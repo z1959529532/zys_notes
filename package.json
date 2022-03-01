@@ -1,0 +1,31 @@
+{
+    "name": "zys_notes",
+    "version": "1.0.0",
+    "description": "zys_notes",
+    "main": "index.js",
+    "scripts": {
+        "dev": "vuepress dev docs",
+        "build": "vuepress build docs",
+        "deploy": "vuepress build docs && start deploy.bat"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/z1959529532/zys_notes.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/z1959529532/zys_notes/issues"
+    },
+    "homepage": "https://github.com/z1959529532/zys_notes#readme",
+    "dependencies": {
+        "@vssue/api-github-v4": "^1.4.7",
+        "@vssue/vuepress-plugin-vssue": "^1.4.8",
+        "moment": "^2.29.1"
+    },
+    "devDependencies": {
+        "@vuepress/plugin-back-to-top": "^1.9.7",
+        "vuepress": "^1.9.7"
+    }
+}
