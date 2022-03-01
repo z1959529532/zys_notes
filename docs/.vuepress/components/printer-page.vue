@@ -14,7 +14,7 @@
         data() {
             return {
                 curTitle: '',
-                titleArr: ['跟随光，成为光！', '如果没有梦想，和咸鱼有什么区别！'],
+                titleArr: ['跟随光，成为光！', '没有梦想，和咸鱼有什么区别！'],
                 curIndex: 0,
                 h1: null,
                 spans: null,
