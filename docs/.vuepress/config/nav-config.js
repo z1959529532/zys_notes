@@ -3,6 +3,7 @@
 module.exports = [
     {text: 'Vuepress', link: '/vp-notes/', icon: 'reco-tag'},
     {text: 'Vue', link: '/vue/'},
+    {text: '关于', link: '/about/'},
     { text: '时间线', link: '/timeline/', icon: 'reco-date' }
     // {
     //     text: '更多',
