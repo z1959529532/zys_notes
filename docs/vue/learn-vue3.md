@@ -75,7 +75,7 @@ npm run dev
 
 ### （1）拉开序幕的setup
 1. 理解：Vue3.0中一个新的配置项，值为一个函数。
-2. setup是所有<span style="color:#00f">Composition API（组合API）“ 表演的舞台 ”</span>。
+2. <span style="color:#00f">setup是所有Composition API（组合API）“ 表演的舞台 ”</span>。
 3. 组件中所用到的：数据、方法等等，均要配置在setup中。
 4. setup函数的两种返回值：
    1. 若返回一个对象，则对象中的属性、方法, 在模板中均可以直接使用。<span style="color:#00f">（重点关注！）</span>
@@ -86,3 +86,85 @@ npm run dev
       - 但在Vue3的setup中<span style="color:#00f">不能访问到</span>Vue2.x配置（data、methos、computed...）。
       - <span style="color:#00f">如果有重名</span>, setup优先。
    2. setup不能是一个async函数，因为返回值不再是return的对象, 而是promise, 模板看不到return对象中的属性。（后期也可以返回一个Promise实例，但需要Suspense和异步组件的配合）
+```bash
+#示例
+<h2>姓名：{{ name }}</h2>
+<h2>年龄：{{ age }}</h2>
+
+#此处只是测试setup，暂时不考虑响应式的问题
+setup() {
+    #// 数据、方法直接定义
+    let name = '张三';
+    let age = 24;
+
+    function sayHello() {
+        alert(`你好，我是${name}，今年${age}`);
+    }
+
+    return {
+        name,
+        age,
+        sayHello
+    }
+
+    #// 返回渲染函数，了解
+    #// return () => h('h1', '张三');
+}
+```
+
+## 4、Vue3.0中的响应式原理
+### （1）先说vue2.x的响应式
+- 实现原理：
+  - 对象类型：通过<span style="color:#00f">Object.defineProperty()</span>对属性的读取、修改进行拦截（<span style="color:#00f">数据劫持</span>）。
+  - 数组类型：通过重写更新数组的一系列方法来实现拦截。（对数组的变更方法进行了包裹）。
+```bash
+Object.defineProperty(data, 'count', {
+    get () {}, 
+    set () {}
+})
+```
+
+- 存在问题：
+  - 新增属性、删除属性, 界面不会更新。  <span style="color:#00f">this.$set()，this.$delete()</span>
+  - 直接通过下标修改数组, 界面不会自动更新。
+```bash
+#例子（对象新增、删除属性，数组下标改值）
+<h2 v-show="person.name">{{ person.name }}</h2>
+<h2>{{ person.age }}</h2>
+<h2 v-show="person.sex">{{ person.sex }}</h2>
+<h2>{{ person.hobby }}</h2>
+
+person: {name: '张三', age: 22, hobby: ['打篮球', '跑步']}
+
+import Vue from 'vue'
+#添加sex属性
+addSex() {
+    // this.person.sex = '男';    #打印数据有了，但是页面没有更新
+    this.$set(this.person, 'sex', '男');
+    Vue.set(this.person, 'sex', '男');    #这种要导入Vue
+}
+
+#删除name属性
+deleteName() {
+    // delete this.person.name;    #打印数据删了，但页面没有更新
+    this.$delete(this.person, 'name');
+    Vue.delete(this.person, 'name');    #这种要导入Vue
+}
+
+#改hobby数组值
+updateHobby() {
+    // this.person.hobby[1] = '打羽毛球';    #页面没有更新
+    this.$set(this.person.hobby, 1, '打羽毛球');
+    this.person.hobby.splice(1, 1, '打羽毛球');
+}
+```
+
+### （2）Vue3.0的响应式
+- 实现原理: 
+  - <span style="color:#00f">通过Proxy（代理）</span>:  拦截对象中任意属性的变化, 包括：属性值的读写、属性的添加、属性的删除等
+  - <span style="color:#00f">通过Reflect（反射）</span>:  对源对象的属性进行操作。
+  - MDN文档中描述的Proxy与Reflect：
+    - Proxy：[https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+    - Reflect：[https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect)
+
+
