@@ -90,6 +90,7 @@ npm run dev
 #示例
 <h2>姓名：{{ name }}</h2>
 <h2>年龄：{{ age }}</h2>
+<button @click="sayHello">弹出提示</button>
 
 #此处只是测试setup，暂时不考虑响应式的问题
 setup() {
@@ -108,7 +109,109 @@ setup() {
     }
 
     #// 返回渲染函数，了解
+    #// import {h} from 'vue';
     #// return () => h('h1', '张三');
+}
+```
+
+### （2）ref函数
+- 作用: 定义一个<strong style="color:#00f">响应式</strong>的数据
+- 语法: <span style="color:#00f">const xxx = ref(value)</span>
+  - 创建一个包含响应式数据的<span style="color:#00f">引用对象（reference对象，简称ref对象）</span>。
+  - JS中操作数据： <span style="color:#00f">xxx.value （拿到ref中真正传入的值）</span>
+  - 模板中读取数据: <span style="color:#00f">不需要.value</span>，直接使用
+- 备注：
+  - 接收的数据可以是：基本类型、也可以是对象类型。
+  - 基本类型的数据：响应式依然是靠<span style="color:#00f"> Object.defineProperty() </span>的```get```与```set```完成的。（数据劫持）
+  - 对象类型的数据：内部 <i style="color:#00f;font-weight:bold">“ 求助 ”</i> 了Vue3.0中的一个新函数—— ```reactive```函数。（proxy）
+```bash
+#示例
+<h2>姓名：{{ name }}</h2>
+<h2>年龄：{{ age }}</h2>
+<h2>工作种类：{{ job.type }}</h2>
+<h2>工作薪水：{{ job.salary }}</h2>
+<button @click="changeInfo">修改信息</button>
+
+setup() {
+    #// let name = '张三';    // 1、不支持响应式
+    
+    import {ref} from 'vue';    // 2、借助ref函数
+    let name = ref('张三');
+    let age = ref(24);
+    let job = ref({type: '前端工程师', salary: '20k'});
+    
+    #// 修改信息方法
+    function changeInfo() {
+        #// name = '李四';
+        #// age = 30;
+        #// console.log(name);    // 1、数据改了，页面没有更新
+    
+        name.value = '李四';
+        age.value = 30;
+        job.value.type = '后端工程师';
+        job.value.salary = '30k';
+    }
+
+    return {
+        name,
+        age,
+        job,
+        changeInfo
+    };
+}
+```
+
+### （3）reactive函数
+- 作用: 定义一个<strong style="color:#00f">对象类型</strong>的响应式数据（<strong style="color:#00f">基本类型不要用它，要用```ref```函数</strong>）
+- 语法：<span style="color:#00f">```const 代理对象= reactive(源对象)```接收一个对象（或数组）</span>，返回一个代理对象（Proxy的实例对象，简称proxy对象）
+- reactive定义的响应式数据是<span style="color:#00f">“深层次的”</span>。
+- 内部基于 ES6 的 Proxy 实现，通过代理对象操作源对象内部数据进行操作。
+```bash
+#示例
+<h3 v-show="person?.name">姓名：{{person.name}}</h3>
+<h3>工作种类：{{ person.job.type }}</h3>
+<h3>工作薪水：{{ person.job.salary }}</h3>
+<h3>测试深层次对象：{{ person.job.a.b.c }}</h3>
+<h3>测试数组：{{ person.hobby }}</h3>
+<button @click="changeInfo">修改信息</button>
+
+setup() {
+    #// let job = ref({type: '前端工程师', salary: '20k'});
+
+    #2、reactive函数
+    #// let number = reactive(666);   // 基本类型不要用reactive
+    #// let job = reactive(
+    #//     {type: '前端工程师', salary: '20k', a: {b: {c: 666}}}
+    #// );
+    #// let hobby = reactive(['打篮球', '跑步', '游泳']);
+
+    #// 3、直接交一整个对象
+    let person = reactive({
+        name: '张三',
+        job: {type: '前端工程师', salary: '20k', a: {b: {c: 666}}},
+        hobby: ['打篮球', '跑步', '游泳']
+    });
+
+    function changeInfo() {
+        #// 2、
+        #// job.type = '后端工程师';
+        #// job.salary = '30k';
+        #// job.a.b.c = 999;
+        #// hobby[2] = '打乒乓球';
+
+        #// 3、直接交一整个对象
+        person.job.type = '后端工程师';
+        person.job.salary = '30k';
+        person.job.a.b.c = 999;
+        person.hobby[2] = '打乒乓球';
+    }
+
+    return {
+        // job,
+        // hobby,
+        person,    #// 3、直接交一整个对象
+        changeInfo
+    };
 }
 ```
 
@@ -166,5 +269,76 @@ updateHobby() {
   - MDN文档中描述的Proxy与Reflect：
     - Proxy：[https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
     - Reflect：[https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect)
+- 不存在vue2里的问题
 
+```bash
+#示例代码
+<h3 v-show="person?.name">姓名：{{person.name}}</h3>
+<h3 v-show="person?.sex">性别：{{person.sex}}</h3>
+<button @click="addProperty">添加一个sex属性</button>
+<br/>
+<button @click="deleteProperty">删除name属性</button>
 
+import {reactive} from 'vue';
+setup() {
+    let person = reactive({
+        name: '张三',
+        job: {type: '前端工程师', salary: '20k', a: {b: {c: 666}}},
+        hobby: ['打篮球', '跑步', '游泳']
+    });
+
+    function addProperty() {
+        person.sex = '张三';    #// 页面更新
+    }
+    function deleteProperty() {
+        delete person.name;    #// 页面更新
+    }
+
+    return {
+        person,
+        addProperty,
+        deleteProperty
+    };
+}
+```
+原理解析：
+```html
+<script>
+    // 源数据
+    let person = {
+        name: '张三',
+        age: 20
+    };
+    
+    // 模拟Vue2实现的响应式
+    // let p = {};
+    // Object.defineProperty(p, 'name', {
+    //     configurable: true,
+    //     get() {
+    //         return person.name;
+    //     },
+    //     set(value) {  // 修改name时调用
+    //         console.log('调用了修改name属性');
+    //         person.name = value;
+    //     }
+    // });
+    
+    // 模拟Vue3实现的响应式
+    // 捕获响应式
+    const p = new Proxy(person, {
+        // target是传入的源数据  propName是属性
+        get(target, propName) {
+            return target[propName];
+        },
+        // 修改或添加属性调用
+        set(target, propName, value) {
+            console.log(`修改了p身上的${propName}属性`);
+            target[propName] = value;
+        },
+        deleteProperty(target, propName) {
+            console.log(`删除了p身上的${propName}属性`);
+            return delete target[propName];
+        }
+    });
+</script>
+```
