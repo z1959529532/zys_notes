@@ -311,17 +311,17 @@ setup() {
     };
     
     // 模拟Vue2实现的响应式
-    // let p = {};
-    // Object.defineProperty(p, 'name', {
-    //     configurable: true,
-    //     get() {
-    //         return person.name;
-    //     },
-    //     set(value) {  // 修改name时调用
-    //         console.log('调用了修改name属性');
-    //         person.name = value;
-    //     }
-    // });
+    let p = {};
+    Object.defineProperty(p, 'name', {
+        configurable: true,
+        get() {
+            return person.name;
+        },
+        set(value) {  // 修改name时调用
+            console.log('调用了修改name属性');
+            person.name = value;
+        }
+    });
     
     // 模拟Vue3实现的响应式
     // 捕获响应式
@@ -340,5 +340,77 @@ setup() {
             return delete target[propName];
         }
     });
+
+    // Reflect使用
+    // 先说Object.defineProperty重复操作属性，会报错，封装的话比较麻烦，要用try catch
+    Object.defineProperty(obj, 'c', {
+        get () {
+            return 3;
+        }
+    });
+    Object.defineProperty(obj, 'c', {
+        get () {
+            return 4;
+        }
+    });
+    // reflect有返回值，相对友好一点
+    c1 = Reflect.defineProperty(obj, 'c', {
+        get () {
+            return 3;
+        }
+    });
+    console.log(c1);
+    c2 = Reflect.defineProperty(obj, 'c', {
+        get () {
+            return 4;
+        }
+    });
+    console.log(c2);
+    if (c1) {console.log('哪个操作成功了！')}
+    
+
+    // 最后引出了vue的响应式原理
+    const p = new Proxy(person, {
+        get (target, propName) {
+            return Reflect.get(target, propName);
+        },
+        set (target, propName, value) {
+            console.log(`修改了p身上的${propName}属性`);
+            Reflect.set(target, propName, value);
+        },
+        deleteProperty (target, propName) {
+            console.log(`删除了p身上的${propName}属性`);
+            return Reflect.deleteProperty(target, propName);
+        }
+    });
 </script>
 ```
+
+## 5、reactive对比ref
+-  从定义数据角度对比：
+   -  <strong style="color:#0000ff">ref</strong>用来定义：<span style="color:#0000ff">基本类型数据</span>。
+   -  <strong style="color:#0000ff">reactive</strong>用来定义：<span style="color:#0000ff">对象（或数组）类型数据</span>。
+   -  备注：ref 也可以用来定义对象（或数组）类型数据, 它内部会自动通过 reactive 转为代理对象。
+-  从原理角度对比：
+   -  ref 通过 ``Object.defineProperty()`` 的 ``get`` 与 ``set`` 来实现响应式<span style="color:#0000ff">（数据劫持）</span>。
+   -  reactive 通过使用 ``Proxy`` 来实现响应式（数据劫持）, 并通过 ``Reflect`` 操作源对象内部的数据。
+-  从使用角度对比：
+   -  ref 定义的数据：操作数据需要 ``.value``，读取数据时模板中直接读取<span style="color:#0000ff">不需要</span>```.value```。
+   -  reactive 定义的数据：操作数据与读取数据：均不需要 ``.value``。
+
+## 6、setup的两个注意点
+- vue2中子组件打印this   
+    props传值和$attrs（子组件不写接收），$slots（子组件不写坑位）
+
+- setup执行的时机
+  - 在beforeCreate之前执行一次，this是undefined。
+- setup的参数
+  - <span style="color:#0000ff">props</span>：值为对象，包含：组件外部传递过来，且组件内部声明接收了的属性。
+  - <span style="color:#0000ff">context</span>：上下文对象
+    - attrs: 值为对象，包含：组件外部传递过来，但没有在props配置中声明的属性, 相当于 ```this.$attrs```。
+    - slots: 收到的插槽内容, 相当于 ```this.$slots```。
+    - emit: 分发自定义事件的函数, 相当于 ```this.$emit```。
+
+
+
+
