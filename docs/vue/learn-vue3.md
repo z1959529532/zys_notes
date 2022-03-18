@@ -410,7 +410,32 @@ setup() {
     - attrs: 值为对象，包含：组件外部传递过来，但没有在props配置中声明的属性, 相当于 ```this.$attrs```。
     - slots: 收到的插槽内容, 相当于 ```this.$slots```。
     - emit: 分发自定义事件的函数, 相当于 ```this.$emit```。
+```js
+props: ['msg', 'a'],
+emits: ['hello'],
+beforeCreate () {
+    console.log('beforeCreate----');
+},
+setup (props, context) {
+    console.log('setup----this', this);
+    console.log('setup----props', props);  // 子组件接收父组件传值，不声明 props: [] 会警告
 
+    // 上下文
+    console.log('setup----context', context.attrs);  // 不接收props，相当于vue2的$attrs
+    console.log('setup----emit', context.emit);  // 触发自定义事件，注意 emits属性声明
+    console.log('setup----slots', context.slots);  // 插槽v-slot:
 
+    function testHello () {
+        context.emit('hello', 666);
+    }
+
+    return {
+        testHello
+    };
+}
+```
+
+## 7、计算属性与监视
+### （2）computed函数
 
 
