@@ -436,6 +436,44 @@ setup (props, context) {
 ```
 
 ## 7、计算属性与监视
-### （2）computed函数
+### （1）computed函数
+- 与Vue2.x中computed配置功能一致
+- 写法
+```js
+import {computed} from 'vue'
+
+// vue2
+// computed: {
+//     fullName () {
+//         return this.person.firstName + this.person.lastName;
+//     }
+// },
+setup () {
+    let person = reactive({
+        firstName: '张',
+        lastName: '三'
+    });
+
+    // 计算属性（简写）
+    // person.fullName = computed(() => {
+    //     return person.firstName + '-' + person.lastName;
+    // });
+    // 修改计算属性（上面是只读的）
+    person.fullName = computed({
+        get () {
+            return person.firstName + '-' + person.lastName;
+        },
+        set (value) {
+            const nameArr = value.split('-');
+            person.firstName = nameArr[0];
+            person.lastName = nameArr[1];
+        }
+    });
+
+    return {
+        person
+    };
+}
+```
 
 
