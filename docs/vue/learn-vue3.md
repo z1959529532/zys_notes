@@ -476,4 +476,78 @@ setup () {
 }
 ```
 
+### （2）watch函数
+- 与Vue2.x中watch配置功能一致
+- 两个小“坑”：
+  - 直接监视reactive定义的响应式数据时：oldValue无法正确获取、强制开启了深度监视（deep配置失效）。
+  - 监视reactive定义的响应式数据中某个属性（对象）时：deep配置有效。
+```js
+// 监听练习如下
 
+// 1、监听ref定义的一个数据
+watch(sum, (newValue, oldValue) => {
+    console.log('sum的值发生了变化', newValue, oldValue);
+});
+
+// 2、监听ref定义的多个数据
+watch([sum, msg], (newValue, oldValue) => {
+    console.log('watch监听变化', newValue, oldValue);
+}, {immediate: true});
+
+// 3、监听reactive定义的对象
+// 注意1：无法正确获取oldValue
+// 注意2：强制开启了深度监视，deep无效
+watch(person, (newValue, oldValue) => {
+    console.log('watch监听person对象变化', newValue, oldValue);
+}, {deep: false});
+
+// 4、监听reactive定义的对象的某一个属性
+watch(() => person.age, (newValue, oldValue) => {
+    console.log('watch监听person对象age的变化', newValue, oldValue);
+});
+
+// 5、监听reactive定义的对象的某些属性
+watch([() => person.name, () => person.age], (newValue, oldValue) => {
+    console.log('watch监听person对象name、age变化', newValue, oldValue);
+});
+
+// 特殊情况，监听reactive定义的对象的对象属性
+watch(() => person.job, (newValue, oldValue) => {
+    console.log('watch监听person对象job变化', newValue, oldValue);
+}, {deep: true});
+
+
+
+// watch监听ref定义的对象问题
+console.log(sum, 1122);
+console.log(msg, 1122);
+console.log(person, 1122);
+// 1、监听的是结构RefImpl，而不是.value
+// watch(sum.value, (newValue, oldValue) => {
+//     console.log('sum的值发生了变化', newValue, oldValue);
+// });
+// 2、person对象用ref定义，监听person.value不是ref定义的数据，而是里面求助于reactive
+// watch(person.value, (newValue, oldValue) => {
+//     console.log('watch监听person对象变化', newValue, oldValue);
+// });
+watch(person, (newValue, oldValue) => {
+    console.log('watch监听person对象变化', newValue, oldValue);
+}, {deep: true});
+```
+
+vue2中的watch：
+```js
+watch: {
+    // sum (newValue, oldValue) {
+    //     console.log('sum的值发生了变化', newValue, oldValue);
+    // }
+
+    sum: {
+        immediate: true,
+        deep: true,
+        handler(newValue, oldValue) {
+            console.log('sum的值发生了变化', newValue, oldValue);
+        }
+    }
+}
+```
