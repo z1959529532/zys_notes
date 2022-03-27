@@ -665,4 +665,45 @@ setup () {
 ```
 
 
+## 9、自定义hook函数
+- 什么是hook？—— 本质是一个函数，把setup函数中使用的Composition API进行了封装。
+- 类似于vue2.x中的mixin。
+- 自定义hook的优势: 复用代码, 让setup中的逻辑更清楚易懂。
+```js
+// 代码示例
+<h2>当前点击时鼠标的坐标 x：{{ point.x }}，y：{{ point.y }}</h2>
+
+setup () {
+    let point = usePoint();
+
+    return {
+        point
+    };
+}
+
+// 使用hook函数usePoint.js，将组合式API进行抽离
+import {reactive, onMounted, onBeforeUnmount} from 'vue';
+export default function () {
+    let point = reactive({
+        x: 0,
+        y: 0
+    });
+    
+    onMounted(() => {
+        window.addEventListener('click', getPagePoint);
+    });
+    
+    onBeforeUnmount(() => {
+        window.removeEventListener('click', getPagePoint);
+    });
+    
+    function getPagePoint (event) {
+        console.log(event.pageX, event.pageY);
+        point.x = event.pageX;
+        point.y = event.pageY;
+    }
+    
+    return point;
+}
+```
 
