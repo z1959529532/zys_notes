@@ -707,3 +707,50 @@ export default function () {
 }
 ```
 
+## 10、toRef
+- 作用：创建一个 ``ref`` 对象，其value值指向另一个对象中的某个属性。
+- 语法：```const name = toRef(person,'name')```
+- 应用:   要将响应式对象中的某个属性单独提供给外部使用时。
+- 扩展：``toRefs`` 与 ``toRef`` 功能一致，但可以批量创建多个 ref 对象，语法：``toRefs(person)``
+```js
+<h3>源数据姓名：{{ person.name }}</h3>
+<h3>toRef姓名：{{ name }}</h3>
+<h3>新ref姓名：{{ name2 }}</h3>
+<h3>年龄：{{ person.age }}</h3>
+<h3>薪资：{{ salary }}</h3>
+<button @click="name='李四'">修改toRef姓名</button>
+<button @click="name2='李四'">修改新ref姓名</button>
+<button @click="person.age++">年龄+1</button>
+<button @click="salary=salary+2000">加薪</button>
+
+import {ref, reactive, toRef, toRefs} from 'vue';
+setup () {
+    let person = reactive({
+        name: '张三',
+        age: 20,
+        job: {
+            a: {
+                b: 11111
+            }
+        }
+    });
+
+    // let myName = toRef(person, 'name');
+    // console.log(myName, 1122);
+
+    // const a = toRefs(person);
+    // console.log(a, 1122);
+
+    return {
+        person,
+
+        // toRef
+        name: toRef(person, 'name'),
+        name2: ref(person.name),  // 这样是新的值，而不是指向源数据
+        salary: toRef(person.job.a, 'b'),
+
+        // toRefs
+        // ...toRefs(person)  // person第一层可以直接写
+    };
+}
+```
