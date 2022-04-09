@@ -754,3 +754,78 @@ setup () {
     };
 }
 ```
+
+## 11、其它 Composition API
+
+### （1）shallowReactive 与 shallowRef
+- shallowReactive：只处理对象最外层属性的响应式（浅响应式）。
+- shallowRef：只处理基本数据类型的响应式, 不进行对象的响应式处理。
+
+- 什么时候使用?
+  -  如果有一个对象数据，结构比较深, 但变化时只是外层属性变化 ===> shallowReactive。
+  -  如果有一个对象数据，后续功能不会修改该对象中的属性，而是生新的对象来替换 ===> shallowRef。
+
+### （2）readonly 与 shallowReadonly
+- readonly: 让一个响应式数据变为只读的（深只读）。
+- shallowReadonly：让一个响应式数据变为只读的（浅只读）。
+- 应用场景: 不希望数据被修改时。
+
+```js
+let person = reactive({
+    name: '张三',
+    age: 20,
+    job: {
+        a: {
+            b: 11111
+        }
+    }
+});
+let num = ref(0);
+
+person = readonly(person);  // 只读保护
+person = shallowReadonly(person);  // 浅只读，只考虑第一层数据
+num = readonly(num);
+num = shallowReadonly(num);
+// 这样写是不自相矛盾（声明完响应式又不让改），有可能是别人组件生命的响应式数据，让你只能用
+```
+
+### （3）toRaw 与 markRaw
+- toRaw：
+  - 作用：将一个由``reactive``生成的<span style="color:#0000ff">响应式对象</span>转为<span style="color:#0000ff">普通对象</span>。
+  - 使用场景：用于读取响应式对象对应的普通对象，对这个普通对象的所有操作，不会引起页面更新。
+- markRaw：
+  - 作用：标记一个对象，使其永远不会再成为响应式对象。
+  - 应用场景:
+    1. 有些值不应被设置为响应式的，例如复杂的第三方类库等。
+    2. 当渲染具有不可变数据源的大列表时，跳过响应式转换可以提高性能。
+
+```js
+let person = reactive({
+    name: '张三',
+    age: 20,
+    job: {
+        a: {
+            b: 11111
+        }
+    }
+});
+
+function showRawPerson() {
+    const p = toRaw(person);  // 将响应式对象还原普通对象
+    console.log(p);
+}
+
+function addCar() {
+    // person.car = {name: '奔驰', price: '40w'};
+    // 标记对象后值能改，但vue不做响应式了
+    person.car = markRaw({name: '奔驰', price: '40w'});
+}
+
+function changeCarName() {
+    if (person.car) {
+        person.car.name = '宝马';
+        console.log(person);
+    }
+}
+```
+
