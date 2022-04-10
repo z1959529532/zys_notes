@@ -758,12 +758,45 @@ setup () {
 ## 11、其它 Composition API
 
 ### （1）shallowReactive 与 shallowRef
-- shallowReactive：只处理对象最外层属性的响应式（浅响应式）。
+- shallowReactive：只处理对象最外层属性的响应式<span style="color:#0000ff">（浅响应式）。</span>
 - shallowRef：只处理基本数据类型的响应式, 不进行对象的响应式处理。
 
 - 什么时候使用?
   -  如果有一个对象数据，结构比较深, 但变化时只是外层属性变化 ===> shallowReactive。
   -  如果有一个对象数据，后续功能不会修改该对象中的属性，而是生新的对象来替换 ===> shallowRef。
+
+```js
+<button @click="person.name='李四'">修改姓名</button>
+<button @click="person.job.a.b=person.job.a.b+2000">加薪</button>
+
+<hr>
+// <h3>测试x值为：{{x}}</h3>
+// <button @click="x++">点我+1</button>
+<h3>测试值为：{{x.y}}</h3>
+<button @click="x.y++">点我+1</button>
+<button @click="x={y: 20}">点我替换x</button>
+
+// let person = reactive({
+let person = shallowReactive({  // 只考虑第一层的响应式
+    name: '张三',
+    age: 20,
+    job: {
+        a: {
+            b: 11111
+        }
+    }
+});
+
+// let x = ref(0);
+// 2
+// let x = shallowRef(0);  // 处理基本类型数据响应式，与ref作用一样
+// console.log(x, 1122);
+// 3
+let x = shallowRef({  // 不进行对象的响应式处理
+    y: 10
+});
+console.log(x, 1122);  // value值为proxy响应式的
+```
 
 ### （2）readonly 与 shallowReadonly
 - readonly: 让一个响应式数据变为只读的（深只读）。
