@@ -768,10 +768,14 @@ setup () {
 ```js
 <button @click="person.name='李四'">修改姓名</button>
 <button @click="person.job.a.b=person.job.a.b+2000">加薪</button>
+// 发现问题是，点击加薪不变，再点击修改姓名就变了
 
 <hr>
+// 1,2
 // <h3>测试x值为：{{x}}</h3>
 // <button @click="x++">点我+1</button>
+
+// 3
 <h3>测试值为：{{x.y}}</h3>
 <button @click="x.y++">点我+1</button>
 <button @click="x={y: 20}">点我替换x</button>
@@ -792,15 +796,15 @@ let person = shallowReactive({  // 只考虑第一层的响应式
 // let x = shallowRef(0);  // 处理基本类型数据响应式，与ref作用一样
 // console.log(x, 1122);
 // 3
-let x = shallowRef({  // 不进行对象的响应式处理
+let x = shallowRef({  // 处理对象类型，不进行对象的响应式处理
     y: 10
 });
-console.log(x, 1122);  // value值为proxy响应式的
+console.log(x, 1122);  // 不是响应式的
 ```
 
 ### （2）readonly 与 shallowReadonly
-- readonly: 让一个响应式数据变为只读的（深只读）。
-- shallowReadonly：让一个响应式数据变为只读的（浅只读）。
+- readonly: 让一个响应式数据变为只读的<span style="color:#0000ff">（深只读）</span>。
+- shallowReadonly：让一个响应式数据变为只读的<span style="color:#0000ff">（浅只读）</span>。
 - 应用场景: 不希望数据被修改时。
 
 ```js
@@ -853,12 +857,53 @@ function addCar() {
     // 标记对象后值能改，但vue不做响应式了
     person.car = markRaw({name: '奔驰', price: '40w'});
 }
-
 function changeCarName() {
-    if (person.car) {
-        person.car.name = '宝马';
-        console.log(person);
-    }
+    person.car.name = '宝马';
+    console.log(person);
 }
 ```
 
+### （4）customRef
+- 作用：创建一个自定义的 ref，并对其依赖项跟踪和更新触发进行显式控制。
+- 实现防抖效果：
+```vue
+<template>
+    <input type="text" v-model="keyWord" />
+    <h3>{{ keyWord }}</h3>
+</template>
+
+<script>
+import {ref, customRef} from 'vue';
+export default {
+    name: 'App',
+    components: {},
+    setup () {
+        // let keyWord = ref('hello');  // 使用ref
+
+        function myRef(value, delay) {
+            let timer = null;
+            return customRef((track, trigger) => {
+                return {
+                    get() {
+                        track(); // 通知vue追踪数据的变化
+                        return value;
+                    },
+                    set(newValue) {
+                        value = newValue;
+                        clearTimeout(timer);
+                        timer = setTimeout(() => {
+                            trigger();  // 通知vue重新解析模板，调get
+                        }, delay);
+                    }
+                }
+            });
+        }
+        let keyWord = myRef('hello', 1000);  // 使用自定义ref
+
+        return {
+            keyWord
+        };
+    }
+};
+</script>
+```
