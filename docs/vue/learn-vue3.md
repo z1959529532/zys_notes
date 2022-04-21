@@ -864,7 +864,7 @@ function changeCarName() {
 ```
 
 ### （4）customRef
-- 作用：创建一个自定义的 ref，并对其依赖项跟踪和更新触发进行显式控制。
+- 作用：<span style="color:#0000ff">创建一个自定义的 ref</span>，并对其依赖项跟踪和更新触发进行显式控制。
 - 实现防抖效果：
 ```vue
 <template>
@@ -878,7 +878,7 @@ export default {
     name: 'App',
     components: {},
     setup () {
-        // let keyWord = ref('hello');  // 使用ref
+        // let keyWord = ref('hello');  // 1、使用ref
 
         function myRef(value, delay) {
             let timer = null;
@@ -898,7 +898,7 @@ export default {
                 }
             });
         }
-        let keyWord = myRef('hello', 1000);  // 使用自定义ref
+        let keyWord = myRef('hello', 1000);  // 2、使用自定义ref
 
         return {
             keyWord
@@ -907,3 +907,74 @@ export default {
 };
 </script>
 ```
+
+### （5）provide 与 inject（提供与注入）
+<img src="https://v3.cn.vuejs.org/images/components_provide.png" style="width:300px" />   
+
+- 作用：<span style="color:#0000ff">实现祖与后代组件间通信</span>
+- 套路：父组件有一个 ``provide`` 选项来提供数据，后代组件有一个 ``inject`` 选项来开始使用这些数据
+- 具体写法：
+  1. 祖组件中：
+```vue
+<script>
+import {reactive, toRefs, provide} from 'vue';
+export default {
+    name: 'App',
+    components: {Child},
+    setup () {
+        let car = reactive({carName: '奔驰', price: '40w'});
+        provide('car', car);  // 提供，给自己的后代组件传递数据
+        return {...toRefs(car)};
+    }
+};
+</script>
+```
+
+  2. 后代组件中：
+```vue
+<script>
+import {inject} from 'vue'
+export default {
+    name: "Son",
+    components: {},
+    setup() {
+        let propCar = inject('car');  // 注入，后代组件接收
+        // console.log(propCar);
+        return {propCar}
+    }
+}
+</script>
+```
+
+### （6）响应式数据的判断
+- isRef: 检查一个值是否为一个 ref 对象
+- isReactive: 检查一个对象是否是由 ``reactive`` 创建的响应式代理
+- isReadonly: 检查一个对象是否是由 ``readonly`` 创建的只读代理
+- isProxy: 检查一个对象是否是由 ``reactive`` 或者 ``readonly`` 方法创建的代理
+示例：
+```vue
+<script>
+import {ref, reactive, readonly, isRef, isReactive, isReadonly, isProxy} from 'vue';
+export default {
+    name: 'App',
+    components: {},
+    setup () {
+        let car = reactive({carName: '奔驰', price: '40w'});
+        let sum = ref(0);
+        let car2 = readonly(car);
+
+        // 响应式数据的判断
+        console.log(isRef(sum));  // true
+        console.log(isReactive(car));  // true
+        console.log(isReadonly(car2));  // true
+        console.log(isProxy(car));  // true
+        console.log(isProxy(car2));  // true，注意，readonly处理完依然是proxy
+        console.log(isProxy(sum));  // false
+        return {};
+    }
+};
+</script>
+```
+
+
+
