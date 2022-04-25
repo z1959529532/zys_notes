@@ -173,7 +173,11 @@ app.all('/server/json', (request, response) => {
 </script>
 ```
 
-### IE缓存问题
+## server.js热更新
+- 安装nodemon（npm i nodemon）
+- nodemon server.js启动就可
+
+## IE缓存问题
 当请求没有变化时，IE浏览器会走本地缓存
 ```js
 // IE缓存
@@ -192,8 +196,8 @@ app.all('/server/ie', (request, response) => {
 </script>
 ```
 
-### 请求超时与网络异常的处理
-- 让相应延时，设置超时时间
+## 请求超时与网络异常的处理
+- 让服务响应延时，设置超时时间
 - f12把network中 ``No throttling``切换为``Offline`` 模拟网络异常
 server中创建服务
 ```js
@@ -221,6 +225,172 @@ html中
     };
     xhr.open('GET', 'http://127.0.0.1:8020/server/delay');
     xhr.send();
+</script>
+```
+
+## 取消请求与重复请求问题
+- 请求未完成可取消请求``xhr.abort()``
+- 阻止发送重复请求   
+server中创建服务
+```js
+app.all('/server/cancelorrepeat', (request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    setTimeout(() => {
+        response.send('HELLO CANCELORREPEAT');
+    }, 1500);
+});
+```
+html中
+```html
+<script>
+    let xhr = null;
+    let isSending = false; // 是否正在发送请求标识
+    btn.onclick = function () {
+        if(isSending) xhr.abort();  // 如果正在发送，取消当前请求
+        xhr = new XMLHttpRequest();
+        isSending = true;  // 发送
+        xhr.open('GET', 'http://127.0.0.1:8020/server/cancelorrepeat');
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                // 在返回所有结果处重新置位，因为有失败情况
+                isSending = false;
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log(xhr.response);
+                } else {}
+            }
+        };
+    };
+</script>
+```
+
+## jQuery发ajax请求
+server中创建服务
+```js
+app.all('/server/jquery', (request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    // response.send('HELLO jQuery发ajax');
+    const data = {name: '张三'};
+    response.send(JSON.stringify(data));
+});
+```
+html中
+```html
+<script>
+    $('button').eq(0).click(() => {
+        $.get('http://127.0.0.1:8020/server/jquery', {a: 100, b: 200}, (data) => {
+            console.log(data);
+        });
+    });
+    $('button').eq(1).click(() => {
+        $.post('http://127.0.0.1:8020/server/jquery', {a: 100, b: 200}, function (data) {
+            console.log(data);
+        }, 'json');  // json格式
+    });
+    
+    // 通用方法
+    $('button').eq(2).click(() => {
+        $.ajax({
+            type: 'GET',
+            url: 'http://127.0.0.1:8020/server/jquery',
+            data: {a: 100, b: 200},
+            dataType: 'json',
+            timeout: 2000,
+            headers: {
+                name: 'atguigu'
+            },
+            success: (data) => {
+                console.log(data);
+            },
+            error: () => {}
+        });
+    });
+</script>
+```
+
+## axios发ajax请求
+server中创建服务
+```js
+app.all('/server/axios', (request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    const data = {name: '张三'};
+    response.send(JSON.stringify(data));
+});
+```
+html中
+```html
+<script>
+    // 配置通用baseUrl
+    axios.defaults.baseURL = 'http://127.0.0.1:8020/server';
+    btns[0].onclick = () => {
+        axios.get('/axios', {
+            params: {a: 100, b: 200},
+            headers: {name: 'atguigu'}
+        }).then(data => {
+            console.log(data);
+        });
+    };
+    btns[1].onclick = () => {
+        axios.post('/axios', {  // 第二个参数为请求体
+            username: 'admin',
+            password: '123456'
+        }, {  // 第三个参数为其他配置
+            params: {a: 100, b: 200},
+            headers: {name: 'atguigu'}
+        }).then(data => {
+            console.log(data);
+        });
+    };
+    
+    // 通用方法
+    btns[2].onclick = () => {
+        axios({
+            method: 'POST',
+            url: '/axios',
+            params: {a: 100, b: 200},
+            headers: {name: 'atguigu'},
+            data: {  // 请求体
+                username: 'admin',
+                password: '123456'
+            }
+        }).then(data => {
+            console.log(data);
+        });
+    };
+</script>
+```
+
+## fetch函数发ajax请求
+server中创建服务
+```js
+app.all('/server/fetch', (request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    const data = {name: '张三'};
+    response.send(JSON.stringify(data));
+});
+```
+html中
+```html
+<script>
+    btn.onclick = () => {
+        fetch('http://127.0.0.1:8020/server/fetch', {
+            method: 'POST',
+            headers: {name: 'atguigu'},
+            body: {  // 请求体
+                username: 'admin',
+                password: '123456'
+            }
+        }).then(response => {
+            // return response.text();
+            return response.json();  // 返回json格式
+        }).then(data => {
+            console.log(data);
+        });
+    };
 </script>
 ```
 
