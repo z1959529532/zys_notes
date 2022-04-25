@@ -36,7 +36,7 @@ title: ajax
 npm init --yes
 npm i express
 ```
-- 创建server.js模拟服务端，node启动，可直接访问 localhost:8020/server
+- 创建server.js模拟服务端，node启动（node server.js），可直接访问 localhost:8020/server/get
 ```js
 // 1、引入express
 const express = require('express');
@@ -120,17 +120,18 @@ app.all('/server/post', (request, response) => {
 - 页面POST.html中
   - 用POST方法请求结果显示（在服务端server创建与之匹配的路由规则）
   - 设置POST请求参数，再初始化.send中加参数
-- 设置请求头信息
+- 设置自定义请求头信息
   - ``xhr.setRequestHeader('Content-Type'， 'application/x-www-form-urlencoded')``
   - 自定义请求头的话，服务端设置相应响应头  
 ```html
+<div id="result"></div>
 <script>
     result.addEventListener('click', () => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://127.0.0.1:8020/server/post');
         // 设置请求头信息
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.setRequestHeader('name', 'zhangSan');  //自定义
+        xhr.setRequestHeader('name', 'zhangSan');  //自定义头信息
         xhr.send('a=100&b=200');  // 参数写法多种
     });
 </script>
