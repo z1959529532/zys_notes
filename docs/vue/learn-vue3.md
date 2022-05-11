@@ -755,9 +755,7 @@ setup () {
 }
 ```
 
-## 11、其它 Composition API
-
-### （1）shallowReactive 与 shallowRef
+## 11、shallowReactive 与 shallowRef（其它API）
 - shallowReactive：只处理对象最外层属性的响应式<span style="color:#0000ff">（浅响应式）。</span>
 - shallowRef：只处理基本数据类型的响应式, 不进行对象的响应式处理。
 
@@ -802,7 +800,7 @@ let x = shallowRef({  // 处理对象类型，不进行对象的响应式处理
 console.log(x, 1122);  // 不是响应式的
 ```
 
-### （2）readonly 与 shallowReadonly
+## 12、readonly 与 shallowReadonly（其它API）
 - readonly: 让一个响应式数据变为只读的<span style="color:#0000ff">（深只读）</span>。
 - shallowReadonly：让一个响应式数据变为只读的<span style="color:#0000ff">（浅只读）</span>。
 - 应用场景: 不希望数据被修改时。
@@ -826,7 +824,7 @@ num = shallowReadonly(num);
 // 这样写是不自相矛盾（声明完响应式又不让改），有可能是别人组件生命的响应式数据，让你只能用
 ```
 
-### （3）toRaw 与 markRaw
+## 13、toRaw 与 markRaw（其它API）
 - toRaw：
   - 作用：将一个由``reactive``生成的<span style="color:#0000ff">响应式对象</span>转为<span style="color:#0000ff">普通对象</span>。
   - 使用场景：用于读取响应式对象对应的普通对象，对这个普通对象的所有操作，不会引起页面更新。
@@ -863,7 +861,7 @@ function changeCarName() {
 }
 ```
 
-### （4）customRef
+## 14、customRef（其它API）
 - 作用：<span style="color:#0000ff">创建一个自定义的 ref</span>，并对其依赖项跟踪和更新触发进行显式控制。
 - 实现防抖效果：
 ```vue
@@ -908,7 +906,7 @@ export default {
 </script>
 ```
 
-### （5）provide 与 inject（提供与注入）
+## 15、provide 与 inject（提供与注入，其它API）
 <img src="https://v3.cn.vuejs.org/images/components_provide.png" style="width:300px" />   
 
 - 作用：<span style="color:#0000ff">实现祖与后代组件间通信</span>
@@ -946,11 +944,11 @@ export default {
 </script>
 ```
 
-### （6）响应式数据的判断
+## 16、响应式数据的判断（其它API）
 - isRef: 检查一个值是否为一个 ref 对象
 - isReactive: 检查一个对象是否是由 ``reactive`` 创建的响应式代理
 - isReadonly: 检查一个对象是否是由 ``readonly`` 创建的只读代理
-- isProxy: 检查一个对象是否是由 ``reactive`` 或者 ``readonly`` 方法创建的代理
+- isProxy: 检查一个对象是否是由 ``reactive`` 或者 ``readonly`` 方法创建的代理   
 示例：
 ```vue
 <script>
@@ -976,5 +974,101 @@ export default {
 </script>
 ```
 
+## 17、Fragment（新的组件）
+- 在Vue2中: 组件必须有一个根标签
+- 在Vue3中: 组件可以没有根标签, 内部会将多个标签包含在一个Fragment虚拟元素中
+- 好处: 减少标签层级, 减小内存占用
 
+## 18、Teleport（新的组件）
+- 什么是Teleport？
+  - `Teleport` 是一种能够将我们的<span style="color:#0000ff">组件html结构</span>移动到指定位置的技术。
+  - 直接脱离当前组件，不影响当前结构
+
+```vue
+<div>
+    <button @click="isShow=true">点我显示弹窗</button>
+    <!--直接插入body中-->
+    <teleport to="body">
+        <!--蒙层-->
+        <!--    <div v-if="isShow" class="mask">-->
+        <div v-if="isShow" class="dialog">
+            <h3>我是弹窗</h3>
+            <h4>内容...</h4>
+            <button @click="isShow=false">关闭弹窗</button>
+        </div>
+        <!--</div>-->
+    </teleport>
+</div>
+
+<script>
+    import {ref} from 'vue'
+    export default {
+        name: "Dialog",
+        components: {},
+        setup() {
+            let isShow = ref(false);
+            return {isShow}
+        }
+    }
+</script>
+```
+
+## 19、Suspense（新的组件）
+- 等待异步组件时渲染一些额外内容，让应用有更好的用户体验
+- 两种情况会导致显示的慢，网速、异步组件
+
+- 静态引入：要等最里层的渲染完成，整个才显示   
+- 异步引入：渲染完成就显示，好一点。   
+  有个小问题，未显示内容时用户以为没东西了呢（fallback解决）   
+  内置的，直接能使用
+
+```vue
+<div class="app">
+    <h3>我是App组件（父）</h3>
+    <suspense>
+        <template v-slot:default>
+            <child></child>
+        </template>
+        <template v-slot:fallback>
+            <h3>稍等，加载中...</h3>
+        </template>
+    </suspense>
+</div>
+
+<script>
+// import Child from "./components/Demo13/Child";  // 静态引入
+import {defineAsyncComponent} from 'vue'  // 异步引入
+const Child = defineAsyncComponent(() => import('./components/Demo13/Child'));
+export default {
+    name: 'App',
+</script>
+```
+
+子组件：
+```vue
+<template>
+    <div class="child">
+        <h3>我是Child组件（子）</h3>
+        {{sum}}
+    </div>
+</template>
+
+<script>
+import {ref} from 'vue'
+export default {
+    name: "Child",
+    components: {},
+    // 异步
+    async setup() {
+        let sum = ref(0);
+        let p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve({sum});
+            }, 1500);
+        });
+        return await p;
+    }
+}
+</script>
+```
 
