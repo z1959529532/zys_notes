@@ -795,8 +795,8 @@ setup () {
 ```
 
 ## 11、shallowReactive 与 shallowRef（其它API）
-- shallowReactive：只处理对象最外层属性的响应式<span style="color:#0000ff">（浅响应式）。</span>
-- shallowRef：只处理基本数据类型的响应式, 不进行对象的响应式处理。
+- shallowReactive：处理对象最外层属性的响应式<span style="color:#0000ff">（浅响应式）。</span>
+- shallowRef：处理基本数据类型的响应式, 不进行对象的响应式处理。
 
 - 什么时候使用?
   -  如果有一个对象数据，结构比较深, 但变化时只是外层属性变化 ===> shallowReactive。
@@ -805,10 +805,11 @@ setup () {
 ```vue
 <button @click="person.name='李四'">修改姓名</button>
 <button @click="person.job.a.b=person.job.a.b+2000">加薪</button>
-// zys发现问题是，浅响应式点击加薪不变，再点击修改姓名就变了
+// zys发现问题是，浅响应式声明后，
+// 点击加薪不变，再点击修改姓名，薪资也跟着变化了
 
 <hr>
-// 1,2
+// 2
 // <h3>测试x值为：{{x}}</h3>
 // <button @click="x++">点我+1</button>
 
@@ -834,10 +835,12 @@ setup () {
     
     // let x = ref(0);
     // 2
-    // let x = shallowRef(0);  // 处理基本类型数据响应式，与ref作用一样
+    // 处理基本类型数据响应式，与ref作用一样
+    // let x = shallowRef(0);
     // console.log(x, 1122);
     // 3
-    let x = shallowRef({  // 处理对象类型，不进行对象的响应式处理
+    // 处理对象类型，不进行属性响应式处理，但可以替换
+    let x = shallowRef({
         y: 10
     });
     console.log(x, 1122);  // 不是响应式的
@@ -867,11 +870,12 @@ setup () {
     });
     let num = ref(0);
     
-    person = readonly(person);  // 只读保护 不允许操作报警告
-    person = shallowReadonly(person);  // 浅只读，只考虑第一层数据
+    person = readonly(person);  // 只读保护 不允许操作任何属性(控制台报警告)
+    person = shallowReadonly(person);  // 浅只读，最外层属性不允许操作
     num = readonly(num);
     num = shallowReadonly(num);
-    // 这样写是不自相矛盾（声明完响应式又不让改），有可能是别人组件生命的响应式数据，让你只能用
+    // 这样写是不自相矛盾（声明完响应式又不让改）
+    // 有可能是别人组件声明的响应式数据，让你只能用
 }
 };
 </script>
