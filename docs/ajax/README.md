@@ -15,7 +15,7 @@ title: ajax
         Cookie: name=guigu
         Content-Type: application/x-www-form-urlencoded ...
 空行
-体       username=admin&password=123456
+体       a=100&b=200
         GET方法请求体为空，POST请求体可以不为空
 ```
 ### 响应报文
@@ -124,16 +124,20 @@ app.all('/server/post', (request, response) => {
   - ``xhr.setRequestHeader('Content-Type'， 'application/x-www-form-urlencoded')``
   - 自定义请求头的话，服务端设置相应响应头  
 ```html
+<button>点击发送请求</button>
 <div id="result"></div>
 <script>
-    result.addEventListener('click', () => {
+   const btn = document.getElementsByTagName('button')[0];
+   const result = document.getElementById('result');
+
+    btn.onclick = () => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://127.0.0.1:8020/server/post');
         // 设置请求头信息
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.setRequestHeader('name', 'zhangSan');  //自定义头信息
         xhr.send('a=100&b=200');  // 参数写法多种
-    });
+    };
 </script>
 ```
 
@@ -145,7 +149,7 @@ app.all('/server/json', (request, response) => {
     response.setHeader('Access-Control-Allow-Headers', '*');
     // 响应一个JSON数据
     const data = {name: 'zhangSan'};
-    response.send(JSON.stringify(data));  // 要进行字符串转换
+    response.send(JSON.stringify(data));
 });
 ```
 - 页面JSON.html中
@@ -153,7 +157,7 @@ app.all('/server/json', (request, response) => {
   - 自动：设置xhr中响应体数据类型
 ```html
 <script>
-    result.addEventListener('click', () => {
+    btn.onclick = () => {
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'json';  // 设置xhr中响应体数据类型
         xhr.open('POST', 'http://127.0.0.1:8020/server/json');
@@ -163,14 +167,15 @@ app.all('/server/json', (request, response) => {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     // 结果为JSON数据形式
                     
-                    // let data = JSON.parse(xhr.response);  // 手动转换
+                    // 1、手动转换
+                    // let data = JSON.parse(xhr.response);
                     // result.innerHTML = data.name;
-                    // 自动转换，设置xhr中响应体数据类型
+                    // 2、自动转换，设置xhr中响应体数据类型
                     result.innerHTML = xhr.response.name;
                 } else {}
             }
         };
-    });
+    };
 </script>
 ```
 
