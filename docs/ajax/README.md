@@ -2,6 +2,8 @@
 title: ajax
 ---
 
+- 异步更新网页（不需要刷新整个页面，无刷新获取数据），懒加载按需加载
+
 ## HTTP
 - HTTP协议（hypertext transport protocol）[超文本传输协议]，协议详细规定了浏览器和万维网服务器之间相互通信的原则。
   - 约定，规则
@@ -400,5 +402,86 @@ html中
 </script>
 ```
 
+## 同源策略
+- 是什么？
+  - 是浏览器的一种安全策略
+  - 同源是指：<span style="color:#0000ff">协议、域名、端口</span>必须完全相同
+违背就是跨域
+- 如何解决跨域
+  - JSONP、CORS
+
+创建服务
+```js
+// 同源策略
+// 不设置可跨域请求头
+// 访问127.0.0.1:8020/tongyuan  返回本地页面页面
+app.all('/tongyuan', (request, response) => {
+    response.sendFile(__dirname + '/10_跨域/01_同源策略.html');
+});
+app.all('/tongyuan/request', (request, response) => {
+    response.send('用户数据');
+});
+```
+10_跨域/01_同源策略.html中
+```html
+const btn = document.getElementsByTagName('button')[0];
+
+    btn.onclick = () => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/tongyuan/request');
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log(xhr.response);
+                } else {}
+            }
+        };
+    };
+```
+
+## JSONP（解决跨域）
+- 是一个非官方的跨域解决方案，只支持get
+- 网页有一些标签具有跨域能力（img、link、iframe、script）JSONP就是借助script
+
+示例1
+```js
+// 提前写好函数，用script标签引入js文件去调函数
+const data = {
+    name: '张三'
+};
+handle(data);
+```
+
+示例2，创建服务
+```js
+// JSONP原理
+app.all('/jsonp', (request, response) => {
+    // 直接返回会报错 Uncaught SyntaxError: Unexpected identifier
+    // response.send('HELLO JSONP');
+    // 要返回js代码
+    // response.send(`console.log("HELLO JSONP")`);
+    // 返回要调用的方法
+    const data = {name: '李四'};
+    response.send(`handle(${JSON.stringify(data)})`);
+});
+```
+html中
+```html
+<body>
+<div id="result"></div>
+<script>
+    function handle(data) {
+        const result = document.getElementById('result');
+        result.innerHTML = data.name;
+    }
+</script>
+<!--1、提前写好方法，script引入文件调用该方法-->
+<!--<script src="./a.js"></script>-->
+
+<!--2、script请求返回需要的js代码-->
+<script src="http://127.0.0.1:8020/jsonp"></script>
+</body>
+```
 
 
