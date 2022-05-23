@@ -413,7 +413,7 @@ html中
 创建服务
 ```js
 // 同源策略
-// 不设置可跨域请求头
+// 不设置可跨域请求头信息
 // 访问127.0.0.1:8020/tongyuan  返回本地页面页面
 app.all('/tongyuan', (request, response) => {
     response.sendFile(__dirname + '/10_跨域/01_同源策略.html');
@@ -424,7 +424,11 @@ app.all('/tongyuan/request', (request, response) => {
 ```
 10_跨域/01_同源策略.html中
 ```html
-const btn = document.getElementsByTagName('button')[0];
+<body>
+<h3>同源策略</h3>
+<button>点击过去数据</button>
+<script>
+    const btn = document.getElementsByTagName('button')[0];
 
     btn.onclick = () => {
         const xhr = new XMLHttpRequest();
@@ -438,13 +442,14 @@ const btn = document.getElementsByTagName('button')[0];
             }
         };
     };
+</script>
 ```
 
 ## JSONP（解决跨域）
 - 是一个非官方的跨域解决方案，只支持get
 - 网页有一些标签具有跨域能力（img、link、iframe、script）JSONP就是借助script
 
-示例1
+- 示例1：同源策略
 ```js
 // 提前写好函数，用script标签引入js文件去调函数
 const data = {
@@ -453,7 +458,7 @@ const data = {
 handle(data);
 ```
 
-示例2，创建服务
+- 示例2，JSONP原理（script访问服务，返回结果调用提前写好的函数）
 ```js
 // JSONP原理
 app.all('/jsonp', (request, response) => {
@@ -483,5 +488,106 @@ html中
 <script src="http://127.0.0.1:8020/jsonp"></script>
 </body>
 ```
+
+- 示例3：原生JSONP实践（js创建script标签，设置src属性，返回结果调用提前写好的函数）
+```js
+app.all('/jsonp/practice', (request, response) => {
+    const data = {exist: 1, msg: '用户名已存在'};
+    response.send(`handle(${JSON.stringify(data)})`);
+});
+```
+html中
+```html
+用户名：<input type="text" id="username"/>
+<p id="result"></p>
+<script>
+    const input = document.getElementsByTagName('input')[0];
+    const p = document.getElementById('result');
+
+    function handle (data) {
+        p.innerHTML = data.msg;
+    }
+
+    input.onblur = () => {
+        if (input.value) {
+            // 1、创建script标签
+            // 2、设置标签的src属性
+            // 3、将script插入文档中
+            const script = document.createElement('script');
+            script.src = 'http://127.0.0.1:8020/jsonp/practice';
+            document.body.appendChild(script);
+        }
+    };
+</script>
+```
+
+- 示例4：JQery发jsonp请求
+```js
+// JQuery发送jsonp请求
+app.all('/jquery-jsonp', (request, response) => {
+    const data = {name: '张三'};
+    // 接收callback参数
+    let cb = request.query.callback;
+    
+    response.send(`${cb}(${JSON.stringify(data)})`);
+});
+```
+html中
+```html
+<button>发送请求</button>
+<div id="result"></div>
+<script>
+    $('button').eq(0).click(() => {
+        // callback是固定写法
+        // 这样发送，callback是有值的看f12
+        // 服务端是可以将接收的callback值作为调用的函数，相当于jquery已经注册了这样的一个函数
+        $.getJSON('http://127.0.0.1:8020/jquery-jsonp?callback=?', (data) => {
+            // console.log(data);
+            $('#result').html(`姓名：${data.name}`);
+        });
+    });
+</script>
+```
+
+## CORS（解决跨域）
+- 是官方的跨域解决方案，特点是不在客户端操作，完全在浏览器中处理
+  (像我们之前在请求中设置的请求头信息)
+- 怎么工作，设置一个响应头
+- 使用：在服务端设置即可
+
+```js
+// cors
+app.all('/cors', (request, response) => {
+    // 允许跨域的响应头
+    // response.setHeader('Access-Control-Allow-Origin', '*');
+    // response.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8020');
+    // response.setHeader('Access-Control-Allow-Headers', '*');
+    // 还有好多写法
+    
+    response.send('HELLO CORS');
+});
+```
+html中
+```html
+<button>发送请求</button>
+<div id="result"></div>
+<script>
+    const btn = document.getElementsByTagName('button')[0];
+
+    btn.onclick = () => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://127.0.0.1:8020/cors');
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    result.innerHTML = xhr.response;
+                } else {}
+            }
+        };
+    };
+</script>
+```
+
 
 
