@@ -178,10 +178,10 @@ myReadFile('./resource/file.txt').then(data => {
 ```
 
 ## Promise 的状态
-状态改变由 pedding-->fulfill或reject，promise的状态只能改变一次
+状态改变由 pedding-->fulfill或rejected，promise的状态只能改变一次
 - pedding：等待状态
 - fulfill：满足状态，主动调用resolve()，回调调用.then()
-- reject：满足状态，主动调用reject()，回调调用.catch()
+- rejected：满足状态，主动调用reject()，回调调用.catch()
 
 ## Promise 对象的值
 - PromiseValue：对象成功/失败的返回结果
@@ -260,6 +260,158 @@ myReadFile('./resource/file.txt').then(data => {
 </script>
 </body>
 ```
+
+## Promise 的几个关键问题
+- 如何改变Promise的状态
+  - resolve
+  - reject
+  - throw '出问题了'（抛出错误）
+```html
+<body>
+<script>
+    let p = new Promise((resolve, reject) => {
+        // 1、调用resolve，pedding-->fulfill
+        resolve('ok');
+        // 2、调用reject，pedding-->rejected
+        reject('err');
+        // 3、抛出错误
+        throw '出问题了';
+    });
+    console.log(p);
+</script>
+</body>
+```
+  
+- Promise能否指定多个回调，都会调用吗？
+  - 必须是状态改变后，然后才都会执行
+```html
+<body>
+<script>
+    let p2 = new Promise((resolve, reject) => {
+        resolve('ok');
+    });
+    // 状态改变执行.then
+    p2.then(data => {
+        console.log(data, 2222);
+    });
+    p2.then(data => {
+        console.log(data, 3333);
+    });
+</script>
+</body>
+```
+
+- 改变状态与指定回调他俩的执行顺序问题
+  - 情况1：Promise里是同步任务，这样先执行改变状态
+  - 情况2：Promise里是异步任务，先执行回调.then
+```html
+<body>
+<script>
+    let p3 = new Promise((resolve, reject) => {
+        // 情况1 Promise里是同步任务，这样先执行改变状态
+        // resolve('ok');
+
+        // 情况2 Promise里是异步任务，先执行回调.then
+        setTimeout(() => {
+            resolve('ok');
+        }, 1000);
+    });
+    p3.then(data => {
+        console.log(data, 4444);
+    });
+</script>
+</body>
+```
+
+- .then方法的返回结果
+  - 无返回，.then的结果是peddnig状态的Promise
+  - 抛出错误，.then的结果是失败的Promise（throw '有问题'）
+  - 返回非Promise对象，.then的结果是成功的Promise
+  - 返回Promise对象，.then的结果是Promise对象
+```html
+<body>
+<script>
+    let p4 = new Promise((resolve, reject) => {
+        resolve('ok');
+    });
+    const result = p4.then(data => {
+        // 1、抛出错误，.then的结果是失败的Promise
+        // throw '有问题';
+        // 2、返回非Promise对象，.then的结果是成功的Promise
+        // return 520;
+        // 3、返回Promise对象，.then的结果是Promise对象
+        return new Promise((resolve, reject) => {
+            // resolve('ok');
+            reject('err');
+        });
+    }, err => {
+    });
+    console.log(result, 5555);
+</script>
+</body>
+```
+
+- 串联多个任务（链式调用）
+```html
+<body>
+<script>
+    const p5 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('ok');
+        }, 1000)
+    });
+    p5.then(data1 => {
+        return new Promise((resolve, reject) => {
+            resolve('success');
+        });
+    }).then(data2 => {
+        console.log(data2, 6666);  // success
+    }).then(data3 => {
+        console.log(data3, 7777);  // undefined
+    });
+</script>
+</body>
+```
+
+- 异常穿透，就是在链式调用最后指定失败的回调
+```html
+<body>
+<script>
+    const p6 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('ok');
+        }, 1000)
+    });
+    p6.then(data1 => {
+    }).then(data2 => {
+    }).then(data3 => {
+    }).catch(err => {
+        console.log('err');
+    });
+</script>
+</body>
+```
+
+- 中断Promise链，只有一种方式，返回一个pedding状态的Promise
+```html
+<body>
+<script>
+    const p7 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('ok');
+        }, 1000)
+    });
+    p7.then(data1 => {
+        return new Promise((resolve, reject) => {});
+    }).then(data2 => {
+    }).then(data3 => {
+    });
+</script>
+</body>
+```
+
+## 自定义Promise
+
 
 
 
