@@ -177,18 +177,18 @@ myReadFile('./resource/file.txt').then(data => {
 });
 ```
 
-## Promise 的状态
-状态改变由 pedding-->fulfill或rejected，promise的状态只能改变一次
+## Promise 的状态（promiseState）
+状态改变由 pedding-->fulfill或rejected，<span style="color:#0000ff">promise的状态只能改变一次</span>
 - pedding：等待状态
 - fulfill：满足状态，主动调用resolve()，回调调用.then()
 - rejected：满足状态，主动调用reject()，回调调用.catch()
 
-## Promise 对象的值
-- PromiseValue：对象成功/失败的返回结果
+## Promise 对象的值（promiseResult）
+- PromiseValue：对象成功/失败的返回结果值
 
 ## Promise 的API
-- Promise构造函数：Promise(excutor) {}
-  - excutor执行器，(resolve, reject) => {}，里面是同步调用立即执行
+- Promise构造函数：Promise(executor) {}
+  - executor执行器，(resolve, reject) => {}，里面是同步调用立即执行
 - then方法：.then(value => {}, reason => {});
 - catch方法（语法糖）：p.catch(reason => {});   
    
@@ -323,11 +323,13 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-- .then方法的返回结果
-  - 无返回，.then的结果是peddnig状态的Promise
-  - 抛出错误，.then的结果是失败的Promise（throw '有问题'）
-  - 返回非Promise对象，.then的结果是成功的Promise
-  - 返回Promise对象，.then的结果是Promise对象
+- .then方法的返回结果-<span style="color:#0000ff">新的Promise对象</span>
+  - 由.then指定回调的执行结果决定
+  - .then执行回调中无返回, 相当于``return了undefined``，和返回非Promise对象一样
+  - .then执行回调中有返回
+    - 抛出错误，.then的结果是失败的Promise（throw '有问题'）
+    - 返回非Promise对象，.then的结果是成功的Promise，return的值就是成功的结果
+    - 返回Promise对象，.then的结果状态由Promise的状态决定，.then的结果值就是Promise返回的结果值
 ```html
 <body>
 <script>
@@ -335,14 +337,14 @@ myReadFile('./resource/file.txt').then(data => {
         resolve('ok');
     });
     const result = p4.then(data => {
-        // 1、抛出错误，.then的结果是失败的Promise
+        // （1）抛出错误，.then的结果是失败的Promise
         // throw '有问题';
-        // 2、返回非Promise对象，.then的结果是成功的Promise
+        // （2）返回非Promise对象，.then的结果是成功的Promise，return的值就是成功的结果
         // return 520;
-        // 3、返回Promise对象，.then的结果是Promise对象
+        // （3）返回Promise对象，.then的结果状态由Promise的状态决定，.then的结果值就是Promise返回的结果值
         return new Promise((resolve, reject) => {
-            // resolve('ok');
-            reject('err');
+            resolve('ok1');
+            // reject('error1');
         });
     }, err => {
     });
@@ -411,6 +413,188 @@ myReadFile('./resource/file.txt').then(data => {
 ```
 
 ## 自定义Promise
+- Promise构造函数中
+  - executor()执行
+  - 对应resolve和reject的回调函数，以及throw情况（在executor外加try...catch）
+  - 属性设置（promiseState和promiseResult），this指向问题
+  - Promise状态只能改变一次的设置
+
+- then方法中
+  - 状态判断``fulfilled``和``rejected``，执行回调，返回结果
+
+- 当Promise里为异步任务
+  - 此时状态为``pedding``状态，而且也没接到状态值
+  - 要将回调保存``本地callback对象中``
+  - 等执行Promise构造函数中回调后，再执行callback对象中保存过的回调
+  
+- 代码
+  - promise.js创建``Promise构造函数``和``then方法``
+  - html中引入文件，new Promise就不是全局的Promise了，而是创建的``Promise构造函数``
+```js
+// 构造函数
+function Promise(executor) {
+    // 设置属性
+    this.promiseState = 'pedding';
+    this.promiseResult = null;
+    const _this = this;
+    // 声明属性,异步时保存回调函数用
+    // this.callback = {};
+    this.callback = [];
+
+    // 对应resolve函数，名字并不需要一样，与executor中对应就行
+    function resolve1(value) {
+        // Promise状态只能改变一次的判断
+        if (_this.promiseState !== 'pedding') return;
+
+        // console.log(this);  // 这里的this指向的是window
+        // 1、修改对象状态 promiseState
+        _this.promiseState = 'fulfilled';
+        // 2、设置对象结果值 promiseResult
+        _this.promiseResult = value;
+
+        // 异步时保存回调函数有值，执行保存的回调
+        // if (_this.callback.onResolved) {
+        //     _this.callback.onResolved(value);
+        // }
+        _this.callback.forEach(item => {
+            item.onResolved(value);
+        });
+    }
+
+    // 对应reject函数
+    function reject1(err) {
+        if (_this.promiseState !== 'pedding') return;
+        _this.promiseState = 'rejected';
+        _this.promiseResult = err;
+        // if (_this.callback.onRejected) {
+        //     _this.callback.onRejected(err);
+        // }
+        _this.callback.forEach(item => {
+            item.onRejected(err);
+        });
+    }
+
+    // try...catch对应throw抛出的异常
+    try {
+        // 执行器函数 是同步调用的
+        executor(resolve1, reject1);
+    } catch (e) {
+        reject1(e);
+    }
+}
+
+// 添加 then 方法
+Promise.prototype.then = function (onResolved, onRejected) {
+    return new Promise((resolve, reject) => {
+
+        // 调用回调函数  先对状态进行判断
+        if (this.promiseState === 'fulfilled') {
+            onResolved(this.promiseResult);
+        }
+        if (this.promiseState === 'rejected') {
+            onRejected(this.promiseResult);
+        }
+
+        // 异步任务时，要判断pedding状态
+        if (this.promiseState === 'pedding') {
+            // 此时构造函数中状态不确定，要保存回调函数
+            // 异步任务，最后还是要执行到上面构造函数
+            this.callback.push({
+                onResolved: onResolved,
+                onRejected: onRejected
+            });
+        }
+
+    });
+};
+```
+- 当Promise执行多个回调时
+  - 后面的回调会覆盖前面的
+  - 将Promise构造函数中``callback存为数组形式``，再去遍历执行保存过的回调
+
+html中
+```html
+<head>
+    <script src="./promise.js"></script>
+</head>
+<body>
+<script>
+    const p = new Promise((resolve, reject) => {
+        // resolve('ok');
+        // reject('error');
+        // throw '有问题';
+
+        // 异步时
+        setTimeout(() => {
+            // resolve('ok');
+            reject('error');
+        }, 1000);
+    });
+    console.log(p);
+    p.then(data => {
+        console.log(data, 1111);
+    }, err => {
+        console.warn(err, 1111);
+    });
+
+    // Promise指定多个回调，会将前面的覆盖掉
+    p.then(data => {
+        console.log(data, 2222);
+    }, err => {
+        console.warn(err, 2222);
+    });
+</script>
+</body>
+```
+
+- 同步任务then方法返回结果的实现
+  - 回顾``关键问题中``then方法的返回结果
+  - 而我们创建的Promise返回undefined，是因为我们的then方法并没有return
+  - 在then方法外层返回新的Promise，但状态不会由执行回调的结果决定，对回调结果进行判断给.then返回值
+```html
+<body>
+<script>
+    const p = new Promise((resolve, reject) => {
+        resolve('ok');
+        // reject('error');
+    });
+
+    const res = p.then(data => {
+        // console.log(data);
+        // return 'hello';
+        return new Promise((resolve, reject) => {
+            // resolve('hello success');
+            // reject('error');
+            // 抛出错误
+            throw '有问题';
+        });
+    }, err => {
+        console.log(err);
+    });
+    console.log(res);
+</script>
+</body>
+```
+then方法实现中   
+外层return new Promise((resolve, reject) => {
+```js
+const result = onResolved(this.promiseResult);
+
+// 对结果进行判断，给.then返回值
+try {
+    if (result instanceof Promise) {
+        result.then(data => {
+            resolve(data);
+        }, err => {
+            reject(err);
+        });
+    } else {  // 非Promise对象
+        resolve(result);
+    }
+} catch (e) {
+    reject(e);
+}
+```
 
 
 
