@@ -262,10 +262,10 @@ myReadFile('./resource/file.txt').then(data => {
 ```
 
 ## Promise 的几个关键问题
-- 如何改变Promise的状态
-  - resolve
-  - reject
-  - throw '出问题了'（抛出错误）
+### 如何改变Promise的状态
+- resolve
+- reject
+- throw '出问题了'（抛出错误）
 ```html
 <body>
 <script>
@@ -281,9 +281,9 @@ myReadFile('./resource/file.txt').then(data => {
 </script>
 </body>
 ```
-  
-- Promise能否指定多个回调，都会调用吗？
-  - 必须是状态改变后，然后才都会执行
+
+### Promise能否指定多个回调，都会调用吗？
+- 必须是状态改变后，然后才都会执行
 ```html
 <body>
 <script>
@@ -301,9 +301,9 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-- 改变状态与指定回调他俩的执行顺序问题
-  - 情况1：Promise里是同步任务，这样先执行改变状态
-  - 情况2：Promise里是异步任务，先执行回调.then
+### 改变状态与指定回调他俩的执行顺序问题
+- 情况1：Promise里是同步任务，这样先执行改变状态
+- 情况2：Promise里是异步任务，先执行回调.then
 ```html
 <body>
 <script>
@@ -323,13 +323,13 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-- .then方法的返回结果-<span style="color:#0000ff">新的Promise对象</span>
-  - 由.then指定回调的执行结果决定
-  - .then执行回调中无返回, 相当于``return了undefined``，和返回非Promise对象一样
-  - .then执行回调中有返回
-    - 抛出错误，.then的结果是失败的Promise（throw '有问题'）
-    - 返回非Promise对象，.then的结果是成功的Promise，return的值就是成功的结果
-    - 返回Promise对象，.then的结果状态由Promise的状态决定，.then的结果值就是Promise返回的结果值
+### then方法的返回结果-<span style="color:#0000ff">新的Promise对象</span>
+- 由.then指定回调的执行结果决定
+- .then执行回调中无返回, 相当于``return了undefined``，和返回非Promise对象一样
+- .then执行回调中有返回
+  - 抛出错误，.then的结果是失败的Promise（throw '有问题'）
+  - 返回非Promise对象，.then的结果是成功的Promise，return的值就是成功的结果
+  - 返回Promise对象，.then的结果状态由Promise的状态决定，.then的结果值就是Promise返回的结果值
 ```html
 <body>
 <script>
@@ -353,7 +353,7 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-- 串联多个任务（链式调用）
+### 串联多个任务（链式调用）
 ```html
 <body>
 <script>
@@ -375,7 +375,8 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-- 异常穿透，就是在链式调用最后指定失败的回调
+### 异常穿透
+- 就是在链式调用最后指定失败的回调
 ```html
 <body>
 <script>
@@ -394,7 +395,8 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-- 中断Promise链，只有一种方式，返回一个pedding状态的Promise
+### 中断Promise链
+- 只有一种方式，返回一个pedding状态的Promise
 ```html
 <body>
 <script>
@@ -414,22 +416,18 @@ myReadFile('./resource/file.txt').then(data => {
 
 ## 自定义Promise
 - Promise构造函数中
-  - executor()执行
-  - 对应resolve和reject的回调函数，以及throw情况（在executor外加try...catch）
-  - 属性设置（promiseState和promiseResult），this指向问题
-  - Promise状态只能改变一次的设置
+  - executor()执行器
+  - 属性设置 ``promiseState`` 和 ``promiseResult``，注意this指向问题
+  - 对应 ``resolve`` 和 ``reject`` 的回调函数 ``修改状态``
+  - throw情况（在executor外加try...catch），执行 ``reject``
+  - Promise状态只能改变一次的设置，加判断
 
 - then方法中
-  - 状态判断``fulfilled``和``rejected``，执行回调，返回结果
-
-- 当Promise里为异步任务
-  - 此时状态为``pedding``状态，而且也没接到状态值
-  - 要将回调保存``本地callback对象中``
-  - 等执行Promise构造函数中回调后，再执行callback对象中保存过的回调
+  - 状态判断 ``fulfilled`` 和 ``rejected``，执行传入回调，返回结果
   
 - 代码
-  - promise.js创建``Promise构造函数``和``then方法``
-  - html中引入文件，new Promise就不是全局的Promise了，而是创建的``Promise构造函数``
+  - promise.js创建 ``Promise构造函数`` 和 ``then方法``
+  - html中引入文件，new Promise就不是全局的Promise了，而是我们创建的 ``Promise构造函数``
 ```js
 // 构造函数
 function Promise(executor) {
@@ -497,10 +495,14 @@ Promise.prototype.then = function (onResolved, onRejected) {
         onRejected(this.promiseResult);
     }
 
-    // 异步任务时，要判断pedding状态
+    // 针对异步任务时，要判断pedding状态
     if (this.promiseState === 'pedding') {
         // 此时构造函数中状态不确定，要保存回调函数
         // 异步任务，最后还是要执行到上面构造函数
+        // this.callback.push({
+        //     onResolved: onResolved,
+        //     onRejected: onRejected
+        // });
         this.callback.push({
             onResolved: onResolved,
             onRejected: onRejected
@@ -508,9 +510,14 @@ Promise.prototype.then = function (onResolved, onRejected) {
     }
 };
 ```
+- 当Promise里为异步任务
+  - 此时状态为 ``pedding`` 状态，而且也没接到状态值
+  - 要将then传入的回调保存 ``本地callback变量`` 中
+  - 等执行Promise构造函数中 ``改变状态后``，再执行callback对象中 ``保存过then传入的回调``
+
 - 当Promise执行多个回调时
-  - 后面的回调会覆盖前面的
-  - 将Promise构造函数中``callback存为数组形式``，再去遍历执行保存过的回调
+  - then传入的回调，后面会覆盖前面的
+  - 所以将Promise构造函数中 ``callback存为数组形式``
 
 html中
 ```html
@@ -547,10 +554,10 @@ html中
 </body>
 ```
 
-- 同步任务then方法返回结果的实现
-  - 回顾``关键问题中``then方法的返回结果
-  - 而我们创建的Promise返回undefined，是因为我们的then方法并没有return
-  - 在then方法外层返回新的Promise，但状态不会由执行回调的结果决定，对回调结果进行判断给.then返回值
+### 同步任务then方法返回结果的实现
+- 回顾``关键问题中``then方法的返回结果
+- 下面代码返回 ``undefined``，是因为我们的then方法里并没有return
+- 在then方法外层返回新的Promise，对回调结果进行判断 ``给.then返回值``
 ```html
 <head>
     <script src="./promise.js"></script>
@@ -602,7 +609,9 @@ Promise.prototype.then = function (onResolved, onRejected) {
 }
 ```
 
-- 异步任务then方法返回结果的实现
+### 异步任务then方法返回结果的实现
+- 将 ``then传入的回调`` 存到函数中
+- 当Promise状态改变，执行存起来的函数
 ```html
 <head>
     <script src="./promise.js"></script>
@@ -662,8 +671,8 @@ Promise.prototype.catch = function (onRejected) {
 ```
 
 ### 异常穿透
-- 像（关键问题中异常穿透）在链式调用的最后指定一个``catch``失败的回调
-- 状态失败的话，直接走最后的``catch``
+- 回顾 ``关键问题中异常穿透`` 在链式调用的最后指定一个 ``catch`` 失败的回调
+- 状态失败的话，直接走最后的 ``catch``
 ```html
 <head>
     <script src="./promise.js"></script>
@@ -688,8 +697,8 @@ Promise.prototype.catch = function (onRejected) {
 ```
 - 这样会报``TypeError: onRejected is not a function``
 - 因为上面.then中并没由传入失败的回调
-- 我们要在then方法实现中，刚进的地方加入判断
-- 执行``throw reason;``，这样往下.then继续调用失败的回调，直到.catch
+- 我们要在then方法实现中，刚进的地方加回调参数的判断
+- 执行 ``throw reason;`` 返回新的Promise，这样往下.then继续调用失败的回调，直到.catch
 ```js
 Promise.prototype.then = function (onResolved, onRejected) {
     // 判断回调参数
@@ -704,8 +713,6 @@ Promise.prototype.then = function (onResolved, onRejected) {
 
 ### 值传递
 - 另外还存在.then回调都不传的情况
-- 与上面``异常穿透``类似，给then方法有返回值
-- 这样then方法返回结果是新的Promise，会继续执行.then
 ```html
 <head>
     <script src="./promise.js"></script>
@@ -727,7 +734,8 @@ Promise.prototype.then = function (onResolved, onRejected) {
 </script>
 </body>
 ```
-- 在then方法实现中，加入回调参数的判断
+- 与上面 ``异常穿透`` 类似，加回调参数的判断给返回值
+- 这样then方法返回结果是新的Promise，会继续执行.then
 ```js
 // 值传递情况
 if (typeof onResolved !== 'function') {
@@ -739,8 +747,8 @@ if (typeof onResolved !== 'function') {
 ```
 
 ### Promise.resolve() 方法的实现
-- ``Promise的API``中Promise.resolve()方法
-- 返回一个Promise对象
+- 回顾 ``Promise的API`` 中Promise.resolve()方法
+- 快速返回一个Promise对象
 ```html
 <head>
     <script src="./promise.js"></script>
@@ -775,4 +783,159 @@ Promise.resolve = function (value) {
     });
 };
 ```
+
+### Promise.reject() 方法的实现
+- 回顾 ``Promise的API`` 中Promise.resolve()方法
+- 快速返回一个Promise对象
+```html
+<head>
+    <script src="./promise.js"></script>
+</head>
+<body>
+<script>
+    // const p = Promise.reject('error');
+    const p  = Promise.reject(new Promise((resolve, reject) => {
+        resolve('ok');
+        // reject('error');
+    }));
+
+    console.log(p);
+</script>
+</body>
+```
+- 传入 非Promise对象，返回失败的Promise对象，结果值为传入值
+- 传入 Promise对象，返回失败的Promise对象，结果值为传入的Promise对象
+- 总结：返回一个失败的Promise，结果值为传入值
+```js
+// 添加 reject方法
+Promise.reject = function (value) {
+    return new Promise((resolve, reject) => {
+        reject(value);
+    });
+};
+```
+
+### Promise.all() 方法的实现
+- 回顾 ``Promise的API`` 中Promise.resolve()方法
+- 接收Promise对象的一个数组
+- 返回一个Promise对象
+```html
+<head>
+    <script src="./promise.js"></script>
+</head>
+<body>
+<script>
+    const p1 = new Promise((resolve, reject) => {
+        resolve('ok1');
+    });
+    const p2 = Promise.resolve('ok2');
+    const p3 = Promise.resolve('ok3');
+    // const p4 = Promise.reject('error');
+    
+    const result = Promise.all([p1, p2, p3]);
+    console.log(result);
+</script>
+</body>
+```
+- 所有的Promise成功才成功，结果值为三个Promise结果值的数组
+```js
+// 添加 all方法
+Promise.all = function (promiseArr) {
+    return new Promise((resolve, reject) => {
+        // 计数
+        let count = 0;
+        let resultArr = [];
+        for (let i = 0; i < promiseArr.length; i++) {
+            promiseArr[i].then(data => {
+                // 对象状态是成功
+                count++;
+                // 注意有顺序问题
+                resultArr[i] = data;
+                // 计数，所有的状态都成功后，调成功，返回成功结果的数组
+                if (count === promiseArr.length) {
+                    resolve(resultArr);
+                }
+            }, err => {
+                reject(err);
+            });
+        }
+    });
+};
+```
+
+### Promise.race() 方法的实现
+- 回顾 ``Promise的API`` 中Promise.race()方法
+- 接收Promise对象的一个数组
+- 返回一个Promise对象
+```html
+<head>
+    <script src="./promise.js"></script>
+</head>
+<body>
+<script>
+    const p1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('ok1')
+        }, 1000);
+    });
+    const p2 = Promise.resolve('ok2');
+    const p3 = Promise.resolve('ok3');
+    const raceResult = Promise.race([p1, p2, p3]);
+    console.log(raceResult);
+</script>
+</body>
+```
+- 谁先改变状态就返回谁的值
+```js
+// 添加 race方法
+Promise.race = function (promiseArr) {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < promiseArr.length; i++) {
+            // 谁先改变状态就返回谁的值
+            promiseArr[i].then(data => {
+                resolve(data);
+            }, err => {
+                reject(err);
+            });
+        }
+    });
+};
+```
+
+### 注意点：then方法回调里是异步执行
+- 系统的then方法里是异步执行
+- 而我们实现的不是，要在执行回调的地方加定时器，让它异步执行
+```html
+<head>
+    <script src="./promise.js"></script>
+</head>
+<body>
+<script>
+    const p = new Promise((resolve, reject) => {
+        resolve('ok');
+        console.log(111);
+    });
+    p.then(data => {
+        console.log(222);
+    });
+    console.log(333);
+    // 输出 111 333 222
+</script>
+</body>
+```
+```js
+// then方法中执行回调的地方加定时器
+if (this.promiseState === 'fulfilled') {
+    setTimeout(() => {
+        // 调公用方法，传入执行回调
+        callback(onResolved);
+    });
+}
+```
+
+
+
+
+
+
 
