@@ -9,6 +9,7 @@ module.exports =
         '/about/',
         '/ajax/',
         '/promise/',
+        '/axios/',
         // 数组的扩展形式
         {
             title: 'vue学习',

@@ -934,7 +934,127 @@ if (this.promiseState === 'fulfilled') {
 ```
 
 
+## async 与 await
+### async函数
+- 返回值为Promise对象
+- 函数返回非Promise情况，返回成功的Promise对象，返回值为结果值
+- 函数返回Promise情况，状态和结果值和返回Promise的一样
+- 抛出异常，返回失败的Promise对象，抛出的值为结果值
+```html
+<body>
+<script>
+    async function main() {
+        // 1、返回值是非Promise情况，返回成功的Promise对象，返回值为结果值
+        // return 123;
+        // 2、返回值是Promise情况，状态和结果值和返回的一样
+        // return new Promise((resolve, reject) => {
+        //     // resolve('ok');
+        //     reject('error');
+        // });
+        // 3、抛出异常，返回失败的Promise对象，抛出的值为结果值
+        throw '有问题';
+    }
 
+    // async函数返回的结果
+    const result = main();
+    console.log(result);
+</script>
+</body>
+```
+
+### await表达式
+- await哟测的表达式一般为Promise对象，也可以是其他的值
+- 如果表达式是Promise对象，await返回的是成功Promise的值
+- 如果表达式时其它值，直接将此值作为await的返回值
+- 注意：
+  - await必须写在async函数中，但async函数中可以没有await
+  - 如果await的Promise失败了，就会抛异常，要通过try...catch捕获
+```html
+<body>
+<script>
+    async function main() {
+
+        // 1、右侧为Promise情况，返回成功Promise的值
+        const result1 = await Promise.resolve('ok');
+        console.log(result1);
+        // 2、右侧为非Promise情况，直接返回此值
+        const result2 = await 20;
+        console.log(result2);
+        // 3、失败的Promise情况，加try...catch
+        try {
+            const result3 = await Promise.reject('error');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    main();
+</script>
+</body>
+```
+
+### async与await结合（简洁）
+```js
+// 读取文件内容
+const fs = require('fs');
+const mineReadFile = require('util').promisify(fs.readFile);
+
+// 回调函数方式
+fs.readFile('./resource/1.txt', (err, data1) => {
+    if (err) throw err;
+    fs.readFile('./resource/2.txt', (err, data2) => {
+        if (err) throw err;
+        fs.readFile('./resource/3.txt', (err, data3) => {
+            if (err) throw err;
+            console.log(data1 + data2 + data3);
+        });
+    });
+});
+
+// async与await结合
+async function main() {
+    try {
+        const data1 = await mineReadFile('./resource/1.txt');
+        const data2 = await mineReadFile('./resource/2.txt');
+        const data3 = await mineReadFile('./resource/3.txt');
+        console.log(data1 + data2 + data3, 'async与await结合');
+    } catch (e) {
+        console.log(e);
+    }
+}
+main();
+```
+
+```html
+<body>
+<button>发送请求</button>
+<script>
+    function sendAjax(url) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve(xhr.response);
+                    } else {
+                        reject('请求失败');
+                    }
+                }
+            };
+        });
+    }
+
+    const btn = document.getElementsByTagName('button')[0];
+
+    btn.addEventListener('click', async () => {
+        const reply = await sendAjax('http://127.0.0.1:8020/server/get');
+        console.log(reply);
+    });
+</script>
+</body>
+```
 
 
 
