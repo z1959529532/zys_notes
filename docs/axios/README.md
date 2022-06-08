@@ -115,5 +115,56 @@ cdn引入
 </body>
 ```
 
+## axios的配置对象
+* baseURL：通用baseUrl
+* url：地址
+* method：'get'
+* transformRequest
+* transformResponse
+* headers：请求头信息（一般验证）
+* params：设置url参数
+* data： 请求体设置（对象形式，字符串形式）
+* timeout：超时时间设置
+* responseType：响应体格式设置（默认json）
+
+## axios的默认配置
+- 设置默认请求类型
+  - ```axios.defaults.method = 'GET';```
+- 设置默认通用baseUrl
+  - ```axios.defaults.baseURL = 'http://localhost:3000';```
+- 设置默认请求参数 ```params```
+- 设置默认请求超时时间 ```timeout```
+
+## axios创建实例对象发送ajax请求
+* const myAxios = axios.create(```config...```); 
+* 优点：可针对不同的服务器不同配置
+```html
+<body>
+<script>
+    // 创建实例对象
+    // http://localhost:3000/posts
+    const myAxios = axios.create({
+        baseURL: 'http://localhost:3000',
+        timeout: 2000
+    });
+    // 这里 myAxios 和 axios 的功能几乎一样
+    console.log(myAxios);
+
+    // 1
+    myAxios({
+        method: 'GET',
+        url: 'posts'
+    }).then(response => {
+        console.log(response, 1122);
+    });
+    // 2
+    myAxios.get('posts').then(response => {
+        console.log(response, 3344);
+    });
+</script>
+</body>
+```
+
+
 
 
