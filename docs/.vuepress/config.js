@@ -15,6 +15,7 @@ module.exports = {
         /** 5、侧边栏 */
         sidebar: sidebarConfig,  // 自定义侧边栏
         // sidebar: 'auto',
+        sidebarDepth: 2,
         
         /** 7、更新时间 */
         lastUpdated: '更新时间'

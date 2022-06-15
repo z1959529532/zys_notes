@@ -20,6 +20,16 @@ module.exports =
                 '/vue/learn-vue2',
                 '/vue/learn-vue3',
             ],
+        },
+        {
+            title: '面试题',
+            path: '/interview/',
+            collapsable: false,
+            sidebarDepth: 2,
+            children: [
+                '/interview/vue',
+                '/interview/css',
+            ],
         }
     ];
 
