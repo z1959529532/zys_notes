@@ -8,7 +8,7 @@ title: axios
 
 - 使用 ```json-server``` 快速搭建Http服务
   - npm install -g json-server
-  - 创建 ```db.json``` 文件
+  - 创建 ```db.json``` 文件存放数据
   - 启动服务 ```json-server --watch db.json```
   - 操作参考github
 
@@ -165,6 +165,112 @@ cdn引入
 </body>
 ```
 
+## axios拦截器
+* ```请求```拦截器
+* ```响应```拦截器
+* 多个拦截器执行顺序：请求拦截器后进先执行，响应拦截器先进先执行
+* 请求拦截器config(配置)修改，响应拦截器response修改
 
+```html
+<body>
+<script>
+    // 设置 请求 拦截器
+    axios.interceptors.request.use(function (config) {
+        console.log('请求拦截器1 成功');
+        // 修改config参数
+        config.params = {a: 100};
+        return config;
+        // throw '有问题';
+    }, function (error) {
+        console.log('请求拦截器1 失败');
+        return Promise.reject(error);
+    });
+    axios.interceptors.request.use(function (config) {
+        console.log('请求拦截器2 成功');
+        config.timeout = 2000;
+        return config;
+        // throw '有问题';
+    }, function (error) {
+        console.log('请求拦截器2 失败');
+        return Promise.reject(error);
+    });
+
+    // 设置 响应 拦截器
+    axios.interceptors.response.use(function (response) {
+        console.log('响应拦截器1 成功');
+        // return response;
+        return response.data;
+    }, function (error) {
+        console.log('响应拦截器1 失败');
+        return Promise.reject(error);
+    });
+    axios.interceptors.response.use(function (response) {
+        console.log('响应拦截器2 成功');
+        return response;
+    }, function (error) {
+        console.log('响应拦截器2 失败');
+        return Promise.reject(error);
+    });
+
+    // Promise
+
+    axios({
+        method: 'GET',
+        url: 'http://localhost:3000/posts'
+    }).then(response => {
+        console.log(response, 1122);
+    }).catch(err => {
+        console.log(err, 3344);
+    });
+</script>
+</body>
+```
+
+
+
+
+
+
+## axios取消请求
+* 服务延迟响应：json-server --watch db.json -d 2000
+* 参照axios中的 ```CancelToken```
+[CancelToken](https://github.com/axios/axios#canceltoken-deprecated)   
+
+```html
+<body>
+<button>发送请求</button>
+<button>取消请求</button>
+<script>
+    const btns = document.getElementsByTagName('button');
+    // 2、声明全局变量
+    let cancel = null;
+
+    btns[0].onclick = () => {
+        // 如果上一次请求未完成
+        if (cancel != null) {
+            cancel();
+        }
+
+        axios({
+            method: 'GET',
+            url: 'http://localhost:3000/posts',
+            // 1、添加配置对象的属性
+            cancelToken: new axios.CancelToken(function (c) {
+                // 3、赋值
+                cancel = c;
+            })
+        }).then(response => {
+            console.log(response);
+            // 请求成功后置为null
+            cancel = null;
+        });
+    }
+
+    btns[1].onclick = () => {
+        cancel();
+    }
+</script>
+</body>
+```
 
 
