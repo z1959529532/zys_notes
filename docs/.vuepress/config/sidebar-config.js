@@ -22,7 +22,7 @@ module.exports =
             ],
         },
         {
-            title: '面试题',
+            title: '问题积累',
             path: '/interview/',
             collapsable: false,
             sidebarDepth: 2,
