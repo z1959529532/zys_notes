@@ -274,3 +274,61 @@ cdn引入
 ```
 
 
+
+
+## 模拟axios创建过程
+```html
+<body>
+<script>
+    // 构造函数
+    function Axios(config) {
+        // 初始化
+        this.defaults = config;  // 创建defaults默认属性
+        this.interceptors = {
+            request: {},
+            response: {}
+        }
+    }
+
+    // 原型添加相关方法
+    Axios.prototype.request = function (config) {
+        console.log('发送ajax请求');
+    }
+    Axios.prototype.get = function (config) {
+        return this.request(config);
+    }
+    Axios.prototype.post = function (config) {
+        return this.request(config);
+    }
+
+    // 声明函数
+    function createInstance(defaultConfig) {
+        // 实例化一个对象
+        // 此时就可以 context.get()，但不能当函数 context()
+        let context = new Axios(defaultConfig);
+        // 创建请求函数
+        // instance是一个函数 instance()，但不能当对象 instance.get()
+        let instance = Axios.prototype.request.bind(context);
+        // 将Axios.prototype对象中的方法加到instance函数中
+        Object.keys(Axios.prototype).forEach(key => {
+            // console.log(key, Axios.prototype[key]);
+            // this.defaults  this.interceptors
+            instance[key] = Axios.prototype[key].bind(context);
+        });
+
+        // 为 instance 函数对象添加属性 defaults和interceptors
+        Object.keys(context).forEach(key => {
+            // console.log(key, context[key]);
+            instance[key] = context[key];
+        });
+        return instance;
+    }
+
+    let axios = createInstance();
+    axios({method: 'GET'});
+    axios.get({});
+    axios.post({});
+
+</script>
+</body>
+```
