@@ -3,27 +3,31 @@ title: axios
 ---
 
 ## 前置知识
+
 * Ajax
 * Promise
 
 - 使用 ```json-server``` 快速搭建Http服务
-  - npm install -g json-server
-  - 创建 ```db.json``` 文件存放数据
-  - 启动服务 ```json-server --watch db.json```
-  - 操作参考github
+    - npm install -g json-server
+    - 创建 ```db.json``` 文件存放数据
+    - 启动服务 ```json-server --watch db.json```
+    - 操作参考github
 
 ## axios的基本使用
+
 * 可在浏览器端发送Ajax请求
 * 在node.js中发送Http请求
-* 支持Promise   
+* 支持Promise
 
 - 安装   
-npm install axios   
-yarn add axios   
-cdn引入   
+  npm install axios   
+  yarn add axios   
+  cdn引入
 
 - 基本使用练习
+
 ```html
+
 <body>
 <button>发送 GET 请求</button>
 <button>发送 POST 请求</button>
@@ -84,6 +88,7 @@ cdn引入
 ```
 
 ## axios其他方式发送请求（axios.get...）
+
 * axios.request(config: {})
 * axios.get(url, config: {})
 * axios.post(url, {data, config: {}})
@@ -91,7 +96,9 @@ cdn引入
 * axios.delete(url, config: {})
 
 - 练习与上类似
+
 ```html
+
 <body>
 <script>
     const btns = document.querySelectorAll('button');
@@ -116,6 +123,7 @@ cdn引入
 ```
 
 ## axios的配置对象
+
 * baseURL：通用baseUrl
 * url：地址
 * method：'get'
@@ -128,17 +136,21 @@ cdn引入
 * responseType：响应体格式设置（默认json）
 
 ## axios的默认配置
+
 - 设置默认请求类型
-  - ```axios.defaults.method = 'GET';```
+    - ```axios.defaults.method = 'GET';```
 - 设置默认通用baseUrl
-  - ```axios.defaults.baseURL = 'http://localhost:3000';```
+    - ```axios.defaults.baseURL = 'http://localhost:3000';```
 - 设置默认请求参数 ```params```
 - 设置默认请求超时时间 ```timeout```
 
 ## axios创建实例对象发送ajax请求
-* const myAxios = axios.create(```config...```); 
+
+* const myAxios = axios.create(```config...```);
 * 优点：可针对不同的服务器不同配置
+
 ```html
+
 <body>
 <script>
     // 创建实例对象
@@ -166,12 +178,14 @@ cdn引入
 ```
 
 ## axios拦截器
+
 * ```请求```拦截器
 * ```响应```拦截器
 * 多个拦截器执行顺序：请求拦截器后进先执行，响应拦截器先进先执行
 * 请求拦截器config(配置)修改，响应拦截器response修改
 
 ```html
+
 <body>
 <script>
     // 设置 请求 拦截器
@@ -226,17 +240,14 @@ cdn引入
 </body>
 ```
 
-
-
-
-
-
 ## axios取消请求
+
 * 服务延迟响应：json-server --watch db.json -d 2000
 * 参照axios中的 ```CancelToken```
-[CancelToken](https://github.com/axios/axios#canceltoken-deprecated)   
+  [CancelToken](https://github.com/axios/axios#canceltoken-deprecated)
 
 ```html
+
 <body>
 <button>发送请求</button>
 <button>取消请求</button>
@@ -273,50 +284,45 @@ cdn引入
 </body>
 ```
 
-
-
-
 ## 模拟axios创建过程
+
 ```html
+
 <body>
 <script>
     // 构造函数
     function Axios(config) {
-        // 初始化
-        this.defaults = config;  // 创建defaults默认属性
+        // 默认属性
+        this.defaults = config;
         this.interceptors = {
             request: {},
             response: {}
         }
     }
 
-    // 原型添加相关方法
     Axios.prototype.request = function (config) {
-        console.log('发送ajax请求');
+        console.log('发送请求，类型为：' + config.method);
     }
-    Axios.prototype.get = function (config) {
-        return this.request(config);
+    Axios.prototype.get = function () {
+        this.request({method: 'GET'});
     }
-    Axios.prototype.post = function (config) {
-        return this.request(config);
+    Axios.prototype.post = function () {
+        this.request({method: 'POST'});
     }
 
     // 声明函数
     function createInstance(defaultConfig) {
-        // 实例化一个对象
-        // 此时就可以 context.get()，但不能当函数 context()
         let context = new Axios(defaultConfig);
-        // 创建请求函数
-        // instance是一个函数 instance()，但不能当对象 instance.get()
+        context.request({method: 'get'});  // context对象
+
         let instance = Axios.prototype.request.bind(context);
-        // 将Axios.prototype对象中的方法加到instance函数中
+        instance({method: 'get'});  // instance函数
+
+        // 往 instance函数 上添加属性 request和defaults等
         Object.keys(Axios.prototype).forEach(key => {
             // console.log(key, Axios.prototype[key]);
-            // this.defaults  this.interceptors
             instance[key] = Axios.prototype[key].bind(context);
         });
-
-        // 为 instance 函数对象添加属性 defaults和interceptors
         Object.keys(context).forEach(key => {
             // console.log(key, context[key]);
             instance[key] = context[key];
@@ -326,9 +332,8 @@ cdn引入
 
     let axios = createInstance();
     axios({method: 'GET'});
-    axios.get({});
-    axios.post({});
-
+    axios.request({method: 'GET'});
+    axios.post();
 </script>
 </body>
 ```
