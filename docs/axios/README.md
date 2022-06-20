@@ -287,7 +287,6 @@ title: axios
 ## 模拟axios创建过程
 
 ```html
-
 <body>
 <script>
     // 构造函数
