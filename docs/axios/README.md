@@ -336,3 +336,6 @@ title: axios
 </script>
 </body>
 ```
+
+## axios发送请求的过程
+* 调request --> chain里的dispatchRequest --> xhr（XMLHttpRequest）ajax请求
