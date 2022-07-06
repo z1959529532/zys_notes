@@ -23,3 +23,16 @@ mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度�
   Vue.use(插件名)、Vue.component
 * 编写形式
 
+## keep-alive的作用
+* 是Vue的一个内置组件，可以使被包含的组建保留状态，避免重新渲染（不走destoryed）
+* 只有使用keep-alive才生效的两个函数
+  * activated(){}
+  * deactivated (to, from, next){}
+
+## vue-router中 hash与history有什么区别
+hash模式地址栏url会带#
+history每次刷新会重新请求整个网址，也就是重新请求服务器
+
+
+
+
