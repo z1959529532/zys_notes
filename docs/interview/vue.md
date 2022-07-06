@@ -30,7 +30,8 @@ mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度�
   * deactivated (to, from, next){}
 
 ## vue-router中 hash与history有什么区别
-hash模式地址栏url会带#
+hash模式地址栏url会带#   
+兼容性的问题   
 history每次刷新会重新请求整个网址，也就是重新请求服务器
 
 
