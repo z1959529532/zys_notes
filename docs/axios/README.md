@@ -284,7 +284,42 @@ title: axios
 </body>
 ```
 
+## axios源码解析
+```
+/dist                       打包输出路径
+/lib                        项目源码目录
+  /adapters                 定义请求适配器 xhr、http
+    /http.js                实现http适配器
+    /xhr.js                 实现xhr适配器
+  /cancel                   定义取消功能
+  /core                     核心功能
+    /Axios.js               axios的核心主类
+    /dispatchRequest.js     发送请求的函数，决定调xhr和http
+    /InterceptorManager.js  拦截器的管理器
+  /axios.js                 axios的入口文件
+```
+
+## 查看axios创建过程   
+```
+查看axios创建过程  F12查看源码ctrl+p
+axios.js文件  38断点  下一步->创建实例
+下一步-> Axios.js  挂载配置属性方法
+```
+
+```html
+<head>
+  <!--引用包文件-->
+  <script src="./node_modules/axios/dist/mine-axios.js"></script>
+</head>
+<body>
+<script>
+  console.log(axios);
+</script>
+</body>
+```
+
 ## 模拟axios创建过程
+就是创建函数（函数本身可以传配置），往函数身上挂属性的过程
 
 ```html
 <body>
@@ -312,7 +347,7 @@ title: axios
     // 声明函数
     function createInstance(defaultConfig) {
         let context = new Axios(defaultConfig);
-        context.request({method: 'get'});  // context对象
+        context.request({method: 'get'});  // // 实例化的context对象
 
         let instance = Axios.prototype.request.bind(context);
         instance({method: 'get'});  // instance函数
@@ -337,5 +372,87 @@ title: axios
 </body>
 ```
 
-## axios发送请求的过程
+## 查看axios发送请求的过程
+```
+查看axios发送请求的过程 F12查看源码ctrl+p
+Axios.js文件  36行断点
+传入判断  config合并  请求方法设定
+返回一个成功的promise，chain里的dispatchRequest是返回值
+下一步dispatchRequest.js文件  请求信息的设置
+调用xhrAdapter适配器，发送xhr（XMLHttpRequest）ajax请求
+```
 * 调request --> chain里的dispatchRequest --> xhr（XMLHttpRequest）ajax请求
+
+## 模拟axios发送请求过程
+```html
+<body>
+<script>
+  // 1、声明构造函数
+  function Axios(config) {
+    this.config = config;
+  }
+
+  Axios.prototype.request = function (config) {
+    // 发送请求
+    // config合并处理其它操作
+    // 创建promise对象
+    let promise = Promise.resolve(config);
+    // 声明一个数组
+    let chains = [dispatchRequest, undefined];  // undefined占位
+    // 循环处理
+    let result = promise.then(chains[0], chains[1]);
+    return result;
+  }
+
+  // 2、dispatchRequest函数
+  function dispatchRequest(config) {
+    // 调用适配器发送请求
+    return xhrAdapter(config).then(response => {
+      console.log(response);
+      // 对响应的结果做处理
+      return response;
+    }, err => {
+      console.log(err);
+      throw err;
+    });
+  }
+
+  // 3、adapter适配器
+  function xhrAdapter(config) {
+    console.log('adapter');
+    return new Promise((resolve, reject) => {
+      // 发送ajax请求
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'json'
+      xhr.open(config.method, config.url);
+      xhr.send();
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve({
+              config: config,
+              data: xhr.response,
+              headers: xhr.getAllResponseHeaders(),
+              request: xhr,
+              status: xhr.status,
+              statusText: xhr.statusText
+            });
+          } else {
+            reject(new Error('失败'));
+          }
+        }
+      }
+    });
+  }
+
+  // 4、创建axios函数
+  let axios = Axios.prototype.request.bind(null);
+  axios({
+    method: 'GET',
+    url: 'http://localhost:3000/posts'
+  }).then(response => {
+    console.log(response, 1122);
+  });
+</script>
+</body>
+```
