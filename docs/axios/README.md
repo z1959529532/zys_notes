@@ -4,13 +4,14 @@ title: axios
 
 ## 前置知识
 
-* Ajax
-* Promise
+* 会Ajax
+* 会Promise
 
 - 使用 ```json-server``` 快速搭建Http服务
     - npm install -g json-server
     - 创建 ```db.json``` 文件存放数据
     - 启动服务 ```json-server --watch db.json```
+    - ```json-server --watch db.json -d 2000```
     - 操作参考github
 
 ## axios的基本使用
@@ -24,7 +25,7 @@ title: axios
   yarn add axios   
   cdn引入
 
-- 基本使用练习
+- 基本使用练习（github参考：axios、json-server）
 
 ```html
 
@@ -34,7 +35,7 @@ title: axios
 <button>发送 PUT 请求</button>
 <button>发送 DELETE 请求</button>
 <script>
-    const btns = document.querySelectorAll('button');
+    const btns = document.getElementsByTagName('button');
 
     // get请求
     btns[0].onclick = () => {
@@ -87,15 +88,13 @@ title: axios
 </body>
 ```
 
-## axios其他方式发送请求（axios.get...）
+## axios其他方式发送请求（axios.get等）
 
 * axios.request(config: {})
 * axios.get(url, config: {})
 * axios.post(url, {data, config: {}})
 * axios.put(url, {data, config: {}})
 * axios.delete(url, config: {})
-
-- 练习与上类似
 
 ```html
 
@@ -144,7 +143,7 @@ title: axios
 - 设置默认请求参数 ```params```
 - 设置默认请求超时时间 ```timeout```
 
-## axios创建实例对象发送ajax请求
+## 创建axios实例对象（配置默认配置）发送ajax请求
 
 * const myAxios = axios.create(```config...```);
 * 优点：可针对不同的服务器不同配置
@@ -226,8 +225,6 @@ title: axios
         return Promise.reject(error);
     });
 
-    // Promise
-
     axios({
         method: 'GET',
         url: 'http://localhost:3000/posts'
@@ -285,6 +282,7 @@ title: axios
 ```
 
 ## axios源码解析
+
 ```
 /dist                       打包输出路径
 /lib                        项目源码目录
@@ -299,29 +297,19 @@ title: axios
   /axios.js                 axios的入口文件
 ```
 
-## 查看axios创建过程   
+## 模拟axios创建过程
+
 ```
 查看axios创建过程  F12查看源码ctrl+p
 axios.js文件  38断点  下一步->创建实例
 下一步-> Axios.js  挂载配置属性方法
 ```
 
-```html
-<head>
-  <!--引用包文件-->
-  <script src="./node_modules/axios/dist/mine-axios.js"></script>
-</head>
-<body>
-<script>
-  console.log(axios);
-</script>
-</body>
-```
-
-## 模拟axios创建过程
-就是创建函数（函数本身可以传配置），往函数身上挂属性的过程
+* Axios.js核心主类中有默认属性defaults、interceptors，request方法
+* axios.js中创建实例，给函数挂载属性的过程
 
 ```html
+
 <body>
 <script>
     // 构造函数
@@ -372,7 +360,8 @@ axios.js文件  38断点  下一步->创建实例
 </body>
 ```
 
-## 查看axios发送请求的过程
+## 模拟axios发送请求过程
+
 ```
 查看axios发送请求的过程 F12查看源码ctrl+p
 Axios.js文件  36行断点
@@ -381,78 +370,306 @@ Axios.js文件  36行断点
 下一步dispatchRequest.js文件  请求信息的设置
 调用xhrAdapter适配器，发送xhr（XMLHttpRequest）ajax请求
 ```
-* 调request --> chain里的dispatchRequest --> xhr（XMLHttpRequest）ajax请求
 
-## 模拟axios发送请求过程
+* Axios.js核心主类中，原型request方法里进行传入判断、config合并、请求方法的设定，返回一个成功的
+    * let promise = Promise.resolve(config)；
+    * return promise.then(chain[0]=dispatchRequest，chain[1])
+* dispatchRequest（发送请求函数）中决定发送哪种请求，返回xhrAdapter请求结果
+* xhrAdapter（请求适配器）返回promise对象，promise里发送请求
+
 ```html
+
 <body>
 <script>
-  // 1、声明构造函数
-  function Axios(config) {
-    this.config = config;
-  }
+    // 1、声明构造函数
+    function Axios(config) {
+        this.config = config;
+    }
 
-  Axios.prototype.request = function (config) {
-    // 发送请求
-    // config合并处理其它操作
-    // 创建promise对象
-    let promise = Promise.resolve(config);
-    // 声明一个数组
-    let chains = [dispatchRequest, undefined];  // undefined占位
-    // 循环处理
-    let result = promise.then(chains[0], chains[1]);
-    return result;
-  }
+    Axios.prototype.request = function (config) {
+        // 发送请求
+        // config合并处理其它操作
+        // 创建promise对象
+        let promise = Promise.resolve(config);
+        // 声明一个数组
+        let chains = [dispatchRequest, undefined];  // undefined占位
+        // 循环处理
+        let result = promise.then(chains[0], chains[1]);
+        return result;
+    }
 
-  // 2、dispatchRequest函数
-  function dispatchRequest(config) {
-    // 调用适配器发送请求
-    return xhrAdapter(config).then(response => {
-      console.log(response);
-      // 对响应的结果做处理
-      return response;
-    }, err => {
-      console.log(err);
-      throw err;
+    // 2、dispatchRequest函数
+    function dispatchRequest(config) {
+        // 调用适配器发送请求
+        return xhrAdapter(config).then(response => {
+            console.log(response);
+            // 对响应的结果做处理
+            return response;
+        }, err => {
+            console.log(err);
+            throw err;
+        });
+    }
+
+    // 3、adapter适配器
+    function xhrAdapter(config) {
+        console.log('adapter');
+        return new Promise((resolve, reject) => {
+            // 发送ajax请求
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'json'
+            xhr.open(config.method, config.url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve({
+                            config: config,
+                            data: xhr.response,
+                            headers: xhr.getAllResponseHeaders(),
+                            request: xhr,
+                            status: xhr.status,
+                            statusText: xhr.statusText
+                        });
+                    } else {
+                        reject(new Error('失败'));
+                    }
+                }
+            }
+        });
+    }
+
+    // 4、创建axios函数
+    let axios = Axios.prototype.request.bind(null);
+    axios({
+        method: 'GET',
+        url: 'http://localhost:3000/posts'
+    }).then(response => {
+        console.log(response, 1122);
     });
-  }
+</script>
+</body>
+```
 
-  // 3、adapter适配器
-  function xhrAdapter(config) {
-    console.log('adapter');
-    return new Promise((resolve, reject) => {
-      // 发送ajax请求
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = 'json'
-      xhr.open(config.method, config.url);
-      xhr.send();
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            resolve({
-              config: config,
-              data: xhr.response,
-              headers: xhr.getAllResponseHeaders(),
-              request: xhr,
-              status: xhr.status,
-              statusText: xhr.statusText
-            });
-          } else {
-            reject(new Error('失败'));
-          }
+## 模拟axios拦截器原理
+
+* 通过拦截器管理器InterceptorManager保存回调
+* 在request处调用，整合，存在数组中
+* 通过promise链条方式执行回调
+
+```html
+
+<body>
+<script>
+    // 构造函数
+    function Axios(config) {
+        this.defaults = config;
+        this.interceptors = {
+            request: new InterceptorManager(),
+            response: new InterceptorManager()
         }
-      }
-    });
-  }
+    }
 
-  // 4、创建axios函数
-  let axios = Axios.prototype.request.bind(null);
-  axios({
-    method: 'GET',
-    url: 'http://localhost:3000/posts'
-  }).then(response => {
-    console.log(response, 1122);
-  });
+    Axios.prototype.request = function (config) {
+        // 难点与重点
+        let promise = Promise.resolve(config);
+        const chains = [dispatchRequest, undefined];
+        // 处理拦截器
+        // 请求拦截器放在前面,响应拦截器放在后面
+        this.interceptors.request.handlers.forEach(val => {
+            chains.unshift(val.fulfilled, val.rejected);
+        })
+        this.interceptors.response.handlers.forEach(val => {
+            chains.push(val.fulfilled, val.rejected);
+        })
+
+        while (chains.length > 0) {
+            promise = promise.then(chains.shift(), chains.shift())
+        }
+        return promise;
+    }
+
+    // 发送请求
+    function dispatchRequest() {
+        return new Promise((resolve, reject) => {
+            resolve({
+                status: 200,
+                statusText: 'OK'
+            })
+        })
+    }
+
+    // 拦截器管理器
+    function InterceptorManager() {
+        this.handlers = [];
+    }
+
+    InterceptorManager.prototype.use = function (fulfilled, rejected) {
+        this.handlers.push({
+            fulfilled,
+            rejected
+        })
+    }
+    // 创建axios函数
+    let context = new Axios({});
+    let axios = Axios.prototype.request.bind(context);
+    Object.keys(context).forEach(key => {
+        axios[key] = context[key];
+    });
+
+
+    // 设置 请求 拦截器
+    axios.interceptors.request.use(function (config) {
+        console.log('请求拦截器1 成功');
+        // 修改config参数
+        config.params = {a: 100};
+        return config;
+        // throw '有问题';
+    }, function (error) {
+        console.log('请求拦截器1 失败');
+        return Promise.reject(error);
+    });
+    axios.interceptors.request.use(function (config) {
+        console.log('请求拦截器2 成功');
+        config.timeout = 2000;
+        return config;
+        // throw '有问题';
+    }, function (error) {
+        console.log('请求拦截器2 失败');
+        return Promise.reject(error);
+    });
+
+    // 设置 响应 拦截器
+    axios.interceptors.response.use(function (response) {
+        console.log('响应拦截器1 成功');
+        // return response;
+        return response.data;
+    }, function (error) {
+        console.log('响应拦截器1 失败');
+        return Promise.reject(error);
+    });
+    axios.interceptors.response.use(function (response) {
+        console.log('响应拦截器2 成功');
+        return response;
+    }, function (error) {
+        console.log('响应拦截器2 失败');
+        return Promise.reject(error);
+    });
+
+    console.dir(axios);
+
+    axios({
+        method: 'GET',
+        url: 'http://localhost:3000/posts'
+    }).then(response => {
+        console.log(response, 1122);
+    }).catch(err => {
+        console.log(err, 3344);
+    });
+</script>
+</body>
+```
+
+## 模拟axios取消请求原理
+
+* cancelToken挂一个promise属性
+* 将改变这个promise状态的变量通过new CancelToken(function (c)暴露外部
+* 执行改变状态，发送请求中执行config.cancelToken.promise.then
+
+```html
+
+<body>
+<button>发送请求</button>
+<button>取消请求</button>
+<script>
+    // 构造函数
+    function Axios(config) {
+        this.defaults = config;
+    }
+
+    Axios.prototype.request = function (config) {
+        return dispatchRequest(config);
+    }
+
+    function dispatchRequest(config) {
+        return xhrAdapter(config);
+    }
+
+    function xhrAdapter(config) {
+        return new Promise((resolve, reject) => {
+            // 发送ajax请求
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'json'
+            xhr.open(config.method, config.url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve({
+                            config: config,
+                            data: xhr.response,
+                            headers: xhr.getAllResponseHeaders(),
+                            request: xhr,
+                            status: xhr.status,
+                            statusText: xhr.statusText
+                        });
+                    } else {
+                        reject(new Error('失败'));
+                    }
+                }
+            }
+            // 关于取消请求的处理
+            if (config.cancelToken) {
+                config.cancelToken.promise.then(value => {
+                    xhr.abort();
+                })
+            }
+        });
+    }
+
+    // 创建axios函数
+    let context = new Axios({});
+    let axios = Axios.prototype.request.bind(context);
+    console.dir(axios);
+
+    // cancelToken构造函数
+    function CancelToken(executer) {
+        let resolvePromise;
+        this.promise = new Promise((resolve) => {
+            resolvePromise = resolve;
+        })
+        // 调用executer函数
+        executer(function () {
+            resolvePromise();
+        })
+    }
+
+    const btns = document.getElementsByTagName('button');
+    let cancel = null;
+    btns[0].onclick = () => {
+        // 如果上一次请求未完成
+        if (cancel != null) {
+            cancel();
+        }
+
+        // 创建cancelToken的值
+        const cancelToken = new CancelToken(function (c) {
+            cancel = c;
+        })
+        axios({
+            method: 'GET',
+            url: 'http://localhost:3000/posts',
+            cancelToken: cancelToken
+        }).then(response => {
+            console.log(response);
+
+            // 请求成功后置为null
+            cancel = null;
+        });
+    }
+    btns[1].onclick = () => {
+        cancel();
+    }
 </script>
 </body>
 ```
