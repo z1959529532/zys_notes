@@ -298,15 +298,11 @@ title: axios
 ```
 
 ## 模拟axios创建过程
-
 ```
-查看axios创建过程  F12查看源码ctrl+p
-axios.js文件  38断点  下一步->创建实例
-下一步-> Axios.js  挂载配置属性方法
+Axios函数（Axios.js核心主类）中默认属性defaults、interceptors，原型挂request方法等
+createInstance函数（axios.js入口文件）
+然后给instance绑定request方法和挂载属性（.defaults、.get等）的过程
 ```
-
-* Axios.js核心主类中有默认属性defaults、interceptors，request方法
-* axios.js中创建实例，给函数挂载属性的过程
 
 ```html
 
@@ -361,7 +357,6 @@ axios.js文件  38断点  下一步->创建实例
 ```
 
 ## 模拟axios发送请求过程
-
 ```
 查看axios发送请求的过程 F12查看源码ctrl+p
 Axios.js文件  36行断点
@@ -369,13 +364,15 @@ Axios.js文件  36行断点
 返回一个成功的promise，chain里的dispatchRequest是返回值
 下一步dispatchRequest.js文件  请求信息的设置
 调用xhrAdapter适配器，发送xhr（XMLHttpRequest）ajax请求
-```
 
-* Axios.js核心主类中，原型request方法里进行传入判断、config合并、请求方法的设定，返回一个成功的
-    * let promise = Promise.resolve(config)；
-    * return promise.then(chain[0]=dispatchRequest，chain[1])
-* dispatchRequest（发送请求函数）中决定发送哪种请求，返回xhrAdapter请求结果
-* xhrAdapter（请求适配器）返回promise对象，promise里发送请求
+Axios.js核心主类中，原型request方法里进行传入判断、config合并、请求方法的设定
+  返回一个成功的promise
+  let promise = Promise.resolve(config);
+  let chains = [dispatchRequest, undefined];
+  return promise.then(chain[0]=dispatchRequest，chain[1]);
+dispatchRequest函数（决定发送请求函数xhr和http）返回adapter中请求的结果
+adapter（发送请求）返回promise对象，promise里发送请求
+```
 
 ```html
 
