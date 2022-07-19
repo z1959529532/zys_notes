@@ -572,9 +572,19 @@ Axios.js文件  36行断点
 
 ## 模拟axios取消请求原理
 
-* cancelToken挂一个promise属性
-* 将改变这个promise状态的变量通过new CancelToken(function (c)暴露外部
-* 执行改变状态，发送请求中执行config.cancelToken.promise.then
+```
+CancelToken函数（CancelToken.js）中原型挂一个promise
+将这个promise成功状态赋给一个变量暴露给外部
+cancelToken: new CancelToken(function (c) {
+    cancel = c;
+})
+当外部执行改变成功状态时，就会执行发送请求处的
+if (config.cancelToken) {
+    config.cancelToken.promise.then(value => {
+        xhr.abort();
+    })
+}
+```
 
 ```html
 
@@ -586,15 +596,12 @@ Axios.js文件  36行断点
     function Axios(config) {
         this.defaults = config;
     }
-
     Axios.prototype.request = function (config) {
         return dispatchRequest(config);
     }
-
     function dispatchRequest(config) {
         return xhrAdapter(config);
     }
-
     function xhrAdapter(config) {
         return new Promise((resolve, reject) => {
             // 发送ajax请求
@@ -626,12 +633,6 @@ Axios.js文件  36行断点
             }
         });
     }
-
-    // 创建axios函数
-    let context = new Axios({});
-    let axios = Axios.prototype.request.bind(context);
-    console.dir(axios);
-
     // cancelToken构造函数
     function CancelToken(executer) {
         let resolvePromise;
@@ -643,6 +644,10 @@ Axios.js文件  36行断点
             resolvePromise();
         })
     }
+
+    // 创建axios函数
+    let context = new Axios({});
+    let axios = Axios.prototype.request.bind(context);
 
     const btns = document.getElementsByTagName('button');
     let cancel = null;
