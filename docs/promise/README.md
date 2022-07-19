@@ -2,37 +2,26 @@
 title: Promise
 ---
 
-## prmise
-解决回调地狱的问题，在指定回调和错误处理上更灵活
+## 1、Prmise
+是异步编程新的一种解决方案，支持链式调用解决回调地狱的问题   
+在指定回调和错误处理上更灵活
+
 - 介绍与基本使用
 - API
 - Promise相关问题
 - 自定义封装
 - async与await
 
-## Promise是什么
-- 抽象表达
-  - 是异步编程心得一种解决方案（ES6规范，旧的使用回调函数）
-- 具体表达
-  - 从无法上说，Promise是一个构造函数
-  - 从功能上说，Promise对象用来封装一个异步操作并可以获取其成功/失败的结果
-
-## 异步编程
+## 2、异步编程
 - fs文件操作（基于node）
 - ajax
 - 定时器
 - 回调函数
 
-## 为什么要用Promise
-指定回调函数的方式灵活（可以在异步任务结束后指定/多个）   
-支持链式调用，解决回调地狱
-
-
-## 初体验（4个异步操作例子）
+## 3、初体验（4个异步操作例子）
 定时器
 ```html
 <body>
-<h3></h3>
 <button>点击抽奖</button>
 <script>
     function rand(m, n) {
@@ -177,16 +166,16 @@ myReadFile('./resource/file.txt').then(data => {
 });
 ```
 
-## Promise 的状态（promiseState）
+## 4、Promise的状态-promiseState
 状态改变由 pedding-->fulfill或rejected，<span style="color:#0000ff">promise的状态只能改变一次</span>
 - pedding：等待状态
 - fulfill：满足状态，主动调用resolve()，回调调用.then()
 - rejected：满足状态，主动调用reject()，回调调用.catch()
 
-## Promise 对象的值（promiseResult）
+## 4、Promise对象的值-promiseResult
 - PromiseValue：对象成功/失败的返回结果值
 
-## Promise 的API
+## 6、Promise 的API
 - Promise构造函数：Promise(executor) {}
   - executor执行器，(resolve, reject) => {}，里面是同步调用立即执行
 - then方法：.then(value => {}, reason => {});
@@ -194,7 +183,7 @@ myReadFile('./resource/file.txt').then(data => {
    
 
 <strong style="color:#0000ff">Promise函数对象的方法</strong>   
-并不是实例对象，作用是为了快速得到一个promise对象
+并不是实例对象，为了快速得到一个promise对象
 
 - <span style="color:#0000ff">Promise.resolve()方法</span>
   - 传入 非Promise对象，返回成功的Promise对象，结果值为传入值
@@ -261,8 +250,8 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-## Promise 的几个关键问题
-### 如何改变Promise的状态
+## 7、Promise 的几个关键问题
+### (1) 如何改变Promise的状态
 - resolve
 - reject
 - throw '出问题了'（抛出错误）
@@ -282,7 +271,7 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-### Promise能否指定多个回调，都会调用吗？
+### (2) Promise能否指定多个回调，都会调用吗？
 - 必须是状态改变后，然后才都会执行
 ```html
 <body>
@@ -301,7 +290,7 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-### 改变状态与指定回调他俩的执行顺序问题
+### (3) 改变状态与指定回调他俩的执行顺序问题
 - 情况1：Promise里是同步任务，这样先执行改变状态
 - 情况2：Promise里是异步任务，先执行回调.then
 ```html
@@ -323,8 +312,8 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-### then方法的返回结果-<span style="color:#0000ff">新的Promise对象</span>
-- 由.then指定回调的执行结果决定
+### (4) then方法的返回结果-新的Promise对象
+由.then指定回调的执行结果决定
 - .then执行回调中无返回, 相当于``return了undefined``，和返回非Promise对象一样
 - .then执行回调中有返回
   - 抛出错误，.then的结果是失败的Promise（throw '有问题'）
@@ -353,7 +342,7 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-### 串联多个任务（链式调用）
+### (5) 串联多个任务（链式调用）
 ```html
 <body>
 <script>
@@ -375,7 +364,7 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-### 异常穿透
+### (6) 异常穿透
 - 就是在链式调用最后指定失败的回调
 ```html
 <body>
@@ -395,7 +384,7 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-### 中断Promise链
+### (7) 中断Promise链
 - 只有一种方式，返回一个pedding状态的Promise
 ```html
 <body>
@@ -414,7 +403,7 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-## 自定义Promise
+## 8、自定义Promise
 - Promise构造函数中
   - executor()执行器
   - 属性设置 ``promiseState`` 和 ``promiseResult``，注意this指向问题
@@ -934,7 +923,7 @@ if (this.promiseState === 'fulfilled') {
 ```
 
 
-## async 与 await
+## 9、async 与 await
 ### async函数
 - 返回值为Promise对象
 - 函数返回非Promise情况，返回成功的Promise对象，返回值为结果值

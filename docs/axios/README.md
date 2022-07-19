@@ -282,17 +282,16 @@ title: axios
 ```
 
 ## axios源码解析
-
 ```
 /dist                       打包输出路径
 /lib                        项目源码目录
-  /adapters                 定义请求适配器 xhr、http
+  /adapters                 发送请求适配器 xhr或http
     /http.js                实现http适配器
     /xhr.js                 实现xhr适配器
   /cancel                   定义取消功能
   /core                     核心功能
     /Axios.js               axios的核心主类
-    /dispatchRequest.js     发送请求的函数，决定调xhr和http
+    /dispatchRequest.js     决定发送请求的函数，决定调xhr和http
     /InterceptorManager.js  拦截器的管理器
   /axios.js                 axios的入口文件
 ```
@@ -300,12 +299,11 @@ title: axios
 ## 模拟axios创建过程
 ```
 Axios函数（Axios.js核心主类）中默认属性defaults、interceptors，原型挂request方法等
-createInstance函数（axios.js入口文件）
-然后给instance绑定request方法和挂载属性（.defaults、.get等）的过程
+createInstance函数（axios.js入口文件）中
+给instance绑定request方法和挂载属性（.defaults、.get等）的过程
+let axios = createInstance();
 ```
-
 ```html
-
 <body>
 <script>
     // 构造函数
@@ -358,24 +356,15 @@ createInstance函数（axios.js入口文件）
 
 ## 模拟axios发送请求过程
 ```
-查看axios发送请求的过程 F12查看源码ctrl+p
-Axios.js文件  36行断点
-传入判断  config合并  请求方法设定
-返回一个成功的promise，chain里的dispatchRequest是返回值
-下一步dispatchRequest.js文件  请求信息的设置
-调用xhrAdapter适配器，发送xhr（XMLHttpRequest）ajax请求
-
 Axios.js核心主类中，原型request方法里进行传入判断、config合并、请求方法的设定
-  返回一个成功的promise
-  let promise = Promise.resolve(config);
-  let chains = [dispatchRequest, undefined];
-  return promise.then(chain[0]=dispatchRequest，chain[1]);
+返回一个成功的promise
+    let promise = Promise.resolve(config);
+    let chains = [dispatchRequest, undefined];
+    return promise.then(chain[0]等于dispatchRequest，chain[1]);
 dispatchRequest函数（决定发送请求函数xhr和http）返回adapter中请求的结果
 adapter（发送请求）返回promise对象，promise里发送请求
 ```
-
 ```html
-
 <body>
 <script>
     // 1、声明构造函数
@@ -449,11 +438,9 @@ adapter（发送请求）返回promise对象，promise里发送请求
 ```
 
 ## 模拟axios拦截器原理
-
 * 通过拦截器管理器InterceptorManager保存回调
 * 在request处调用，整合，存在数组中
 * 通过promise链条方式执行回调
-
 ```html
 
 <body>
@@ -568,13 +555,9 @@ adapter（发送请求）返回promise对象，promise里发送请求
 ```
 
 ## 模拟axios取消请求原理
-
 ```
 CancelToken函数（CancelToken.js）中原型挂一个promise
 将这个promise成功状态赋给一个变量暴露给外部
-cancelToken: new CancelToken(function (c) {
-    cancel = c;
-})
 当外部执行改变成功状态时，就会执行发送请求处的
 if (config.cancelToken) {
     config.cancelToken.promise.then(value => {
@@ -582,9 +565,7 @@ if (config.cancelToken) {
     })
 }
 ```
-
 ```html
-
 <body>
 <button>发送请求</button>
 <button>取消请求</button>
