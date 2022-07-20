@@ -113,6 +113,30 @@ const app = new Vue({
 ```
 
 ## 事件监听 v-on
+- 简写：v-on:click ==> @click
+- 参数问题：
+  - 调用方法无参数，写不写括号都行 ```@click="btnClick"```
+  - 调用方法有一个参数，定义事件不写参数，会将 ```event事件对象``` 传入
+  - 调用方法既需要event对象又要其它参数，```@click="btnClick($event, '123')```
+- v-on修饰符
+  - .stop：```@click.stop``` 调用 ```event.stopPropagation();``` 阻止冒泡
+  - .prevent：```@click.prevent``` 调用 ```event.preventDefault()``` 阻止默认行为
+  - .once：```@click.once``` 只触发一次回调
+  - @keyup.enter
+  - @keyup.13
+
+## v-if条件渲染
+
+
+
+
+
+
+
+
+
+
+
 
 
 
