@@ -337,3 +337,25 @@ props: {
 <slot name="right"><button>右</button></slot>
 ```
 
+* 编译作用域：就是说父组件模板的东西会在父级作用域编译，子组件也同样
+* 作用域插槽
+```vue
+<!--父组件-->
+<son>
+  <!-- 获取子组件中的PLanguages -->
+  <template slot-scope="slot">
+    <span>{{slot.data.join('、')}}</span>
+  </template>
+</son>
+
+<!--子组件-->
+<slot :data="PLanguages">
+  <ul>
+    <li v-for="item in PLanguages">{{item}}</li>
+  </ul>
+</slot>
+```
+
+## 模块化开发
+
+
