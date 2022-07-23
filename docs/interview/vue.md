@@ -10,7 +10,7 @@ MVVM
 
 ## vue的响应式原理
 * vue2的是通过 ```Object.defineproperty``` 数据劫持，初始化时对每个属性加上get/set（存在问题对象新增、删除属性界面不更新，得用$set；通过下标改数组界面不更新
-* vue3的是通过 ```Proxy``` 拦截对象中任意属性变化（优点不用监听每个属性），通过 ```Reflect(反射)``` 对源对象属性操作（优点，重复性操作属性时，Reflect它是有返回值的，defineproperty会报错）
+* vue3的是通过 ```Proxy``` 拦截对象中任意属性变化（优点不用监听每个属性），通过 ```Reflect(反射)``` 对源对象属性操作（优点，重复性操作属性时，Reflect它是有返回值的，Object会报错）
 
 ## 计算属性
 
@@ -32,6 +32,8 @@ v-show条件为false时，只是元素的display属性设置为none，元素还�
 - 
 ## 什么是组件化
 
+## 注册组件步骤
+
 ## 组件data必须为函数
 函数return的都是新地址的data，这样组件之间数据不会相互影响，防止数据污染
 
@@ -45,11 +47,14 @@ v-show条件为false时，只是元素的display属性设置为none，元素还�
 ## 生命周期
 
 ## 第一次页面加载触发哪几个钩子
+beforeCreate、created、beforeMount、mounted
 
 ## 父子组件执行生命周期的顺序
 
 ## create和mounted中间间隔受哪些因素影响
 mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度可能会影响dom的渲染
+
+## 模块化
 
 ## vue-router中 hash与history有什么区别
 hash模式地址栏url会带#   
@@ -74,6 +79,31 @@ $nextTick()返回一个promise对象
 * 编写形式
 
 ## vue3提升体现在哪
+打包减小、渲染快、内存减小   
+源码（响应式）   
+更好的支持typescript   
+新特性：Composition API、内置组件
+
+## vite
+
+## Composition API
+setup：使用和注意，执行时机，this，两个参数   
+ref、reactive：使用和原理，它俩的对比   
+toRef、shallowReavtive和shallowRef（浅响应式）   
+readonly（深只读）和shallowReadonly（浅只读）   
+toRaw和markRaw   
+自定义ref
+provide与inject
+
+## 响应式原理
+## 计算属性
+person.fullName = computed(() => {})
+## watch监听
+使用
+
+
+
+
 
 
 
