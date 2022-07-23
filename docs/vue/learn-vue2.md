@@ -7,19 +7,18 @@ title: vue2
 渐进式框架（可以将vue作为应用的一部分嵌入）   
 上手容易，容易迅速开发出一些中小型项目
 
-### vue中的MVVM
-
+#### vue中的MVVM
 * Model：数据层
 * View：视图层，dom展示
 * VueModel：视图模型层，一方面实现数据绑定（Data Binding），另一方面实现Dom监听（Dom Listener）
 
-### 创建Vue传入的options
+#### 创建Vue传入的options
 
 * el：决定挂在哪一个dom
 * data：数据
 * methods：方法
 
-### 生命周期
+#### 生命周期
 
 Vue2与Vue3对比
 
@@ -36,7 +35,6 @@ Vue2与Vue3对比
 </div>
 
 ## 基础语法
-
 ```vue
 Mustache语法：{{name}}
 指令：
@@ -190,10 +188,10 @@ this.myArr.reverse();
 ## 组件化开发
 组件化思想：尽可能的将页面拆分成一个个小的，可复用的组件。这样代码更方便维护和管理，扩展性更强
 
-### 注册组件
+#### 注册组件
 - 注册组件的三个步骤
-  - 创建组件构造器：```Vue.extend({template: ``});```  ```Vue.component('my-cpn', {template: ``})```
-  - 注册组件：```Vue.component('my-cpn', cpn);```
+  - 创建组件构造器：```Vue.extend({template: ``});``` 
+  - 注册组件：```Vue.component('my-cpn', cpn);``` ```Vue.component('my-cpn', {template: ``})```
   - 使用组件：```<my-cpn></my-cpn>```
 ```vue
 <div id="app">
@@ -229,7 +227,7 @@ const app = new Vue({
 </template>
 ```
 
-### 组件的数据存放
+#### 组件的数据存放
 * 组件data为什么是一个函数：   
 因为函数return的都是新地址的data，这样组件间数据不会相互影响，防止数据污染
 ```vue
@@ -255,7 +253,7 @@ const cpn = Vue.extend({
 </script>
 ```
 
-### 父子组件
+#### 父子组件
 ```vue
 <script>
 const app = new Vue({
@@ -287,7 +285,7 @@ const son = Vue.extend({
 </script>
 ```
 
-### 父子组件通信
+#### 父子组件通信
 - 父传子通过props   
   父组件标签上 ```:name="name"```，子组件props接收 ```props: ['myTitle']```
 - 子传父通过$emit   
@@ -313,7 +311,7 @@ props: {
 }
 ```
 
-### slot插槽
+#### slot插槽
 为了让组件更有扩展性，将共性抽取到组件中，将不同暴露为插槽
 
 * 基本使用
@@ -357,5 +355,85 @@ props: {
 ```
 
 ## 模块化开发
+* 原始js多文件存在的问题：变量冲突，和文件导入的顺序也有关系
+```js
+<script src="aaa.js"></script>
+<script src="bbb.js"></script>
+<script src="mmm.js"></script>
+
+// 文件1
+var flag = true
+// 文件2
+var flag = false
+// 文件3
+if (flag) {
+  console.log('我是文件3');
+}
+```
+* 匿名函数（函数闭包）解决
+```js
+(function () {
+  var flag = false
+})()
+```
+* CommonJs导出   
+需要node支撑解析
+```js
+// 文件1
+var flag = true
+module.exports = {
+  flag
+}
+// 文件2
+var aaa = require('./aaa.js')
+if(aaa.flag) {
+  console.log('hello');
+}
+```
+* Es5模块导出
+```js
+// 文件1
+var moduleA = (function () {
+  var flag = true
+  // Es5 用一个导出的对象
+  var obj = {}
+  obj.flag = flag;
+  return obj
+})()
+// 文件2
+if (moduleA.flag) {
+  console.log('hello');
+}
+```
+
+#### ES6模块导出导入
+* export
+  * 定义后一起{}导出
+  * 直接导出
+* axport default（默认导出）：在同一模块中默认导出只能有一个   
+让导入者自己来命名 ```import abc from "./aaa.js"```
+
+```js
+// 定义后导出
+var flag = true
+function sum (num1, num2) {
+  return num1 + num2;
+}
+export {flag, sum}
+// 直接导出
+export var flag = true
+export function sum (num1, num2) {
+  return num1 + num2;
+}
+```
+```js
+// 定义后导出
+import {flag, sum} from "./aaa.js";
+if (flag) {
+  console.log(sum(20, 30));
+}
+```
+
+
 
 
