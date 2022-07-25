@@ -434,6 +434,123 @@ if (flag) {
 }
 ```
 
+## vue-router路由
+是vue.js官方的路由插件，它和vue.js是深度集成的
 
+- hash模式
+  - #是自带的
+  - 通过 ```location.hash``` 来改变href，页面不发生刷新
+- history模式（html5）
+  - ```history.pushState({}, '', '/foo')```，不刷新，有历史记录
+  - ```history.replaceState({}, '', '/foo')```，无历史记录
+  - ```history.go(1)```，相当于界面的前进后退
+
+- 安装
+  - npm install vue-router --save
+- 使用
+```js
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import Home from '../components/Home'
+
+// 使用插件
+Vue.use(VueRouter)
+// 定义路由
+const routes = [];
+// 创建路由实例
+const router = new VueRouter({
+  routes,
+  // mode: 'history'  // html5的history模式
+})
+// 导出
+export default router
+```
+
+* router-link
+```
+是vue-router的内置组件，它会被渲染成<a>标签
+<router-link :to="'/user'" tag="button" replace>用户</router-link>
+tag：决定渲染成什么元素  replace：不会留下history记录  
+active-class：路由匹配默认class，修改实在路由实例中 linkActiveClass: 'active'
+```
+* router-view   
+```<router-view></router-view>```子路由显示内容，动态渲染不同组件
+
+#### 默认路由
+```js
+const routes = [
+  {
+    path: '/',
+    name: '',
+    redirect: '/home'  // 重定向
+  }
+];
+```
+#### 懒加载
+把所有页面导入js文件会非常大，另外性能浪费，要达到按需加载，并且打包后的分成多个   
+ES6的写法
+```js
+const routes = [
+  {
+    path: '/home',
+    name: '',
+    // component: Home
+    component: () => import('../components/Home')
+  }
+];
+```
+#### 嵌套路由
+也就是子路由，home组件内用```<router-view></router-view>```显示
+```js
+const routes = [
+  {
+    path: '/home',
+    name: '',
+    component: () => import('../components/Home'),
+    children: []
+  }
+];
+```
+
+#### 跳转、传参与接参
+- 跳转
+  - router-link方式
+  - js代码：```this.$router.push('/home/son')```、```this.$router.replace('/home/son')```（无记录）
+- 传参与接参
+  - 标签传字符串：```<router-link :to="'/user/123'">```对应路由```path: '/user/:userId',```
+  - 标签传对象：```<router-link :to="{path:'/user/123', query:{name: '李四', age: '22'}}">```
+  - js代码传参：```this.$router.push({path:'/user/123', query:{name: '李四', age: '22'}})```
+  - js代码接收参数：```this.$route.params```
+- $router和$route区别
+  - $router为VueRouter实例，通过它导航不同的url
+  - $route可获取跳转对象中的参数信息
+
+#### 导航守卫
+* 全局前置守卫 ```router.beforeEach((to, form, next) => {next()}```   
+可以配合meta用来修改网页的标题   
+* 全局后置守卫 ```router.afterEach((to, form, next) => {})```，不需要主动调用next()
+```js
+const routes = [
+  {
+    path: '/home',
+    name: '',
+    component: () => import('../components/Home'),
+    meta: {title: '首页'}
+  }
+];
+router.beforeEach((to, form, next) => {
+  window.document.title = to.meta.title;
+  next()
+})
+```
+* 路由守卫 ```beforeEnter: (to, from, next) => {}```
+* 组件守卫 ```beforeRouteEnter(to, from, next) {}```，```beforeRouteLeave(to, from, next) {}```
+
+#### keep-alive
+是Vue的一个内置组件，可以使被包含的组件保留状态，避免重新渲染（不走destoryed）
+* include：对应组件name，匹配的组件缓存
+* exclude：匹配的组件不缓存 ```<keep-alive exclude="About">```
+* activated() {}：钩子函数只有使用了keep-alive，组件活跃时调用
+* deactivated() {}：钩子函数只有使用了keep-alive
 
 
