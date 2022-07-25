@@ -61,12 +61,14 @@ hash模式地址栏url会带#
 兼容性的问题   
 history每次刷新会重新请求整个网址，也就是重新请求服务器
 
+## 路由传参的方式
+
 ## vue的$nextTick
 vue更新dom是异步执行的，修改数据后，在回调中拿到更新后的dom结构   
 $nextTick()返回一个promise对象
 
 ## keep-alive的作用
-* 是Vue的一个内置组件，可以使被包含的组建保留状态，避免重新渲染（不走destoryed）
+* 是Vue的一个内置组件，可以使被包含的组件保留状态，避免重新渲染（不走destoryed）
 * 只有使用keep-alive才生效的两个函数
   * activated(){}
   * deactivated (to, from, next){}
