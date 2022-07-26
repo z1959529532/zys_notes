@@ -188,7 +188,7 @@ this.myArr.reverse();
 ## 组件化开发
 组件化思想：尽可能的将页面拆分成一个个小的，可复用的组件。这样代码更方便维护和管理，扩展性更强
 
-#### 注册组件
+### 注册组件
 - 注册组件的三个步骤
   - 创建组件构造器：```Vue.extend({template: ``});``` 
   - 注册组件：```Vue.component('my-cpn', cpn);``` ```Vue.component('my-cpn', {template: ``})```
@@ -227,7 +227,7 @@ const app = new Vue({
 </template>
 ```
 
-#### 组件的数据存放
+### 组件的数据存放
 * 组件data为什么是一个函数：   
 因为函数return的都是新地址的data，这样组件间数据不会相互影响，防止数据污染
 ```vue
@@ -253,7 +253,7 @@ const cpn = Vue.extend({
 </script>
 ```
 
-#### 父子组件
+### 父子组件
 ```vue
 <script>
 const app = new Vue({
@@ -285,7 +285,7 @@ const son = Vue.extend({
 </script>
 ```
 
-#### 父子组件通信
+### 父子组件通信
 - 父传子通过props   
   父组件标签上 ```:name="name"```，子组件props接收 ```props: ['myTitle']```
 - 子传父通过$emit   
@@ -311,7 +311,7 @@ props: {
 }
 ```
 
-#### slot插槽
+### slot插槽
 为了让组件更有扩展性，将共性抽取到组件中，将不同暴露为插槽
 
 * 基本使用
@@ -406,7 +406,7 @@ if (moduleA.flag) {
 }
 ```
 
-#### ES6模块导出导入
+### ES6模块导出导入
 * export
   * 定义后一起{}导出
   * 直接导出
@@ -427,7 +427,6 @@ export function sum (num1, num2) {
 }
 ```
 ```js
-// 定义后导出
 import {flag, sum} from "./aaa.js";
 if (flag) {
   console.log(sum(20, 30));
@@ -476,7 +475,7 @@ active-class：路由匹配默认class，修改实在路由实例中 linkActiveC
 * router-view   
 ```<router-view></router-view>```子路由显示内容，动态渲染不同组件
 
-#### 默认路由
+### 默认路由
 ```js
 const routes = [
   {
@@ -486,7 +485,7 @@ const routes = [
   }
 ];
 ```
-#### 懒加载
+### 懒加载
 把所有页面导入js文件会非常大，另外性能浪费，要达到按需加载，并且打包后的分成多个   
 ES6的写法
 ```js
@@ -499,7 +498,7 @@ const routes = [
   }
 ];
 ```
-#### 嵌套路由
+### 嵌套路由
 也就是子路由，home组件内用```<router-view></router-view>```显示
 ```js
 const routes = [
@@ -512,7 +511,7 @@ const routes = [
 ];
 ```
 
-#### 跳转、传参与接参
+### 跳转、传参与接参
 - 跳转
   - router-link方式
   - js代码：```this.$router.push('/home/son')```、```this.$router.replace('/home/son')```（无记录）
@@ -525,7 +524,7 @@ const routes = [
   - $router为VueRouter实例，通过它导航不同的url
   - $route可获取跳转对象中的参数信息
 
-#### 导航守卫
+### 导航守卫
 * 全局前置守卫 ```router.beforeEach((to, form, next) => {next()}```   
 可以配合meta用来修改网页的标题   
 * 全局后置守卫 ```router.afterEach((to, form, next) => {})```，不需要主动调用next()
@@ -546,11 +545,58 @@ router.beforeEach((to, form, next) => {
 * 路由守卫 ```beforeEnter: (to, from, next) => {}```
 * 组件守卫 ```beforeRouteEnter(to, from, next) {}```，```beforeRouteLeave(to, from, next) {}```
 
-#### keep-alive
+### keep-alive
 是Vue的一个内置组件，可以使被包含的组件保留状态，避免重新渲染（不走destoryed）
 * include：对应组件name，匹配的组件缓存
 * exclude：匹配的组件不缓存 ```<keep-alive exclude="About">```
 * activated() {}：钩子函数只有使用了keep-alive，组件活跃时调用
 * deactivated() {}：钩子函数只有使用了keep-alive
+
+## Vuex状态管理
+是专为vue.js应用开发的状态管理模式，集中式存储管理   
+类似vue的prototype，可以在多个组件使用，但它不是响应式的
+* 安装：```npm install vuex --save```
+
+- Devtools：跟踪，浏览器提供的插件
+
+### 基本使用
+src/store/index.js
+```js
+import Vue from 'vue'
+import Vuex from 'vuex'
+Vue.use(Vuex)
+const store = new Vuex.Store({
+  // 共享状态
+  state: { count: 100 },
+  getters: {},
+  // 方法
+  mutations: {},
+  actions: {},
+  modules: {}
+});
+export default store
+```
+在main.js中导入使用
+
+### 核心概念
+- state共享状态：   
+```state: { count: 100 }```，用```this.$store.state.count```访问
+- getters：获取将store中一些state变换后的数据，类似计算属性，但计算属性多个页面用的话得写多个   
+```getters: { countSquare(state) {return state.count * state.count;} }```
+- mutations状态更新：对store状态更新的方式就是提交mutation   
+store中定义```mutations: { updateCount(state, payload) { state.count = payload; } }```   
+js代码中提交```this.$store.commit('incrementCount', 10);```
+- actions：类似mutation，但异步操作要放在action中   
+```js
+// store中定义，使用context也用通过mutation提交
+actions: {
+  setTimeout(() => {context.commit('updateCount', payload);}, 1000);
+}
+// js代码使用dispatch分发
+this.$store.dispatch('updateCount', 1000)
+```
+- modules
+
+
 
 
