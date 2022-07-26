@@ -585,7 +585,7 @@ export default store
 ```getters: { countSquare(state) {return state.count * state.count;} }```
 - mutations状态更新：对store状态更新的方式就是提交mutation   
 store中定义```mutations: { updateCount(state, payload) { state.count = payload; } }```   
-js代码中提交```this.$store.commit('incrementCount', 10);```
+js代码中提交```this.$store.commit('updateCount', 10);```
 - actions：类似mutation，但异步操作要放在action中   
 ```js
 // store中定义，使用context也用通过mutation提交
