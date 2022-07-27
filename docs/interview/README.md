@@ -32,7 +32,6 @@ title: 面试题
 * 路由传参的方式
 * $router和$route区别
 * keep-alive的作用
-
 ---
 * vue的$nextTick
 * vue组件和插件的不同
