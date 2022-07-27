@@ -447,6 +447,7 @@ if (flag) {
 - 安装
   - npm install vue-router --save
 - 使用
+src/router/index.js
 ```js
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -590,12 +591,41 @@ js代码中提交```this.$store.commit('updateCount', 10);```
 ```js
 // store中定义，使用context也用通过mutation提交
 actions: {
-  setTimeout(() => {context.commit('updateCount', payload);}, 1000);
+  updateCountAction(context, payload) {
+    setTimeout(() => {context.commit('updateCount', payload);}, 1000);
+  }
 }
 // js代码使用dispatch分发
-this.$store.dispatch('updateCount', 1000)
+this.$store.dispatch('updateCountAction', 1000)
 ```
-- modules
+- modules：将状态管理分成模块   
+```this.$store.state.moduleA.name```   
+```this.$store.getters.fullName```   
+```this.$store.commit('updateName', 'James');```   
+```this.$store.dispatch('updateNameAction', 'James');```   
+```js
+modules: {
+    moduleA:{ 
+        state: { name: 'Kobe' }
+        getters: {
+          fullName(state) {
+            return state.name + ' - Bryant';
+          }
+        }
+        mutations: {
+          updateName(state, payload) {
+            state.name = payload;
+          }
+        }
+        actions: {
+          updateNameAction(context, payload) {
+          setTimeout(() => {
+            context.commit('updateName', payload);
+          }, 1000);
+        }
+    }
+}
+```
 
 
 
