@@ -7,8 +7,10 @@ title: css系列
 ### 选择器和继承属性
 
 ### 隐藏元素方法
+```display```  ```visiablity```  ```opacity```  ```宽高0```  ```position移出```
 
 ### 水平垂直居中的方法
+```定位+margin auto```  ```定位+ margin负值```  ```定位+ transform```  ```flex```
 
 ### 动画animation
 animation:   
