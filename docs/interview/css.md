@@ -45,7 +45,7 @@ animation:
   * user-scalable：用户可以缩放操作   
 
 ```@media screen and (min-device-width: 400px) and (max-device-width: 800px) {}```   
-通过媒体查询，对不同分辨率设备下的央视设定
+通过媒体查询，对不同分辨率设备下的样式设定
 
 * 百分比，rem
 
@@ -53,9 +53,15 @@ animation:
 * 单行
   * ```overflow: hidden;```
   * ```white-space: nowrap;```  文本间的空格与换行（空格合并为一个，不换行）
-  * ```text-overflow: ellipsis;```  溢出部分替换...
+  * ```text-overflow: ellipsis;```  溢出部分...替换
 
 * 多行
+  * ```overflow: hidden```
+  * ```-webkit-line-clamp: 2``` 限制块元素的文本行数
+  * ```text-overflow: ellipsis``` 溢出部分...替换
+  * ```display: -webkit-box``` 将对象作为弹性盒子模型
+  * ```-webkit-box-orient: vertical``` 设置伸缩盒子元素的排列
+  * ```word-break: break-all```
 
 
 
