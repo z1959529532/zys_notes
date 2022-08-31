@@ -6,6 +6,17 @@ title: css系列
 
 ### 选择器和继承属性
 
+### px/em/rem/vh区别
+```px``` 绝对单位，像素   
+浏览器默认字体16px   
+```em``` 相对单位(不固定)，相对于父级字体大小计算，父级无设定则相对浏览器   
+```rem``` 相对单位，相对于根节点html字体大小计算   
+```vh、vw``` 相对于窗口宽高，等分100份
+
+### 如何让chrome支持小于12px的字体
+chrome中文版默认最小字号12px   
+```zoom: 0.8```、```-webkit-transform: scale(0.8)```
+
 ### 隐藏元素方法
 ```display```  ```visiablity```  ```opacity```  ```宽高0```  ```position移出```
 

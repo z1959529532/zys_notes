@@ -29,6 +29,7 @@ module.exports =
             children: [
                 '/interview/vue',
                 '/interview/css',
+                '/interview/js'
             ],
         }
     ];
