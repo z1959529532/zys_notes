@@ -2,33 +2,33 @@
 title: css系列
 ---
 
-### 盒模型
+### 1、盒模型
 标准盒模型、IE怪异盒模型（width包含padding、border）
 
-### 预编译语言
+### 2、预编译语言
 扩展了css，增加了注入变量、混入(mixin)、模块化等概念，使用方便易于维护   
 基本使用（less许写大括号）、变量（@、$）、作用域（sass无全局变量概念）、混入
 
-### 选择器和继承属性
+### 3、选择器和继承属性
 
-### px/em/rem/vh区别
+### 4、px/em/rem/vh区别
 ```px``` 绝对单位，像素   
 浏览器默认字体16px   
 ```em``` 相对单位(不固定)，相对于父级字体大小计算，父级无设定则相对浏览器   
 ```rem``` 相对单位，相对于根节点html字体大小计算   
 ```vh、vw``` 相对于窗口宽高，等分100份
 
-### 如何让chrome支持小于12px的字体
+### 5、如何让chrome支持小于12px的字体
 chrome中文版默认最小字号12px   
 ```zoom: 0.8```、```-webkit-transform: scale(0.8)```
 
-### 隐藏元素方法
+### 6、隐藏元素方法
 ```display```  ```visiablity```  ```opacity```  ```宽高0```  ```position移出```
 
-### 水平垂直居中的方法
+### 7、水平垂直居中的方法
 ```定位+margin auto```  ```定位+ margin负值```  ```定位+ transform```  ```flex```
 
-### 动画animation
+### 8、动画animation
 animation:   
 ```animation-name(动画名称)```   
 ```animation-duration(动画时间)```   
@@ -36,10 +36,10 @@ animation:
 ```animation-iteration-count(循环次数)```   
 ```animation-fill-mode(动画时间之外的状态)```
 
-### 转换transform
+### 9、转换transform
 ```translate(50%, 50%)位移```  ```scale(.8)缩放```  ```rotate(15deg)旋转```  ```skew(-5deg)扭曲```
 
-### 响应式相关
+### 10、响应式相关
 * flex盒布局
   * 决定主轴方向和排列方式，控制换行
     * flex-flow： flex-direction、 flex-wrap
@@ -65,7 +65,7 @@ animation:
 
 * 百分比，rem
 
-### 单行/多行文本溢出省略
+### 11、单行/多行文本溢出省略
 * 单行
   * ```overflow: hidden;```
   * ```white-space: nowrap;```  文本间的空格与换行（空格合并为一个，不换行）
@@ -79,7 +79,7 @@ animation:
   * ```-webkit-box-orient: vertical``` 设置伸缩盒子元素的排列
   * ```word-break: break-all```
 
-### 回流和重绘
+### 12、回流和重绘
 回流可理解为计算节点的位置和大小，触发条件：一开始渲染、添加删除dom、位置和尺寸变化、窗口尺寸变化   
 重绘可理解为节点画好形状后(回流)，画上颜色等特性，触发条件：颜色修改、文本方向   
 如何减少：   

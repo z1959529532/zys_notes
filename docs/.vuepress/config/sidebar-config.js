@@ -21,17 +21,17 @@ module.exports =
                 '/vue/learn-vue3',
             ],
         },
-        // {
-        //     title: '问题积累',
-        //     path: '/interview/',
-        //     collapsable: false,
-        //     sidebarDepth: 2,
-        //     children: [
-        //         '/interview/vue',
-        //         '/interview/css',
-        //         '/interview/js'
-        //     ],
-        // }
+        {
+            title: '面试问题',
+            path: '/interview/',
+            collapsable: false,
+            sidebarDepth: 2,
+            children: [
+                '/interview/vue',
+                '/interview/css',
+                '/interview/js'
+            ],
+        }
     ];
 
     // 3、对象形式
