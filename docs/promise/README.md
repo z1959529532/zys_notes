@@ -952,7 +952,7 @@ if (this.promiseState === 'fulfilled') {
 ```
 
 ### await表达式
-- await哟测的表达式一般为Promise对象，也可以是其他的值
+- await右侧的表达式一般为Promise对象，也可以是其他的值
 - 如果表达式是Promise对象，await返回的是成功Promise的值
 - 如果表达式时其它值，直接将此值作为await的返回值
 - 注意：

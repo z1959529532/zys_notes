@@ -39,12 +39,14 @@ BOM：浏览器对象模型
 常见的BOM对象：window(核心对象)包含-->location、screen、navigator
 
 ### AJAX
-异步更新网页（更新网页对应部分，不需要刷新整个网页）   
-支持promise、浏览器端发送AJAX请求、node端发http请求   
+异步更新网页（更新网页对应部分，不需要刷新整个网页）    
 * 过程
   * 创建XMLHttpRequest实例对象（new XMLHttpRequest()）
   * 与服务器建立连接.open
   * 发送给服务端.send
+
+### Axios
+支持promise、浏览器端发送AJAX请求、node端发http请求
 
 ### for...in和for...of区别
 for in：遍历对象（拿key），遍历数组（拿索引）   
@@ -85,6 +87,25 @@ function deepClone(obj, hash = new WeakMap()) {
 }
 ```
 
+### 内存泄露
+* 使用未声明的变量，意外创建了一个全局变量，使变量在内存中无法被收回
+* 闭包，读取函数内部的局部变量
+```js
+// 简单的理解成定义在一个函数内部的函数
+function f1() {
+  var n = 100;
+  function f2() {
+    console.log(n);
+  }
+}
+```
+* 删除dom元素，没有清理dom的引用
+```js
+var a = document.getElementById('btn');
+document.body.removeChild(document.getElementById('btn'));
+// 解决手动删除 a = null;
+```
+
 ## ES6篇
 ### var、let、const
 变量提升、作用域、声明和修改
@@ -108,7 +129,30 @@ console.log(typeof a) // number
 是异步编程新的一种解决方案，支持链式调用解决回调地狱的问题
 
 ### async/await
-
+* async声明一个异步的function，返回值为Promise对象
+```js
+// 函数里return结果，相当于Promise.resolve()
+async function abc() {}
+const result = abc();
+console.log(result, 1122); // Promise对象
+```
+* await等待一个异步方法执行完成，一般右侧为Promise对象
+```js
+// 返回成功Promise的值，其它值直接返回，失败Promise要try...catch
+async function abc() {
+  console.log(await Promise.resolve(123));
+  console.log(await 123);
+  console.log(abc(), 1122);
+}
+```
+* 优势：如果是链式调用，Promise得用then去执行，async/await写法几乎和同步代码一样，错误处理友好try…catch
+```js
+async function getResult() {
+    const result1 = await 异步方法1(123);
+    const result2 = await 异步方法2(result1);
+    const result = await 异步方法3(result2);
+}
+```
 
 ### Proxy
 用于创建一个对象代理，实现对对象的拦截和自定义   
