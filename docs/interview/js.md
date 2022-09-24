@@ -38,6 +38,41 @@ DOM：文档对象模型，是W3C标准规范，主要学习操作页面元素
 BOM：浏览器对象模型   
 常见的BOM对象：window(核心对象)包含-->location、screen、navigator
 
+### 原型和原型链
+js中是使用构造函数来新建一个对象的   
+访问一个对象属性时，不仅在对象上搜索，还会搜索该对象的原型，直到找到匹配名字或层层向上找达到原型链的末端   
+```js
+function Person() {}
+console.log(Person.prototype);
+
+// 输出
+{
+  constructor: ƒ Person()
+  __proto__: {
+    constructor: ƒ Object()
+    hasOwnProperty: ƒ hasOwnProperty()
+    isPrototypeOf: ƒ isPrototypeOf()
+    propertyIsEnumerable: ƒ propertyIsEnumerable()
+    toLocaleString: ƒ toLocaleString()
+    toString: ƒ toString()
+    valueOf: ƒ valueOf()
+  }
+}
+
+const p = new Person();
+console.log(p);
+// 输出
+{
+  __proto__: {
+    constructor: ƒ Person()
+    __proto__: Object
+  }
+}
+```
+```__proto__```作为桥梁，用来指向构造函数的原型   
+```p.__proto__===Person.prototype```   
+所有对象最终都是由Object构造的，```Object.prototype```的下一级是```Object.prototypep.__proto__===null```
+
 ### AJAX
 异步更新网页（更新网页对应部分，不需要刷新整个网页）    
 * 过程
