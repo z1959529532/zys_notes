@@ -13,9 +13,9 @@ title: Promise
 - async与await
 
 ## 2、异步编程
+- 定时器
 - fs文件操作（基于node）
 - ajax
-- 定时器
 - 回调函数
 
 ## 3、初体验（4个异步操作例子）
@@ -172,29 +172,24 @@ myReadFile('./resource/file.txt').then(data => {
 - fulfill：满足状态，主动调用resolve()，回调调用.then()
 - rejected：满足状态，主动调用reject()，回调调用.catch()
 
-## 4、Promise对象的值-promiseResult
+## 5、Promise对象的值-promiseResult
 - PromiseValue：对象成功/失败的返回结果值
 
-## 6、Promise 的API
+## 6、Promise的API
+### (1) 构造、then、catch方法
 - Promise构造函数：Promise(executor) {}
   - executor执行器，(resolve, reject) => {}，里面是同步调用立即执行
 - then方法：.then(value => {}, reason => {});
 - catch方法（语法糖）：p.catch(reason => {});   
    
 
-<strong style="color:#0000ff">Promise函数对象的方法</strong>   
+### (2) Promise函数对象的方法
 并不是实例对象，为了快速得到一个promise对象
 
 - <span style="color:#0000ff">Promise.resolve()方法</span>
-  - 传入 非Promise对象，返回成功的Promise对象，结果值为传入值
-  - 传入 Promise对象，``返回Promise对象的状态``为传入Promise的状态，``结果值``为传入Promise的结果值
 - <span style="color:#0000ff">Promise.reject()方法</span>
-  - 传入 非Promise对象，返回失败的Promise对象，结果值为传入值
-  - 传入 Promise对象，返回失败的Promise对象，结果值为传入的Promise对象
-- <span style="color:#0000ff">Promise.all()方法</span>，传入参入为Promise的数组
-  - 返回一个Promise对象，所有的Promise成功才成功，结果值为三个Promise结果值的数组
-- <span style="color:#0000ff">Promise.race()方法</span>，传入参入为Promise的数组
-  - 谁先状态改变就返回谁的值
+- <span style="color:#0000ff">Promise.all()方法</span>
+- <span style="color:#0000ff">Promise.race()方法</span>
 
 ```html
 <body>
@@ -202,49 +197,47 @@ myReadFile('./resource/file.txt').then(data => {
     /**
      * Promise.resolve方法
      */
-    // 传入 非Promise对象，返回成功Promise对象，结果值为传入值
-    const p1 = Promise.resolve('ok1');
-    console.log(p1, 1111);
-    // 传入 Promise对象，返回Promise对象 的状态为传入Promise的状态，结果值 为传入Promise的结果值
-    const p2 = Promise.resolve(new Promise((resolve, reject) => {
-        // resolve('ok2');
-        reject('err2');
+    // 传入非Promise，返回成功的Promise，结果值是传入值
+    const p1 = Promise.resolve(); //undefined
+    const p2 = Promise.resolve('ok1');
+    // 传入Promise，返回Promise状态为传入Promise的状态，结果值为传入Promise的结果值
+    const p3 = Promise.resolve(new Promise((resolve, reject) => {
+      // resolve('ok1.2');
+      reject('err1.3');
     }));
-    console.log(p2, 2222);
 
     /**
      * Promise.reject方法
      */
-    // 传入 非Promise对象，返回失败的Promise对象，结果值为传入值
-    const p3 = Promise.reject('ok3');
-    console.log(p3, 3333);
-    // 传入 Promise对象，返回失败的Promise对象，结果值为传入的Promise对象
-    const p4 = Promise.reject(new Promise((resolve, reject) => {
-        resolve('ok4');
-        // reject('err4');
+    // 传入非Promise，返回失败的Promise，结果值是传入值
+    const p4 = Promise.reject('ok2.1');
+    // 传入Promise，返回失败的Promise对象，结果值为传入Promise的结果值
+    const p5 = Promise.reject(new Promise((resolve, reject) => {
+      // resolve('ok2.2');
+      reject('err2.3');
     }));
-    console.log(p4, 4444);
 
     /**
      * Promise.all方法
      */
-    const p5 = new Promise((resolve, reject) => resolve('ok5.1'));
-    const p6 = Promise.resolve('ok5.2');
-    const p7 = Promise.resolve('ok5.3');
-    const p8 = Promise.reject('err5.1');
-    const allResult = Promise.all([p5, p6, p7, p8]);
-    console.log(allResult, 5555);
+    // 传入Promise数组，所有Promise成功才成功，结果值是传入Promise结果值的数组
+    // 有一个Promise失败就失败，结果值是第一个失败Promise的结果值
+    const p6 = new Promise((resolve, reject) => resolve('ok3.1'));
+    const p7 = Promise.resolve('ok3.2');
+    const p8 = Promise.resolve('ok3.3');
+    const p9 = Promise.reject('err3.4');
+    const allResult = Promise.all([p6, p7, p8, p9]);
 
     /**
      * Promise.race方法
      */
-    const p9 = new Promise((resolve, reject) => {
-        setTimeout(() => {resolve('ok6.1')}, 1000);
-    });
-    const p10 = Promise.resolve('ok6.2');
-    const p11 = Promise.resolve('err6.1');
-    const raceResult = Promise.race([p9, p10, p11]);
-    console.log(raceResult, 6666);
+    // 传入Promise数组，谁先改变状态就返回谁的值
+    const p10 = new Promise((resolve, reject) => {
+              setTimeout(() => {resolve('ok641')}, 1000);
+            });
+    const p11 = Promise.reject('ok4.2');
+    const p12 = Promise.resolve('err4.1');
+    const raceResult = Promise.race([p10, p11, p12]);
 
 </script>
 </body>
@@ -258,7 +251,7 @@ myReadFile('./resource/file.txt').then(data => {
 ```html
 <body>
 <script>
-    let p = new Promise((resolve, reject) => {
+    let p1 = new Promise((resolve, reject) => {
         // 1、调用resolve，pedding-->fulfill
         resolve('ok');
         // 2、调用reject，pedding-->rejected
@@ -266,7 +259,6 @@ myReadFile('./resource/file.txt').then(data => {
         // 3、抛出错误
         throw '出问题了';
     });
-    console.log(p);
 </script>
 </body>
 ```
@@ -312,35 +304,13 @@ myReadFile('./resource/file.txt').then(data => {
 </body>
 ```
 
-### (4) then方法的返回结果-新的Promise对象
-由.then指定回调的执行结果决定
-- .then执行回调中无返回, 相当于``return了undefined``，和返回非Promise对象一样
-- .then执行回调中有返回
-  - 抛出错误，.then的结果是失败的Promise（throw '有问题'）
-  - 返回非Promise对象，.then的结果是成功的Promise，return的值就是成功的结果
-  - 返回Promise对象，.then的结果状态由Promise的状态决定，.then的结果值就是Promise返回的结果值
-```html
-<body>
-<script>
-    let p4 = new Promise((resolve, reject) => {
-        resolve('ok');
-    });
-    const result = p4.then(data => {
-        // （1）抛出错误，.then的结果是失败的Promise
-        // throw '有问题';
-        // （2）返回非Promise对象，.then的结果是成功的Promise，return的值就是成功的结果
-        // return 520;
-        // （3）返回Promise对象，.then的结果状态由Promise的状态决定，.then的结果值就是Promise返回的结果值
-        return new Promise((resolve, reject) => {
-            resolve('ok1');
-            // reject('error1');
-        });
-    }, err => {
-    });
-    console.log(result, 5555);
-</script>
-</body>
-```
+### (4) then方法的返回结果-Promise对象
+- 由.then指定回调的执行结果决定，与Promise.resolve基本一样
+  - 无返回
+  - 返回非Promise
+  - 返回Promise对象
+  - 抛出异常throw，返回失败的Promise
+
 
 ### (5) 串联多个任务（链式调用）
 ```html
@@ -627,25 +597,26 @@ Promise.prototype.then = function (onResolved, onRejected) {
 Promise.prototype.then = function (onResolved, onRejected) {
     return new Promise((resolve, reject) => {
         if (this.promiseState === 'pedding') {
-        this.callback.push({
-            onResolved: function () {
-                // 判断结果，给.then返回值
-                try {
-                    const result = onResolved(_this.promiseResult);
-                    if (result instanceof Promise) {
-                        result.then(data => {
-                            resolve(data);
-                        }, err => {
-                            reject(err);
-                        });
-                    } else {  // 非Promise对象
-                        resolve(result);
+            this.callback.push({
+                onResolved: function () {
+                    // 判断结果，给.then返回值
+                    try {
+                        const result = onResolved(_this.promiseResult);
+                        if (result instanceof Promise) {
+                            result.then(data => {
+                                resolve(data);
+                            }, err => {
+                                reject(err);
+                            });
+                        } else {  // 非Promise对象
+                            resolve(result);
+                        }
+                    } catch (e) {
+                        reject(e);
                     }
-                } catch (e) {
-                    reject(e);
                 }
-            }
-        })
+          })
+        }
     });
 }
 ```
