@@ -173,7 +173,7 @@ myReadFile('./resource/file.txt').then(data => {
 - rejected：满足状态，主动调用reject()，回调调用.catch()
 
 ## 5、Promise对象的值-promiseResult
-- PromiseValue：对象成功/失败的返回结果值
+- PromiseValue：Promise对象成功/失败的返回结果值
 
 ## 6、Promise的API
 ### (1) 构造、then、catch方法
@@ -186,10 +186,10 @@ myReadFile('./resource/file.txt').then(data => {
 ### (2) Promise函数对象的方法
 并不是实例对象，为了快速得到一个promise对象
 
-- <span style="color:#0000ff">Promise.resolve()方法</span>
-- <span style="color:#0000ff">Promise.reject()方法</span>
-- <span style="color:#0000ff">Promise.all()方法</span>
-- <span style="color:#0000ff">Promise.race()方法</span>
+- Promise.resolve()方法
+- Promise.reject()方法
+- Promise.all()方法
+- Promise.race()方法
 
 ```html
 <body>
