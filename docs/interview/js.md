@@ -18,10 +18,6 @@ instanceof：返回布尔值，只能判断引用数据类型
 ```Object.prototype.toString.call()```方法实现全局通用的数据类型判断   
 ```js
 function getType(obj) {
-    const type = typeof obj;
-    if (type !== 'object') {
-        return type;
-    }
     return Object.prototype.toString.call(obj).replace(/^\[object (\S+)\]$/, '$1');
 }
 ```

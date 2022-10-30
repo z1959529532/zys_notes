@@ -28,7 +28,7 @@ title: axios
 - 基本使用练习（github参考：axios、json-server）
 
 ```html
-
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <body>
 <button>发送 GET 请求</button>
 <button>发送 POST 请求</button>
@@ -41,48 +41,40 @@ title: axios
     btns[0].onclick = () => {
         axios({
             method: 'GET',
-            url: 'http://localhost:3000/posts/2'
+            url: 'http://localhost:3000/allBooks',
+            params: { id: 2 }
         }).then(response => {
             console.log(response);
         });
     };
-
     // post请求
     btns[1].onclick = () => {
         axios({
             method: 'POST',
-            url: 'http://localhost:3000/posts',
+            url: 'http://localhost:3000/allBooks',
             data: {
-                title: '哈哈哈',
-                author: '张三'
+                title: '解忧杂货店',
+                author: '东野圭吾'
             }
-        }).then(response => {
-            console.log(response);
-        });
+        }).then(response => { console.log(response); });
     };
-
     // put请求更新
     btns[2].onclick = () => {
         axios({
             method: 'PUT',
             url: 'http://localhost:3000/posts/3',
             data: {
-                title: '哈哈哈',
-                author: '李四'
+                title: '解忧杂货店',
+                author: '(东野圭吾)'
             }
-        }).then(response => {
-            console.log(response);
-        });
+        }).then(response => { console.log(response); });
     };
-
     // delete请求删除
     btns[3].onclick = () => {
         axios({
             method: 'delete',
-            url: 'http://localhost:3000/posts/3'
-        }).then(response => {
-            console.log(response);
-        });
+            url: 'http://localhost:3000/allBooks/3'
+        }).then(response => { console.log(response); });
     };
 </script>
 </body>
@@ -106,15 +98,19 @@ title: axios
     btns[0].onclick = () => {
         axios.request({
             method: 'GET',
-            url: 'http://localhost:3000/comments'
-        }).then(response => console.log(response));
+            url: 'http://localhost:3000/allComments',
+            params: {id: 2}
+        }).then(response => console.log(response.data));
+        
+        axios.get('http://localhost:3000/allComments', {
+            params: {id: 2}
+        }).then(response => console.log(response.data, 1122));
     };
-
     // 发送post请求
     btns[1].onclick = () => {
-        axios.post('http://localhost:3000/comments', {
-            postId: 1,
-            body: '评论1'
+        axios.post('http://localhost:3000/allComments', {
+            bookName: '解忧杂货店',
+            comments: ['写的不错']
         }).then(response => console.log(response));
     };
 </script>
@@ -153,8 +149,9 @@ title: axios
 <body>
 <script>
     // 创建实例对象
-    // http://localhost:3000/posts
+    // http://localhost:3000/allBooks
     const myAxios = axios.create({
+        method: 'GET',
         baseURL: 'http://localhost:3000',
         timeout: 2000
     });
@@ -163,15 +160,11 @@ title: axios
 
     // 1
     myAxios({
-        method: 'GET',
-        url: 'posts'
-    }).then(response => {
-        console.log(response, 1122);
-    });
+        url: 'allBooks',
+        params: {id: 2}
+    }).then(response => console.log(response.data) );
     // 2
-    myAxios.get('posts').then(response => {
-        console.log(response, 3344);
-    });
+    myAxios.get('allBooks?id=2').then(response => console.log(response.data, 1122) );
 </script>
 </body>
 ```

@@ -2,7 +2,7 @@
 module.exports =
     // 1、自动生成
     // 'auto'
-    
+
     // 2、数组形式
     [
         '/',
@@ -10,6 +10,16 @@ module.exports =
         '/ajax/',
         '/promise/',
         '/axios/',
+        {
+            title: 'html部分',
+            path: '/html/',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                '/html/learn-html',
+                '/html/learn-css'
+            ],
+        },
         // 数组的扩展形式
         {
             title: 'vue学习',
