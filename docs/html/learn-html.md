@@ -5,7 +5,7 @@ title: html基础
 ## 开始
 - 超文本标记语言
 
-- 基本标签
+- 基本标签   
 ```<!DOCTYPE html> ```：H5语法   
 ```<p></p>```：段落标记   
 ```<h2></h2>```：标题字   
@@ -18,4 +18,14 @@ title: html基础
 ```<i></i>```：斜体字   
 ```<font color="red" size="5"></font>```：字体标签   
 
-- 实体符号
+- 实体符号   
+以&开始，以;结束   
+```b&lt;a&gtc```：```表示b<a>c```   
+```&nbsp```：空格   
+
+- table表格   
+```<table border="1" width="400" height="200" align="center">```   
+```<tr><th>a</th></tr>```   
+```<tr><td align="center">4</td></tr>```   
+```<td rowspan="2"></td>```：行合并，删除下面   
+```<td colspan="2"></td>```：列合并，删除哪个没要求
