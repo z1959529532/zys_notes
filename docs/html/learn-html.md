@@ -2,7 +2,6 @@
 title: html基础
 ---
 
-## 开始
 - 超文本标记语言
 
 - 基本标签   
@@ -28,4 +27,14 @@ title: html基础
 ```<tr><th>a</th></tr>```   
 ```<tr><td align="center">4</td></tr>```   
 ```<td rowspan="2"></td>```：行合并，删除下面   
-```<td colspan="2"></td>```：列合并，删除哪个没要求
+```<td colspan="2"></td>```：列合并，删除哪个没要求   
+```thead、tbody、tfoot```：加这些为了js更好的操作   
+
+- 背景色和背景   
+```<body bgcolor="#add8e6" background="img/Default.jpg">```  
+
+- 图片  
+```<img src="img/Default.jpg" alt="图片找不到" width="100%" title="我的图片">```：图片是浮在背景上
+
+
+
