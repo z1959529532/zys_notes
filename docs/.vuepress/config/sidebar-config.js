@@ -14,7 +14,7 @@ module.exports =
             title: 'html部分',
             path: '/html/',
             collapsable: false,
-            sidebarDepth: 1,
+            sidebarDepth: 2,
             children: [
                 '/html/learn-html',
                 '/html/learn-css'
