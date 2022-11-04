@@ -48,15 +48,17 @@ title: html基础
 ## 表单   
 作用：收集用户输入的信息   
 - ```<form action=""></form>```   
-  - ```action属性```：指定服务器地址   
+  - ```action属性```：指定提交服务器地址   
   - ```method属性```：指定请求方式get/post   
    
 表单中有```name```属性才会参与提交   
 - ```<input type="text" name="username" value="admin"/>```   
 - ```<input type="radio" name="sex" value="1" checked/>男```：单选按钮，```name```属性相同表示一组；```checked```为默认选中   
 - ```<input type="checkbox" name="hobby" value="run" checked/>跑步```：多选按钮```name```属性相同表示一组；```checked```为默认选中
-- ```<select name="grade"><option value="bk" selected>本科</option></select>```：下拉框   
+- ```<select name="grade"><option value="bk" selected>本科</option></select>```：下拉框，```multiple```属性多选，```size```多选个数   
 - ```<textarea rows="5" cols="25" name="introduce"></textarea>```：文本域，没有value属性   
+- ```<input type="hidden" name="userid" value="132">```：隐藏控件，网页看不到，会参与表单提交   
+- ```<input type="file"/>```：选取文件   
    
 - ```<input type="button" value="保存"/>```：对于按钮来说，```value```属性用来指定按钮显示文本   
 - ```<input type="submit" value="保存" />```   
