@@ -6,25 +6,24 @@ module.exports =
     // 2、数组形式
     [
         '/',
-        '/about/',
+        {
+            title: '前端基础',
+            path: '/basis/',
+            collapsable: true,
+            sidebarDepth: 2,
+            children: [
+                '/basis/learn-html',
+                '/basis/learn-css'
+            ],
+        },
         '/ajax/',
         '/promise/',
         '/axios/',
-        {
-            title: 'html部分',
-            path: '/html/',
-            collapsable: false,
-            sidebarDepth: 2,
-            children: [
-                '/html/learn-html',
-                '/html/learn-css'
-            ],
-        },
         // 数组的扩展形式
         {
             title: 'vue学习',
             path: '/vue/',
-            collapsable: false,
+            collapsable: true,
             sidebarDepth: 1,
             children: [
                 '/vue/learn-vue2',
@@ -34,7 +33,7 @@ module.exports =
         {
             title: '面试问题',
             path: '/interview/',
-            collapsable: false,
+            collapsable: true,
             sidebarDepth: 2,
             children: [
                 '/interview/vue',

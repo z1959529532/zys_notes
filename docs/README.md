@@ -1,5 +1,5 @@
 ---
-title: Home
+title: 首页
 # home: true
 # heroImage: /hero.png
 # heroText: Hero 标题

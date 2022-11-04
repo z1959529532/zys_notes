@@ -416,7 +416,7 @@ html中
 // 不设置可跨域请求头信息
 // 访问127.0.0.1:8020/tongyuan  返回本地页面页面
 app.all('/tongyuan', (request, response) => {
-    response.sendFile(__dirname + '/10_跨域/01_同源策略.html');
+    response.sendFile(__dirname + '/10_跨域/01_同源策略.basis');
 });
 app.all('/tongyuan/request', (request, response) => {
     response.send('用户数据');
