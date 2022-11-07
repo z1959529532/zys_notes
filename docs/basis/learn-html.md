@@ -117,6 +117,8 @@ div、span可以让页面灵活的布局，table布局死板不够灵活
   ```rangeOverflow```、```rangeUnderflow```：对应数字输入框max和min最大最小值校验
   - ```document.getElementById("username").checkValidity()```：任意约束校验状态   
   - ```numInput.setCustomValidity('不能为空！')```：自定义验证信息   
+<br><br>
 
 - html5自带验证美化
-
+通过css修改校验输入框的样式   
+- ```:required```和```:optional```：必填和非必填，例input:required:focus {}
