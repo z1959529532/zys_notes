@@ -86,9 +86,10 @@ div、span可以让页面灵活的布局，table布局死板不够灵活
   - ```novalidate```：表单不校验，与```submit```上加```formnovalidate```效果一样   
   - ```autocomplete```：是否记住表单输入值   
 - input标签上
-  - ```required```：表示必填，提交时表单校验
   - ```autofocus```：默认聚焦
+  - ```required```：表示必填，提交时表单校验
   - ```pattern="^\d{4}[abcd]$"```：输入满足正则格式
+  - ```maxlength```、```minlength```、```max```、```min```
   - ```formnovalidate```：放在submit上，表单不校验
 ```html
 <!--输入框带提示列表-->
@@ -107,5 +108,15 @@ div、span可以让页面灵活的布局，table布局死板不够灵活
 ```
 <br><br>
 
-- html5约束验证Api
+- html5验证Api
+  - ```document.getElementById("username").validity```：验证状态   
+  ```valueMissing```：require校验状态   
+  ```patternMismatch```：正则校验状态   
+  ```tooLong```、```tooShort```：对应maxlength和minlength但状态不会变   
+  ```typeMismatch```：类型格式校验状态   
+  ```rangeOverflow```、```rangeUnderflow```：对应数字输入框max和min最大最小值校验
+  - ```document.getElementById("username").checkValidity()```：任意约束校验状态   
+  - ```numInput.setCustomValidity('不能为空！')```：自定义验证信息   
+
+- html5自带验证美化
 
