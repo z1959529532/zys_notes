@@ -4,9 +4,10 @@ title: html部分
 
 - 超文本标记语言
 
-## 基本标签   
-```<!DOCTYPE html> ```：H5语法   
-```<p></p>```：段落标记   
+## 基本标签(Tag)   
+```<!DOCTYPE html> ```：H5文档类型   
+```<!---->```：注释   
+```<p></p>```：段落标签   
 ```<h2></h2>```：标题字   
 ```<br>```：换行（独目标记）   
 ```<hr color="red" width="50%">```：分割线   
@@ -53,7 +54,7 @@ title: html部分
 <br>
    
 表单中有```name```属性才会参与提交   
-* ```<input type="text" name="username" value="admin"/>```   
+* ```<input type="text" name="username" value="admin" placeholder="请输入用户名"/>```   
 * ```<input type="radio" name="sex" value="1" checked/>男```：单选按钮，```name```属性相同表示一组；```checked```为默认选中   
 * ```<input type="checkbox" name="hobby" value="run" checked/>跑步```：多选按钮```name```属性相同表示一组；```checked```为默认选中
 * ```<select name="grade"><option value="bk" selected>本科</option></select>```：下拉框，```selected```为默认选中，```multiple```属性多选，```size```多选个数   
@@ -68,6 +69,43 @@ title: html部分
 - ```<input type="submit" value="保存" />```   
 - ```<input type="reset" value="清空"/>```   
 
+## 块级元素和内敛元素
+- 块级元素：独占一行，```p```、```h1```、```div```、```form```、```ul```
+- 内敛元素：通常在块级元素内，只占必要的宽度，```a```、```img```、```input```、```font```   
+
 ## id属性
 在html中任何元素都有id属性，id是该元素的唯一标识，js中为了方便获取到该元素   
+
+## div和span
+div、span可以让页面灵活的布局，table布局死板不够灵活   
+区别：div独占一行(默认情况下)
+
+## html5表单验证
+- form标签上属性
+  - ```enctype="multipart/form-data"```：表单中有file   
+  - ```novalidate```：表单不校验，与```submit```上加```formnovalidate```效果一样   
+  - ```autocomplete```：是否记住表单输入值   
+- input标签上
+  - ```required```：表示必填，提交时表单校验
+  - ```autofocus```：默认聚焦
+  - ```pattern="^\d{4}[abcd]$"```：输入满足正则格式
+  - ```formnovalidate```：放在submit上，表单不校验
+```html
+<!--输入框带提示列表-->
+<input type="text" name="position" list="tips" placeholder="请输入职位">
+<dataList id="tips">
+  <option value="前端"></option>
+  <option value="后端"></option>
+  <option value="测试"></option>
+</dataList>
+```
+- label标签的for属性
+在radio和checkbox上体现，点字就可选中
+```html
+<input type="radio" name="sex" id="man" value="1" checked/><label for="man">男</label>
+<input type="radio" name="sex" id="woman" value="0"/><label for="woman">女</label>
+```
+<br><br>
+
+- html5约束验证Api
 
