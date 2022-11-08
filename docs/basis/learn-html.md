@@ -115,10 +115,16 @@ div、span可以让页面灵活的布局，table布局死板不够灵活
   ```tooLong```、```tooShort```：对应maxlength和minlength但状态不会变   
   ```typeMismatch```：类型格式校验状态   
   ```rangeOverflow```、```rangeUnderflow```：对应数字输入框max和min最大最小值校验
-  - ```document.getElementById("username").checkValidity()```：任意约束校验状态   
-  - ```numInput.setCustomValidity('不能为空！')```：自定义验证信息   
+- ```document.getElementById("username").checkValidity()```：所有约束校验状态，返回Boolean值   
+- ```numInput.setCustomValidity('不能为空！')```：自定义验证信息，可配合oninput、oninvalid、onchange事件定义   
 <br><br>
 
-- html5自带验证美化
+- html5自带验证美化   
 通过css修改校验输入框的样式   
-- ```:required```和```:optional```：必填和非必填，例input:required:focus {}
+  - ```:required```和```:optional```：必填和非必填，例input:required:focus { CSS样式 }
+  - ```:valid```和```invalid```：验证通过和验证不通过
+- 修改默认气泡
+利用js监听表单invalid和submit事件，阻止默认事件```e.preventDefault()```   
+再拿到错误信息插dom操作，设置想要的样式
+
+
