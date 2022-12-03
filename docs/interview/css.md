@@ -48,8 +48,8 @@ animation:
   * 主轴方向对齐方式
     * justify-content：```flex-start``` | ```flex-end``` | ```center``` | ```space-between``` | ```space-around```
   * 侧轴方向对齐方式 单行/多行
-    * align-items：```flex-start``` | ```flex-end``` | ```center``` | ```baseline``` | ```stretch```
-    * align-content：```flex-start``` | ```flex-end``` | ```center``` 
+    * align-items：```flex-start``` | ```flex-end``` | ```center``` | ```baseline``` | ```stretch```（拉伸，子盒子不要给高度）
+    * align-content（多行）：```flex-start``` | ```flex-end``` | ```center``` | ```space-between``` | ```space-around``` | ```stretch```
   * 分配空间
     * flex：flex-grow（扩展比例）、flex-shrink（收缩比例）、flex-basis
     * flex-basis（伸缩基准值）：```<length>``` | ```<percentage>``` | ```auto``` | ```content```
