@@ -7,7 +7,7 @@ title: css系列
 
 ### 2、预编译语言
 扩展了css，增加了注入变量、混入(mixin)、模块化等概念，使用方便易于维护   
-基本使用（less许写大括号）、变量（@、$）、作用域（sass无全局变量概念）、混入
+基本使用（less需写大括号）、变量（@、$）、作用域（sass无全局变量概念）、混入
 
 ### 3、选择器和继承属性
 
@@ -26,7 +26,7 @@ chrome中文版默认最小字号12px
 ```display```  ```visiablity```  ```opacity```  ```宽高0```  ```position移出```
 
 ### 7、水平垂直居中的方法
-```定位+margin auto```  ```定位+ margin负值```  ```定位+ transform```  ```flex```
+```定位上下左右0+margin auto```  ```定位50%+ margin负值自身宽```  ```定位+ transform```  ```flex```
 
 ### 8、动画animation
 animation:   

@@ -74,3 +74,11 @@ width、height、padding、border、margin
 * %和rem（相对于根节点html字体大小计算）
 * 自适应布局：js判断不同设备显示不同页面，局部自适应配合媒体查询
 
+## 预处理器less
+扩展了css，增加了注入变量、混合(mixin)、模块化等概念，使用方便易于维护   
+变量：```@```声明，注意变量是延迟加载，可在使用后声明   
+嵌套规则：```&```代表当前父级   
+混合：类似公共方法，```.box(@width: 100px, @height: 100px, @bgColor: black) {}```，匹配模式   
+导入：```@import "z-mixin";```   
+less需写大括号，sass($，无全局变量概念)   
+
