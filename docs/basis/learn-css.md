@@ -49,7 +49,8 @@ width、height、padding、border、margin
 
 ## 响应式案例
 * 媒体查询，不同宽度匹配不同的方案   
-```device-width（浏览器）/max-device-width（屏幕）```
+```max-width（浏览器）/max-device-width（屏幕）```   
+媒体类型，关键字，媒体属性   
 ```html
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style>
@@ -77,8 +78,8 @@ width、height、padding、border、margin
 ## 预处理器less
 扩展了css，增加了注入变量、混合(mixin)、模块化等概念，使用方便易于维护   
 变量：```@```声明，注意变量是延迟加载，可在使用后声明   
-嵌套规则：```&```代表当前父级   
-混合：类似公共方法，```.box(@width: 100px, @height: 100px, @bgColor: black) {}```，匹配模式   
+嵌套规则：```&```代表当前父选择器   
+混合：类似公共方法；不带输出的混合，加()，```.box(@width: 100px, @height: 100px, @bgColor: black) {}```，匹配模式   
 导入：```@import "z-mixin";```   
 less需写大括号，sass($，无全局变量概念)   
 
