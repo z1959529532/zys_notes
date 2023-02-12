@@ -9,7 +9,7 @@ module.exports =
         {
             title: '前端基础',
             path: '/basis/',
-            collapsable: true,
+            collapsable: false,
             sidebarDepth: 2,
             children: [
                 '/basis/learn-html',
@@ -33,7 +33,7 @@ module.exports =
         {
             title: '面试问题',
             path: '/interview/',
-            collapsable: true,
+            collapsable: false,
             sidebarDepth: 2,
             children: [
                 '/interview/vue',
