@@ -32,10 +32,11 @@ chrome中文版默认最小字号12px
 ```zoom: 0.8```、```-webkit-transform: scale(0.8)```
 
 ### 5、隐藏元素方法
-```display```  ```visibility```  ```opacity```  ```宽高0```  ```position移出```
+```display```、```visibility```、```opacity```、```宽高0```、```position移出```
 
 ### 6、水平垂直居中的方法
-```定位上下左右0+margin auto```  ```定位50%+ margin负值自身宽```  ```定位+ transform```  ```flex```
+```定位上下左右0+margin auto```、```定位50%+ margin负值自身宽```、```定位+ transform```(兼容性好)、```flex```   
+京东移动端顶部logo用的display   
 
 ### 7、动画animation
 animation:   
@@ -47,7 +48,7 @@ animation:
 ```@keyframes```
 
 ### 8、转换transform
-```translate(50%, 50%)位移```  ```scale(.8)缩放```  ```rotate(15deg)旋转```  ```skew(-5deg)扭曲```
+```translate(50%, 50%)位移```、```scale(.8)缩放```、```rotate(15deg)旋转```、```skew(-5deg)扭曲```
 
 ### 9、响应式相关
 * flex盒布局
@@ -89,7 +90,14 @@ animation:
   * ```-webkit-box-orient: vertical``` 设置伸缩盒子元素的排列
   * ```word-break: break-all```
 
-### 11、回流和重绘
+### 11、BFC
+它是页面中的一块渲染区域，并且有一套属于自己的渲染规则，内部的元素不会影响到外部的元素   
+
+同一个bfc下会有：
+* margin重叠，处理是包裹一层容器生成一个新的bfc
+* float浮动会脱离文档流，要使容器包裹浮动元素和高度，```overflow: hidden```清除浮动触发容器的bfc
+
+### 12、回流和重绘
 回流可理解为计算节点的位置和大小，触发条件：一开始渲染、添加删除dom、位置和尺寸变化、窗口尺寸变化   
 重绘可理解为节点画好形状后触发(回流)，画上颜色等特性，触发条件：颜色修改、文本方向   
 如何减少：   
@@ -98,6 +106,6 @@ animation:
 * 元素动画尽量脱离文档流position
 * 避免使用table布局
 
-### 12、预编译语言
+### 13、预编译语言
 扩展了css，增加了注入变量、混入(mixin)、模块化等概念，使用方便易于维护   
 基本使用（less需写大括号）、变量（@、$）、作用域（sass无全局变量概念）、混入

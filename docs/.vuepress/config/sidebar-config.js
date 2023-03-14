@@ -30,6 +30,7 @@ module.exports =
                 '/vue/learn-vue3',
             ],
         },
+        '/iframe/',
         {
             title: '面试问题',
             path: '/interview/',
