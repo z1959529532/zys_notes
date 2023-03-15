@@ -9,7 +9,7 @@ title: iframe通信
     - 用起来简单方便，可以直接调用和修改嵌入页面的内容
     - 解决第三方内容加载缓慢的问题（广告，图标）
 * 缺点：
-    - 会阻塞页面onload事件，要在iframe加载完毕后(dom，css，js)才会触发，影响网页加载速度
+    - 会阻塞主页面onload事件，要在iframe加载完毕后(dom，css，js)才会触发，影响网页加载速度
     - 共享连接池，影响页面并行加载（个解决方案是在优先级更高的资源下载完成后再动态的给iframe的src赋值）
     - 对于小设备展示不全兼容性差
 
@@ -33,6 +33,8 @@ export default class Main extends Vue {
                 {data: 'hello 在吗？', type: 'zys', parentUrl: location.href},
                 location.origin + `/#/iframeTest` // 子页面地址，*为所有
             )
+            // 获取子dom
+            console.log(sonFrame.contentWindow.document.getElementById('greet'), 1122);
         }
     }
 
@@ -45,6 +47,8 @@ export default class Main extends Vue {
             {data: '你好！在', type: 'zys', parentUrl: ''},
             'parentUrl'  // 父页面地址，*为所有
         );
+        // 获取父dom
+        console.log(window.parent.document.getElementById('reply'), 1122);
     }
 
     // 跨域接收消息
