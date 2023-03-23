@@ -5,24 +5,37 @@ title: vue系列
 ### 对Vue看法
 是一个渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
+### SPA
+单页面应用，应用加载好一个Web页面(html、js、css)后不会再随用户的操作重新加载或跳转，而是动态重写当前页面
+* 优点：用户体验好、快，前后端分离开发
+* 缺点：初次加载耗时，SEO难度高
+
 ### 双向绑定的理解
 MVVM
+* Model：数据层，数据业务逻辑处理和服务端交互。
+* View：视图层，可以理解为展示给用户各种信息的DOM层。
+* VueModel：视图模型层，是View和Model之间的通信桥梁，一方面实现Data Banding另一方面实现了Dom Listener。
 
 ### vue的响应式原理
 * vue2的是通过 ```Object.defineproperty``` 数据劫持，初始化时对每个属性加上get/set（存在问题对象新增、删除属性界面不更新，得用$set；通过下标改数组界面不更新
 * vue3的是通过 ```Proxy``` 拦截对象中任意属性变化（优点不用监听每个属性），通过 ```Reflect(反射)``` 对源对象属性操作（优点，重复性操作属性时，Reflect它是有返回值的，Object会报错）
 
+
 ---
-### 计算属性
+
 
 ### v-if和v-show的区别
-v-show条件为false时，只是元素的display属性设置为none，元素还存在dom中
+都能控制元素的显隐   
+v-show条件为false时，只是元素的display属性设置为none，节点还存在dom中   
+v-if是直接添加与删除dom，开销大
 
 ### v-for中key的作用
-与dom的diff算法有关，主要是为了更高效的更新虚拟dom，数据和key相同时dom不用更新
+数据发生改变，匹配元素顺序不会移动   
+与dom的diff算法有关，能更高效的更新虚拟dom，数据和key相同时dom不用更新
 
 ### 为什么v-if和v-for不建议一起用
-放在同一元素上时，v-for的优先级高，每次遍历后再判断影响性能
+在同一元素上使用，v-for的优先级高，每次遍历后再判断影响性能   
+解决：就是加template外层判断，不生成dom
 
 ### 修饰符有哪些
 - 表单修饰符v-model：```.trim``` ```.number``` ```.lazy```
@@ -31,7 +44,18 @@ v-show条件为false时，只是元素的display属性设置为none，元素还�
 - 按键：```@keyup.enter```
 - v-bind修饰符：```:abc.sync```
 
+### diff算法理解
+vue中主要作用于虚拟dom和渲染后的真实dom比较   
+两个特点：同级比较，循环向中间比较
+
+### vue的$nextTick
+vue更新dom是异步执行的，修改数据后，在回调中拿到更新后的dom结构   
+$nextTick()返回一个promise对象
+
+
 ---
+
+
 ### 什么是组件化
 尽可能的将页面拆分成一个个小的可复用的组件，代码更方便维护和管理，扩展性更强
 
@@ -82,10 +106,6 @@ history每次刷新会重新请求整个网址，也就是重新请求服务器
 * 只有使用keep-alive才生效的两个函数
   * activated(){}
   * deactivated (to, from, next){}
-
-### vue的$nextTick
-vue更新dom是异步执行的，修改数据后，在回调中拿到更新后的dom结构   
-$nextTick()返回一个promise对象
 
 ### vue组件和插件的不同
 * 使用场景：

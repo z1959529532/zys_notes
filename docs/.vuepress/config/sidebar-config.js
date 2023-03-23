@@ -7,6 +7,17 @@ module.exports =
     [
         '/',
         {
+            title: '面试问题',
+            path: '/interview/',
+            collapsable: false,
+            sidebarDepth: 2,
+            children: [
+                '/interview/vue',
+                '/interview/css',
+                '/interview/js'
+            ],
+        },
+        {
             title: '前端基础',
             path: '/basis/',
             collapsable: false,
@@ -30,18 +41,7 @@ module.exports =
                 '/vue/learn-vue3',
             ],
         },
-        '/iframe/',
-        {
-            title: '面试问题',
-            path: '/interview/',
-            collapsable: false,
-            sidebarDepth: 2,
-            children: [
-                '/interview/vue',
-                '/interview/css',
-                '/interview/js'
-            ],
-        }
+        '/iframe/'
     ];
 
     // 3、对象形式
