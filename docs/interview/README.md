@@ -12,5 +12,9 @@ title: 面试题
 * v-for中key的作用
 * 为什么v-if和v-for不建议一起用
 * 修饰符有哪些
-* diff算法理解
 * vue的$nextTick
+---
+* Vue组件data必须为函数
+* 计算属性computed
+* watch监听
+* 混入mixin的理解

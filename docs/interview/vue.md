@@ -6,7 +6,7 @@ title: vue系列
 是一个渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
 ### SPA
-单页面应用，应用加载好一个Web页面(html、js、css)后不会再随用户的操作重新加载或跳转，而是动态重写当前页面
+单页面应用，应用加载好一个Web页面(html、js、css)后不会再随用户的操作重新加载或跳转，而是动态重写当前页面内容
 * 优点：用户体验好、快，前后端分离开发
 * 缺点：初次加载耗时，SEO难度高
 
@@ -30,8 +30,10 @@ v-show条件为false时，只是元素的display属性设置为none，节点还�
 v-if是直接添加与删除dom，开销大
 
 ### v-for中key的作用
-数据发生改变，匹配元素顺序不会移动   
-与dom的diff算法有关，能更高效的更新虚拟dom，数据和key相同时dom不用更新
+与dom的diff算法有关   
+diff算法：diff算法在vue中主要是用于虚拟dom和渲染后的真实dom比较（同级比较，循环向中间比较）   
+加key能更高效的更新虚拟dom，数据和key相同时dom不用更新   
+数据发生改变，匹配元素顺序不会移动
 
 ### 为什么v-if和v-for不建议一起用
 在同一元素上使用，v-for的优先级高，每次遍历后再判断影响性能   
@@ -44,17 +46,41 @@ v-if是直接添加与删除dom，开销大
 - 按键：```@keyup.enter```
 - v-bind修饰符：```:abc.sync```
 
-### diff算法理解
-vue中主要作用于虚拟dom和渲染后的真实dom比较   
-两个特点：同级比较，循环向中间比较
-
 ### vue的$nextTick
-vue更新dom是异步执行的，修改数据后，在回调中拿到更新后的dom结构   
+vue更新dom是异步执行的，修改数据后视图不会立刻更新，在回调中拿到更新后的dom结构   
 $nextTick()返回一个promise对象
 
 
 ---
 
+
+### Vue组件data必须为函数
+函数return的都是新地址的data，这样组件之间数据不会相互影响，防止数据污染
+
+### 计算属性computed
+什么情况使用：对数据进行一些转化后在显示   
+与方法对比好处是有缓存，多次使用只会调用一次
+```
+computed: {
+  getAll() { return this.message1+' '+this.message2; }
+}
+person.fullName = computed(() => { return person.firstName + '-' + person.lastName; })
+```
+
+### watch监听
+什么情况使用：监听值变化需要做一些业务逻辑时
+```
+watch: { sum (newValue, oldValue) { 业务 } }
+```
+* Vue3中 ```watch```和```watchEffect```区别   
+  watch既要指明监视的属性也要指明回调
+  而watchEffect不用指明监视的属性，回调中用到的数据有变化就会执行
+
+### 混入mixin的理解
+在需要相似度极高的组件时可以用到，让组件复用一些我们配置相同的生命周期或者方法   
+
+
+<!--
 
 ### 什么是组件化
 尽可能的将页面拆分成一个个小的可复用的组件，代码更方便维护和管理，扩展性更强
@@ -63,9 +89,6 @@ $nextTick()返回一个promise对象
 * 创建组件构造器
 * 注册组件
 * 使用组件
-
-### 组件data必须为函数
-函数return的都是新地址的data，这样组件之间数据不会相互影响，防止数据污染
 
 ### 父子组件通信
 父传子用props接收，子传父用$emit
@@ -132,12 +155,8 @@ toRaw和markRaw
 provide与inject
 
 ### 响应式原理
-### 计算属性
-person.fullName = computed(() => {})
-### watch监听
-使用
 
-
+-->
 
 
 
