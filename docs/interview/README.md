@@ -26,3 +26,6 @@ title: 面试题
 * 组件和插件的区别
 * 组件name的作用
 * 插槽是什么
+---
+* vue-router路由模式
+* $route和$router的区别
