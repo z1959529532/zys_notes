@@ -13,6 +13,16 @@ title: vue系列
 $router是VueRouter实例，包含了所有路由以及路由的跳转方法   
 $route是当前跳转的路由对象，里面含有一些路由信息（name、path、query、params等）
 
+### active-class
+router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRouter处
+
+### 路由守卫有哪些
+```router.beforeEach(to, from, next)```全局前置守卫，调用next()进入下一个页面
+```router.afterEach(to, from, next)```后置守卫，不用主动调next()
+```beforeEnter```路由独享守卫
+```beforeRouteEnter```组件内守卫
+
+
 ---
 
 
