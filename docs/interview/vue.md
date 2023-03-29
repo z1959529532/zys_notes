@@ -2,30 +2,6 @@
 title: vue系列
 ---
 
-### vue-router路由模式
-* hash   
-  地址栏上带有#的，也就是用来指示hash值的
-* history   
-  对应的是HTML5History，```pushState()```和```replaceState()```
-区别：history模式下，刷新就会向后端请求整个网址，前后端地址要完全一致，否则会404报错，处理就是前端加一个搭配404页面
-
-### $route和$router的区别
-$router是VueRouter实例，包含了所有路由以及路由的跳转方法   
-$route是当前跳转的路由对象，里面含有一些路由信息（name、path、query、params等）
-
-### active-class
-router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRouter处
-
-### 路由守卫有哪些
-```router.beforeEach(to, from, next)```全局前置守卫，调用next()进入下一个页面
-```router.afterEach(to, from, next)```后置守卫，不用主动调next()
-```beforeEnter```路由独享守卫
-```beforeRouteEnter```组件内守卫
-
-
----
-
-
 ### 对Vue看法
 是一个渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
@@ -35,7 +11,10 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 * 缺点：初次加载耗时，SEO难度高
 
 ### 双向绑定的理解
-MVVM
+数据劫持结合发布订阅   
+监听器```Observer```对数据劫持监听，数据变化再由订阅者```Watcher```看是否需要更新，交由订阅器```Dep```收集订阅者统一管理
+
+### MVVM
 * Model：数据层，数据业务逻辑处理和服务端交互。
 * View：视图层，可以理解为展示给用户各种信息的DOM层。
 * VueModel：视图模型层，是View和Model之间的通信桥梁，一方面实现Data Banding另一方面实现了Dom Listener。
@@ -76,6 +55,13 @@ diff算法：diff算法在vue中主要是用于虚拟dom和渲染后的真实dom
 ### vue的$nextTick
 vue更新dom是异步执行的，修改数据后视图不会立刻更新，在回调中拿到更新后的dom结构   
 $nextTick()返回一个promise对象
+
+
+---
+
+
+### create和mounted中间间隔受哪些因素影响
+mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度可能会影响dom的渲染
 
 
 ---
@@ -144,42 +130,53 @@ Vue实例的根节点app入口不能有两个
 使用：子组件```slot```开启插槽，父组件使用子组件标签夹显示内容   
 具名插槽(带有name去决定显示哪些不同内容)，作用域插槽（子组件提供数据，绑定在slot上）
 
+
+---
+
+
+### vue-router路由模式
+* hash   
+  地址栏上带有#的，也就是用来指示hash值的
+* history   
+  对应的是HTML5History，```pushState()```和```replaceState()```
+  区别：history模式下，刷新就会向后端请求整个网址，前后端地址要完全一致，否则会404报错，处理就是前端加一个搭配404页面
+
+### $route和$router的区别
+$router是VueRouter实例，包含了所有路由以及路由的跳转方法   
+$route是当前跳转的路由对象，里面含有一些路由信息（name、path、query、params等）
+
+### active-class
+router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRouter处
+
+### 路由守卫有哪些
+```router.beforeEach(to, from, next)```全局前置守卫，调用next()进入下一个页面   
+```router.afterEach(to, from, next)```后置守卫，不用主动调next()   
+```beforeEnter```路由独享守卫   
+```beforeRouteEnter```组件内守卫
+
+### keep-alive的作用
+* 是Vue的一个内置组件，使被包含的组件保留状态，避免重新渲染（不走destoryed）
+* 只有使用keep-alive才生效的两个钩子函数
+  * activated(){}
+  * deactivated (to, from, next){}
+
+
 ---
 
 
 
+### Vuex是什么
+全局状态管理，可以将多个组件共享的数据存储在一个对象里
+
+### Vuex中mutations和actions区别
+区别在于mutations中最好放同步方法，这样能跟踪到，对于异步操作放在actions中
 
 <!--
-
-### 注册组件步骤
-* 创建组件构造器
-* 注册组件
-* 使用组件
-
----
-### 生命周期
 
 ### 第一次页面加载触发哪几个钩子
 beforeCreate、created、beforeMount、mounted
 
-### 父子组件执行生命周期的顺序
-
-### create和mounted中间间隔受哪些因素影响
-mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度可能会影响dom的渲染
-
-### 模块化
-* 原始js开发存在问题，解决方案
-* ES6导出，导入
-
----
-
 ### 路由传参的方式
-
-### keep-alive的作用
-* 是Vue的一个内置组件，可以使被包含的组件保留状态，避免重新渲染（不走destoryed）
-* 只有使用keep-alive才生效的两个函数
-  * activated(){}
-  * deactivated (to, from, next){}
 
 ### vue3提升体现在哪
 打包减小、渲染快、内存减小   
@@ -187,7 +184,6 @@ mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度�
 更好的支持typescript   
 新特性：Composition API、内置组件
 
-### vite
 
 ### Composition API
 setup：使用和注意，执行时机，this，两个参数   

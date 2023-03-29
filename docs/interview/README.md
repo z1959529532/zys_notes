@@ -29,3 +29,9 @@ title: 面试题
 ---
 * vue-router路由模式
 * $route和$router的区别
+* active-class
+* 路由守卫有哪些
+* keep-alive的作用
+---
+* Vuex是什么
+* Vuex中mutations和actions区别
