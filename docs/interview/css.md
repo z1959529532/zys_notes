@@ -4,9 +4,26 @@ title: css系列
 
 ### 1、盒模型
 标准盒模型、IE怪异盒模型（width包含padding、border）   
-```box-sizing: border-box```
+```box-sizing: content-box | border-box```
 
-### 2、选择器和继承属性
+### 2、BFC
+块级格式化上下文，是页面中的一块渲染区域，并且有一套属于自己的渲染规则，内部的元素不会影响到外部的元素
+
+触发条件：
+* 根元素
+* 绝对定位元素
+* ```overflow```不为```visible```的元素
+
+同一个bfc下会有：
+* margin重叠，处理是包裹一层容器生成一个新的bfc
+* float浮动会脱离文档流，要使容器包裹浮动元素和高度，```overflow: hidden```清除浮动触发容器的bfc
+
+### 3、水平垂直居中的方法
+```定位上下左右0+margin auto```、```定位50%+ margin负值自身宽```、```定位50%+ transform```(兼容性好)、```flex```   
+京东移动端顶部logo用的display
+
+
+### 选择器和继承属性
 - 选择器   
 id选择器、类选择器、标签选择器   
 后代选择器(#box div)、子选择器(.one>abc注意只有子辈)，相邻选择器(.one+two)   
@@ -14,7 +31,7 @@ id选择器、类选择器、标签选择器
 - 继承属性   
 字体、文本、visibility、表格布局等
 
-### 3、px/em/rem/vh区别
+### px/em/rem/vh区别
 ```px``` 绝对单位，像素   
 浏览器默认字体16px   
 ```em``` 相对单位(不固定)，相对于父级字体大小计算，父级无设定则相对浏览器   
@@ -27,18 +44,14 @@ html {font-size: 10px} /* 公式16px*62.5%=10px,1rem=10px */
 ```
 ```vh、vw``` 相对于窗口宽高，等分100份
 
-### 4、如何让chrome支持小于12px的字体
+### 如何让chrome支持小于12px的字体
 chrome中文版默认最小字号12px   
 ```zoom: 0.8```、```-webkit-transform: scale(0.8)```
 
-### 5、隐藏元素方法
+### 隐藏元素方法
 ```display```、```visibility```、```opacity```、```宽高0```、```position移出```
 
-### 6、水平垂直居中的方法
-```定位上下左右0+margin auto```、```定位50%+ margin负值自身宽```、```定位+ transform```(兼容性好)、```flex```   
-京东移动端顶部logo用的display   
-
-### 7、动画animation
+### 动画animation
 animation:   
 ```animation-name(动画名称)```   
 ```animation-duration(动画时间)```   
@@ -47,10 +60,10 @@ animation:
 ```animation-fill-mode(动画时间之外的状态)```   
 ```@keyframes```
 
-### 8、转换transform
+### 转换transform
 ```translate(50%, 50%)位移```、```scale(.8)缩放```、```rotate(15deg)旋转```、```skew(-5deg)扭曲```
 
-### 9、响应式相关
+### 响应式相关
 * flex盒布局
   * 决定主轴方向和排列方式，控制换行
     * flex-flow： flex-direction、 flex-wrap
@@ -76,7 +89,7 @@ animation:
 
 * 百分比，rem
 
-### 10、单行/多行文本溢出省略
+### 单行/多行文本溢出省略
 * 单行
   * ```overflow: hidden;```
   * ```white-space: nowrap;```  文本间的空格与换行（空格合并为一个，不换行）
@@ -90,14 +103,7 @@ animation:
   * ```-webkit-box-orient: vertical``` 设置伸缩盒子元素的排列
   * ```word-break: break-all```
 
-### 11、BFC
-它是页面中的一块渲染区域，并且有一套属于自己的渲染规则，内部的元素不会影响到外部的元素   
-
-同一个bfc下会有：
-* margin重叠，处理是包裹一层容器生成一个新的bfc
-* float浮动会脱离文档流，要使容器包裹浮动元素和高度，```overflow: hidden```清除浮动触发容器的bfc
-
-### 12、回流和重绘
+### 回流和重绘
 回流可理解为计算节点的位置和大小，触发条件：一开始渲染、添加删除dom、位置和尺寸变化、窗口尺寸变化   
 重绘可理解为节点画好形状后触发(回流)，画上颜色等特性，触发条件：颜色修改、文本方向   
 如何减少：   
@@ -106,6 +112,6 @@ animation:
 * 元素动画尽量脱离文档流position
 * 避免使用table布局
 
-### 13、预编译语言
+### 预编译语言
 扩展了css，增加了注入变量、混入(mixin)、模块化等概念，使用方便易于维护   
 基本使用（less需写大括号）、变量（@、$）、作用域（sass无全局变量概念）、混入

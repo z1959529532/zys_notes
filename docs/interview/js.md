@@ -7,10 +7,7 @@ title: js系列
 引用：Object、Array、Function   
 ES6：   
 Symbol：创建后独一无二且不可变的数据类型，解决变量冲突   
-BigInt：可以存储和操作大整数   
-
-### 类型转化机制
-强制转换，隐士转换
+BigInt：可以存储和操作大整数
 
 ### typeof和instanceof
 typeof：返回类型字符串，null、对象和数组判断为object类型   
@@ -22,18 +19,24 @@ function getType(obj) {
 }
 ```
 
+### 数组常见方法
+* ```.push()```，```.unshift()开头添加任意个```，```b=a.concat()合并```
+* ```.pop()末尾删除```，```shift()删第一项，返回删除项```，```b=a.slice(1)删位置```
+* ```indexOf()返回位置```，```includes()返回布尔```
+* ```.find(() => )返回匹配项```，```.some(() => )有一个满足返回true```，```.every(() => )所有满足返回true```，```b=a.filter(() => )返回满足数组```，```.map()```
+* ```.splice(开始位置, 删除数量, 插入的元素)```
+
+### 数组去重方法
+* 循环利用```indexOf()```方法去重，```.indexOf(arr[i]) === -1```
+* 利用es6的```Set```去重，```Array.from(new Set())```
+* 利用```filter```去重，```arr.filter((val, index) => arr.indexOf(val) === index)```
+* 利用Map数据结构去重，```arr.filter(val => !map.has(val) && map.set(val, 1))```
+
 ### undefined和null区别
 未定义和定义空对象
 
 ### 判断对象是空对象的方法
 ```Object.keys(obj).length == 0```、```JSON.stringify(obj) == '{}'```
-
-### 数组常见方法
-* ```.push()```，```.unshift()开头添加任意个```，```b=a.concat()合并```   
-* ```.pop()末尾删除```，```shift()删第一项，返回删除项```，```b=a.slice(1)删位置```   
-* ```indexOf()返回位置```，```includes()返回布尔```   
-* ```.find(() => )返回匹配项```，```.some(() => )有一个满足返回true```，```.every(() => )所有满足返回true```，```b=a.filter(() => )返回满足数组```，```.map()```
-* ```.splice(开始位置, 删除数量, 插入的元素)```
 
 ### ==和===区别
 相等会做类型转换，再进行值比较（true==1）
@@ -143,11 +146,9 @@ function deepClone(obj, hash = new WeakMap()) {
 }
 ```
 
-### 内存泄露
-* 使用未声明的变量，意外创建了一个全局变量，使变量在内存中无法被收回
-* 闭包，读取函数内部的局部变量
+### 闭包
+内层函数中访问到其外层函数的作用域   
 ```js
-// 内层函数中访问到其外层函数的作用域
 // 简单的理解成定义在一个函数内部的函数
 function f1() {
   var n = 100;
@@ -156,6 +157,12 @@ function f1() {
   }
 }
 ```
+使用场景：创建私有变量、延长变量的生命周期   
+return一个函数、回调函数、循环函数赋值、防抖和节流
+
+### 内存泄露
+* 使用未声明的变量，意外创建了一个全局变量，使变量在内存中无法被收回
+* 闭包，函数内部的局部变量，没有释放
 * 删除dom元素，没有清理dom的引用
 ```js
 var a = document.getElementById('btn');

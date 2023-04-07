@@ -35,3 +35,17 @@ title: 面试题
 ---
 * Vuex是什么
 * Vuex中mutations和actions区别
+
+
+## JS系列
+* 数据类型
+* typeof和instanceof
+* 数组常见方法
+* 数组去重方法
+* 判断对象是空对象的方法
+
+## Css系列
+* 盒模型
+* BFC
+* 水平垂直居中的方法
+* 
