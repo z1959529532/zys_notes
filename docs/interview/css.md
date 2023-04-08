@@ -14,9 +14,9 @@ title: css系列
 * 绝对定位元素
 * ```overflow```不为```visible```的元素
 
-同一个bfc下会有：
-* margin重叠，处理是包裹一层容器生成一个新的bfc
-* float浮动会脱离文档流，要使容器包裹浮动元素和高度，```overflow: hidden```清除浮动触发容器的bfc
+应用场景：
+* 同一个bfc下margin重叠，处理是包裹一层容器生成一个新的bfc
+* 清除内部浮动float，计算高度时将内部浮动元素高度算入，```overflow: hidden```使外部元素生成bfc
 
 ### 3、水平垂直居中的方法
 ```定位上下左右0+margin auto```、```定位50%+ margin负值自身宽```、```定位50%+ transform```(兼容性好)、```flex```   
