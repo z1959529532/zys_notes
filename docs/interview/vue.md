@@ -170,12 +170,25 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 ### Vuex中mutations和actions区别
 区别在于mutations中最好放同步方法，这样能跟踪到，对于异步操作放在actions中
 
+
+---
+
+
+### 项目中解决跨域
+1、通过```vue.config.js```文件配置   
+2、服务端实现   
+3、通过```nginx```实现代理
+
+### 权限怎么做
+* 路由权限
+  - 动态生成路由（数据前后端都可以，后端的话映射），```router.addRoutes()```添加
+  - 也可通过```meta```设定权限角色
+* 按钮权限：通过```自定义权限指令```控制
+
 <!--
 
 ### 第一次页面加载触发哪几个钩子
 beforeCreate、created、beforeMount、mounted
-
-### 路由传参的方式
 
 ### vue3提升体现在哪
 打包减小、渲染快、内存减小   

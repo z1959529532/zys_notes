@@ -32,10 +32,10 @@ function getType(obj) {
 * 利用```filter```去重，```arr.filter((val, index) => arr.indexOf(val) === index)```
 * 利用Map数据结构去重，```arr.filter(val => !map.has(val) && map.set(val, 1))```
 
-### 节流和防抖
+### 防抖和节流
 都是防止一段时间重复性操作      
-```防抖```是最后一次开始计时等待设置时长执行，输入框发送请求的防抖   
-```节流```是按间隔时间执行，按钮不能重复点击操作
+```防抖```：是最后一次操作开始，等待设置时长执行，输入框发送请求的防抖   
+```节流```：是按间隔时间执行，按钮不能重复点击操作
 
 ### 闭包
 内层函数中访问到其外层函数的作用域   
@@ -192,6 +192,7 @@ console.log(typeof a) // number
 是异步编程新的一种解决方案，支持链式调用解决回调地狱的问题
 
 ### async/await
+基于Promise实现的，好处就是让异步的代码看起来和同步代码一样，代码容易阅读和维护   
 * async声明一个异步的function，返回值为Promise对象
 ```js
 // 函数里return结果，相当于Promise.resolve()
@@ -201,14 +202,18 @@ console.log(result, 1122); // Promise对象
 ```
 * await等待一个异步方法执行完成，一般右侧为Promise对象
 ```js
-// 返回成功Promise的值，其它值直接返回，失败Promise要try...catch
 async function abc() {
-  console.log(await Promise.resolve(123));
-  console.log(await 123);
-  console.log(abc(), 1122);
+  console.log(await Promise.resolve(123));  // 123
+  console.log(await 123);  // 123
+  try {  // 失败要try...catch捕获
+    const result3 = await Promise.reject('error');
+  } catch (e) {
+    console.log(e);
+  }
 }
+abc();
 ```
-* 优势：如果是链式调用，Promise得用then去执行，async/await写法几乎和同步代码一样，错误处理友好try…catch
+* 优势：如果是链式调用，Promise得用then去执行，async/await写法几乎和同步代码一样
 ```js
 async function getResult() {
     const result1 = await 异步方法1(123);

@@ -44,6 +44,30 @@ html {font-size: 10px} /* 公式16px*62.5%=10px,1rem=10px */
 ```
 ```vh、vw``` 相对于窗口宽高，等分100份
 
+### flex弹性盒布局
+* 决定主轴方向和排列方式，控制换行
+  * flex-flow： flex-direction、 flex-wrap
+  * flex-direction： ```row``` | ```row-reverse``` | ```column``` | ```column-reverse```
+  * flex-wrap： ```nowrap``` | ```wrap``` | ```wrap-reverse```
+* 主轴方向对齐方式
+  * justify-content：```flex-start``` | ```flex-end``` | ```center``` | ```space-between``` | ```space-around```
+* 侧轴方向对齐方式 单行/多行
+  * align-items：```flex-start``` | ```flex-end``` | ```center``` | ```baseline``` | ```stretch```（拉伸，子盒子不要给高度）
+  * align-content（多行）：```flex-start``` | ```flex-end``` | ```center``` | ```space-between``` | ```space-around``` | ```stretch```
+* 分配空间
+  * flex：flex-grow（扩展比例）、flex-shrink（收缩比例）、flex-basis
+  * flex-basis（伸缩基准值）：```<length>``` | ```<percentage>``` | ```auto``` | ```content```
+
+### 响应式设计
+* 使用弹性布局：flex布局
+* 媒体查询：针对不同分辨率设备，对应不同css
+  * ```<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">```
+    * width=device-width：自适应屏幕宽度
+    * initial-scale：初始化的缩放
+    * user-scalable：用户可以缩放操作
+  * ```@media screen and (min-device-width: 400px) and (max-device-width: 800px) {}```
+* 使用相对单位，百分比，rem，vh/vw等
+
 ### 如何让chrome支持小于12px的字体
 chrome中文版默认最小字号12px   
 ```zoom: 0.8```、```-webkit-transform: scale(0.8)```
@@ -62,32 +86,6 @@ animation:
 
 ### 转换transform
 ```translate(50%, 50%)位移```、```scale(.8)缩放```、```rotate(15deg)旋转```、```skew(-5deg)扭曲```
-
-### 响应式相关
-* flex盒布局
-  * 决定主轴方向和排列方式，控制换行
-    * flex-flow： flex-direction、 flex-wrap
-    * flex-direction： ```row``` | ```row-reverse``` | ```column``` | ```column-reverse```
-    * flex-wrap： ```nowrap``` | ```wrap``` | ```wrap-reverse```
-  * 主轴方向对齐方式
-    * justify-content：```flex-start``` | ```flex-end``` | ```center``` | ```space-between``` | ```space-around```
-  * 侧轴方向对齐方式 单行/多行
-    * align-items：```flex-start``` | ```flex-end``` | ```center``` | ```baseline``` | ```stretch```（拉伸，子盒子不要给高度）
-    * align-content（多行）：```flex-start``` | ```flex-end``` | ```center``` | ```space-between``` | ```space-around``` | ```stretch```
-  * 分配空间
-    * flex：flex-grow（扩展比例）、flex-shrink（收缩比例）、flex-basis
-    * flex-basis（伸缩基准值）：```<length>``` | ```<percentage>``` | ```auto``` | ```content```
-
-* 媒体查询   
-  * ```<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">```   
-  * width=device-width：自适应屏幕宽度
-  * initial-scale：初始化的缩放
-  * user-scalable：用户可以缩放操作   
-
-```@media screen and (min-device-width: 400px) and (max-device-width: 800px) {}```   
-通过媒体查询，对不同分辨率设备下的样式设定
-
-* 百分比，rem
 
 ### 单行/多行文本溢出省略
 * 单行
