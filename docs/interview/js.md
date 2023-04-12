@@ -32,8 +32,34 @@ function getType(obj) {
 * 利用```filter```去重，```arr.filter((val, index) => arr.indexOf(val) === index)```
 * 利用Map数据结构去重，```arr.filter(val => !map.has(val) && map.set(val, 1))```
 
-### undefined和null区别
-未定义和定义空对象
+### 节流和防抖
+都是防止一段时间重复性操作      
+```防抖```是最后一次开始计时等待设置时长执行，输入框发送请求的防抖   
+```节流```是按间隔时间执行，按钮不能重复点击操作
+
+### 闭包
+内层函数中访问到其外层函数的作用域   
+两种表现形式，一种函数作为参数，一种函数作为返回值
+```js
+// 简单的理解成定义在一个函数内部的函数
+function f1() {
+  var n = 100;
+  function f2() {
+    console.log(n);
+  }
+}
+```
+使用场景：创建私有变量、回调函数、防抖和节流、循环函数赋值
+
+### 内存泄露
+* 使用未声明的变量，意外创建了一个全局变量，使变量在内存中无法被收回
+* 闭包，函数内部的局部变量，没有释放
+* 删除dom元素，没有清理dom的引用
+```js
+var a = document.getElementById('btn');
+document.body.removeChild(document.getElementById('btn'));
+// 解决手动删除 a = null;
+```
 
 ### 判断对象是空对象的方法
 ```Object.keys(obj).length == 0```、```JSON.stringify(obj) == '{}'```
@@ -89,9 +115,6 @@ console.log(p);
 ```p.__proto__===Person.prototype```   
 所有对象最终都是由Object构造的，```Object.prototype```的下一级是```Object.prototypep.__proto__===null```
 
-### this的理解
-绝大数情况下，函数的调用方式决定了this的值
-
 ### 事件代理
 事件流经过三个阶段：捕获-->目标-->冒泡，事件代理就是在冒泡阶段完成   
 就是把一组元素的事件委托到父级或更外层元素上，绑定事件是外层元素   
@@ -144,30 +167,6 @@ function deepClone(obj, hash = new WeakMap()) {
     }
     return cloneObj;
 }
-```
-
-### 闭包
-内层函数中访问到其外层函数的作用域   
-```js
-// 简单的理解成定义在一个函数内部的函数
-function f1() {
-  var n = 100;
-  function f2() {
-    console.log(n);
-  }
-}
-```
-使用场景：创建私有变量、延长变量的生命周期   
-return一个函数、回调函数、循环函数赋值、防抖和节流
-
-### 内存泄露
-* 使用未声明的变量，意外创建了一个全局变量，使变量在内存中无法被收回
-* 闭包，函数内部的局部变量，没有释放
-* 删除dom元素，没有清理dom的引用
-```js
-var a = document.getElementById('btn');
-document.body.removeChild(document.getElementById('btn'));
-// 解决手动删除 a = null;
 ```
 
 ## ES6篇

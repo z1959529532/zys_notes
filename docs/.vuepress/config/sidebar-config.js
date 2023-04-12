@@ -15,6 +15,7 @@ module.exports =
                 '/interview/vue',
                 '/interview/css',
                 '/interview/js',
+                '/interview/encapsulation',
                 '/interview/webgis'
             ],
         },

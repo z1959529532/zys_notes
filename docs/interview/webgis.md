@@ -12,4 +12,3 @@ title: WebGis系列
 ```WMTS```瓦片服务，就是能放大提前制定好的图片
 
 ### 3、Cesium几个核心类
-Viewer
