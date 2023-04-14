@@ -61,8 +61,8 @@ data:{}
 children:Route[]
 loadChildren:LoadChildrenCallback
 ```
-![Router.png](/assets/angular/Router.png)
-![CanActivate.png](/assets/angular/CanActivate.png)
+![Router.png](../.vuepress/public/assets/angular/Router.png)
+![CanActivate.png](../.vuepress/public/assets/angular/CanActivate.png)
 
 ### 服务service
 逻辑处理功能，相当于公共方法   

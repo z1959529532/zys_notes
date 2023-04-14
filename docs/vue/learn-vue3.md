@@ -386,9 +386,9 @@ setup() {
     });
 </script>
 ```
-![vue2响应式原理2](/assets/vue3/vue2响应式原理2.png)   
-![vue3响应式1](/assets/vue3/vue3响应式1.png)
-![vue3响应式2](/assets/vue3/vue3响应式2.png)
+![vue2响应式原理2](../.vuepress/public/assets/vue3/vue2响应式原理2.png)   
+![vue3响应式1](../.vuepress/public/assets/vue3/vue3响应式1.png)
+![vue3响应式2](../.vuepress/public/assets/vue3/vue3响应式2.png)
 
 ## 5、reactive对比ref
 -  从定义数据角度对比：
