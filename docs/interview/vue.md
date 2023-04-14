@@ -1,5 +1,5 @@
 ---
-title: vue系列
+title: Vue系列
 ---
 
 ### 对Vue看法

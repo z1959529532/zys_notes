@@ -19,6 +19,18 @@ module.exports =
                 '/interview/webgis'
             ],
         },
+        // 数组的扩展形式
+        {
+            title: 'vue学习',
+            path: '/vue/',
+            collapsable: true,
+            sidebarDepth: 1,
+            children: [
+                '/vue/learn-vue2',
+                '/vue/learn-vue3',
+            ],
+        },
+        '/angular/angular',
         {
             title: '前端基础',
             path: '/basis/',
@@ -32,17 +44,6 @@ module.exports =
         '/ajax/',
         '/promise/',
         '/axios/',
-        // 数组的扩展形式
-        {
-            title: 'vue学习',
-            path: '/vue/',
-            collapsable: true,
-            sidebarDepth: 1,
-            children: [
-                '/vue/learn-vue2',
-                '/vue/learn-vue3',
-            ],
-        },
         '/iframe/'
     ];
 

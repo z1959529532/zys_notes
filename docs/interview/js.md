@@ -1,5 +1,5 @@
 ---
-title: js系列
+title: JS系列
 ---
 ## JS篇
 ### 数据类型
