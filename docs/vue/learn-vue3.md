@@ -386,6 +386,7 @@ setup() {
     });
 </script>
 ```
+
 ![vue2响应式原理2](../.vuepress/public/assets/vue3/vue2响应式原理2.png)   
 ![vue3响应式1](../.vuepress/public/assets/vue3/vue3响应式1.png)
 ![vue3响应式2](../.vuepress/public/assets/vue3/vue3响应式2.png)

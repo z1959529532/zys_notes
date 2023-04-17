@@ -1,5 +1,5 @@
 ---
-title: Angular系列
+title: Angular
 ---
 
 ### 组件Component
@@ -22,7 +22,7 @@ this.parentFun.emit()
 
 ### 模块Module
 可存放组件，一个组件只能依附于一个模块   
-创建命令：```ng g m 路径/模块名```
+创建命令：```ng g m 路径/模块名```   
 用@NgModule修饰的类   
 ```declarations:[]、imports:[]、bootstrap:[]、exports:[]```
 
@@ -30,7 +30,7 @@ this.parentFun.emit()
 routerLink：html中指定要导航的页面```<a routerLink="/h/car">```   
 Routes：（routes：Routes）所有路由配置   
 Router：（router：Router）当前路由对象，例如```.navigate()```跳转方法   
-![Router1.png](/assets/angular/Router1.png)
+![Router1.png](../.vuepress/public/assets/angular/Router1.png)
 ActivatedRoute：（routeInfo：ActivatedRoute）路由参数信息，```routeInfo.snapshot.queryParams.id```、```routeInfo.queryParams.subacribe(param => {param.id})```
 ```ts
 const routes: Routes [
