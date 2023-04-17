@@ -30,6 +30,7 @@ module.exports =
                 '/vue/learn-vue3',
             ],
         },
+        '/websocket/websocket',
         '/angular/angular',
         {
             title: '前端基础',
