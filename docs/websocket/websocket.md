@@ -35,6 +35,7 @@ websocket不稳定可能会断开连接，两种解决方案
 * 优点：易设置请求少（相对心跳检测）
 * 缺点：可能会丢失数据，在断开重连过程中恰好在通信
 ```js
+// 关闭/出错回调调用
 function closeHandle(e) {
     if (close) {
         ws = null;
@@ -47,6 +48,33 @@ function closeHandle(e) {
 ```
 2、心跳检测，间隔固定时间客户端向服务器发消息证明活着，服务器也同样告诉客户端
 ```js
+// 设置两个定时器，前后端规定事件内修改状态值并检测，服务器未返回信息修改状态的话就去重连
+// 连接成功回调调用
+function heartCheck() {
+  this.pingPong = 'ping';
+  this.pingInterval = setInterval(() => {
+    if (this.ws && this.ws.readyState === 1) {
+      // 客户端发送ping
+      this.ws.send('ping');
+    }
+  }, 10000)
+  this.pongInterval = setInterval(() => {
+    // 没有返回pong 重连webSocket
+    if (this.pingPong === 'ping') {
+      this.closeHandle('pingPong没有改变为pong');
+    }
+    // 重置ping 未返回pong重连
+    this.pingPong = 'ping'
+  }, 20000)
+}
 
+// 接收服务器消息回调
+function receiveMessage(e) {
+  console.log(e.data, 3344);
+  // 服务器端返回pong,修改pingPong的状态
+  if (e.data === 'pong') {
+    this.pingPong = 'pong';
+  }
+}
 ```
 
