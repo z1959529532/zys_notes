@@ -2,10 +2,17 @@
 title: Websocket
 ---
 
-HTML5下一种新的协议（基于tcp的协议）   
-让服务器端可以主动向客户端发送信息，实现了浏览器与服务器全双工通信
+### Websocket
+HTML5提供的一种网络通信协议（基于tcp）   
+实现了浏览器与服务器全双工通信，让服务器端可以主动向客户端发送信息
 
-* 使用
+### 优点
+- 双向通信
+- 性能开销小
+- 支持二进制
+- 没有同源限制
+
+### 使用
 ```js
 const ws = new WebSocket('ws://localhost:8666');
 // 成功回调
@@ -78,3 +85,6 @@ function receiveMessage(e) {
 }
 ```
 
+- 参考地址   
+[手摸手教你使用WebSocket](https://juejin.cn/post/6844903698498322439)   
+[webSocket使用](https://juejin.cn/post/6988052281627246606)
