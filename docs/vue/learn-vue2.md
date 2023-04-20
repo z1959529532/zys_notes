@@ -287,18 +287,9 @@ const son = Vue.extend({
 
 ### 父子组件通信
 - 父传子通过props   
-  父组件标签上 ```:name="name"```，子组件props接收 ```props: ['myTitle']```
-- 子传父通过$emit   
-  子组件js代码 ```this.$emit('son-click', data);```，父组件定义接收事件 ```@son-click="sonClick"```
-- 父访问子   
-  $refs ```this.$refs.son``` 和$children ```this.$children```
-- 子访问父   
-  $parent ```this.$parent``` 多层的话 ```this.$root```
-
-props值的两种方式
-```vue
+  父组件标签上 ```:name="name"```，子组件props接收```props: {a: {type, default, required}}```
+```ts
 props: ['myTitle', 'sonMovies']
-
 props: {
   myTitle: {
     type: String,
@@ -308,6 +299,45 @@ props: {
   sonMovies: {
     type: Array
   }
+}
+```
+- 子传父通过$emit   
+  子组件js代码 ```this.$emit('son-click', data);```，父组件定义接收事件 ```@son-click="sonClick"```
+- 父访问子   
+  $refs ```this.$refs.son``` 和$children ```this.$children```
+- 子访问父   
+  $parent ```this.$parent``` 多层的话 ```this.$root```
+- ```provide```/```reject```   
+- ```eventBus```
+#### 父子组件双向绑定
+```ts
+// .sync
+// 父组件
+:abc.sync="name"
+// 子组件
+@Prop(String) readonly abc!: string;
+this.name = this.abc;
+watch: {
+  name(newValue, oldValue) {
+    this.$emit('update:abc', newValue);
+  }
+}
+
+// v-model
+// 父组件
+v-model="name"
+// 子组件
+@Model('parentNameChange', { type: String }) readonly name!: string;
+this.sonName = this.name;
+watch: {
+  sonName(newValue, oldValue) {
+    this.$emit('parentNameChange', newValue);
+  }
+}
+// js
+model: {
+  prop: 'name', 
+  event: 'parentNameChange'
 }
 ```
 

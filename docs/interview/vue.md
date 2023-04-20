@@ -36,9 +36,9 @@ v-show条件为false时，只是元素的display属性设置为none，节点还�
 v-if是直接添加与删除dom，开销大
 
 ### v-for中key的作用
-与dom的diff算法有关   
+加key能更高效的更新虚拟dom，与dom的diff算法有关   
 diff算法：diff算法在vue中主要是用于虚拟dom和渲染后的真实dom比较（同级比较，循环向中间比较）   
-加key能更高效的更新虚拟dom，数据和key相同时dom不用更新   
+数据和key相同时dom不用更新   
 数据发生改变，匹配元素顺序不会移动
 
 ### 为什么v-if和v-for不建议一起用
@@ -71,7 +71,7 @@ mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度�
 函数return的都是新地址的data，这样组件之间数据不会相互影响，防止数据污染
 
 ### 计算属性computed
-什么情况使用：对数据进行一些转化后在显示   
+使用情况：对数据进行一些转化后在显示   
 与方法对比好处是有缓存，多次使用只会调用一次
 ```
 computed: {
@@ -81,7 +81,7 @@ person.fullName = computed(() => { return person.firstName + '-' + person.lastNa
 ```
 
 ### watch监听
-什么情况使用：监听值变化需要做一些业务逻辑时
+使用情况：监听值变化需要做一些业务逻辑时
 ```
 watch: { sum (newValue, oldValue) { 业务 } }
 ```
@@ -141,7 +141,7 @@ Vue实例的根节点app入口不能有两个
   对应的是HTML5History，```pushState()```和```replaceState()```
   区别：history模式下，刷新就会向后端请求整个网址，前后端地址要完全一致，否则会404报错，处理就是前端加一个搭配404页面
 
-### $route和$router的区别
+### $router和$route的区别
 $router是VueRouter实例，包含了所有路由以及路由的跳转方法   
 $route是当前跳转的路由对象，里面含有一些路由信息（name、path、query、params等）
 
@@ -156,6 +156,9 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 
 ### keep-alive的作用
 * 是Vue的一个内置组件，使被包含的组件保留状态，避免重新渲染（不走destoryed）
+* 两个属性
+  * ```include```组件name匹配会被缓存
+  * ```exclude```
 * 只有使用keep-alive才生效的两个钩子函数
   * activated(){}
   * deactivated (to, from, next){}
@@ -175,23 +178,35 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 
 
 ### 项目中解决跨域
-1、通过```vue.config.js```文件配置   
-2、服务端实现   
-3、通过```nginx```实现代理
+1、通过```vue.config.js```文件配置代理```proxy```    
+2、通过```nginx```实现代理   
+3、CORS服务端设置响应头   
+4、JSONP借助有跨域能力的标签
 
 ### 权限怎么做
 * 路由权限
-  - 动态生成路由（数据前后端都可以，后端的话映射），```router.addRoutes()```添加
-  - 也可通过```meta```设定权限角色
+  - 动态生成路由（数据前后端都可以，后端的话映射），```router.addRoutes()```添加，再通过new实例```.matcher```实现第二次清空
+  - 也可通过```meta```设定权限标识，在```beforeEach((to, from, next) => {}))```去判断进行跳转
 * 按钮权限：通过```自定义权限指令```控制
 
 ### 性能优化
-- 减少请求次数：数据缓存、keep-alive缓存、节流防抖
-- 避免无用渲染：懒加载、预加载
-- webpack打包优化：别名配置、后缀配置、代码分包
-- 减少回流重绘
-- SSR渲染
-- 开启gzip压缩
+- 代码层面的优化
+  - 减少请求次数：数据缓存，keep-alive缓存
+  - ```v-for```添加```key```
+  - 长列表优化-分页、虚拟滚动
+  - 资源的懒加载、预加载
+  - 防抖节流
+- webpack优化
+  - 代码的提取分包
+  - 图片压缩
+  - 打包优化
+- web技术优化
+  - 开启```gzip```压缩
+
+[//]: # (- 避免无用渲染：懒加载、预加载)
+[//]: # (- 减少回流重绘)
+[//]: # (- SSR渲染)
+[//]: # (- 开启gzip压缩)
 
 
 <!--
