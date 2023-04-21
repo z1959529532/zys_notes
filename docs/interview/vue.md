@@ -3,7 +3,7 @@ title: Vue系列
 ---
 
 ### 对Vue看法
-是一个渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
+是一个轻量型渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
 ### SPA
 单页面应用，应用加载好一个Web页面(html、js、css)后不会再随用户的操作重新加载或跳转，而是动态重写当前页面内容
@@ -113,6 +113,40 @@ Vue实例的根节点app入口不能有两个
 ```provide```/```reject```   
 ```eventBus```   
 ```Vuex```
+
+### 父子组件双向绑定
+```ts
+// 方法一 .sync
+// 父组件
+:abc.sync="name"
+// 子组件
+// ts
+@Prop(String) readonly abc!: string;
+this.name = this.abc;
+watch: {
+  name(newValue, oldValue) {
+    this.$emit('update:abc', newValue);
+  }
+}
+// js
+
+// 方法二 v-model
+// 父组件
+v-model="name"
+// 子组件
+@Model('parentNameChange', { type: String }) readonly name!: string;
+this.sonName = this.name;
+watch: {
+  sonName(newValue, oldValue) {
+    this.$emit('parentNameChange', newValue);
+  }
+}
+// js
+model: {
+  prop: 'name', 
+  event: 'parentNameChange'
+}
+```
 
 ### 组件和插件的区别
 组件用来构成业务和界面模块，作用是App.vue   

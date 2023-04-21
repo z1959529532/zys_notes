@@ -3,9 +3,7 @@ title: vue2
 ---
 
 ## vue
-
-渐进式框架（可以将vue作为应用的一部分嵌入）   
-上手容易，容易迅速开发出一些中小型项目
+是一个轻量型渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
 #### vue中的MVVM
 * Model：数据层
@@ -296,9 +294,7 @@ props: {
     default: 'aaa',
     required: true
   },
-  sonMovies: {
-    type: Array
-  }
+  sonMovies: Array
 }
 ```
 - 子传父通过$emit   
@@ -317,20 +313,23 @@ props: {
 // 子组件
 // ts
 @Prop(String) readonly abc!: string;
-this.name = this.abc;
+name = this.abc;
 watch: {
   name(newValue, oldValue) {
     this.$emit('update:abc', newValue);
   }
 }
 // js
+props: {
+  abc: String
+}
 
 // 方法二 v-model
 // 父组件
 v-model="name"
 // 子组件
 @Model('parentNameChange', { type: String }) readonly name!: string;
-this.sonName = this.name;
+sonName = this.name;
 watch: {
   sonName(newValue, oldValue) {
     this.$emit('parentNameChange', newValue);
