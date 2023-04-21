@@ -132,7 +132,7 @@ const app = new Vue({
 * v-show：同样也是控制元素显隐   
 与v-if不同的是条件为false时，元素的display属性设置为none，元素还存在dom中
 
-## v-for便利数组
+## v-for遍历数组
 类似js中的for循环
 ```vue
 <!--遍历数组-->
@@ -140,8 +140,8 @@ const app = new Vue({
 <!--遍历对象-->
 <li v-for="(item, key, index) in userInfo" key="item">{{index +'-'+ key +'-'+ item}}</li>
 ```
-* v-for中的key：与dom的diff算法有关   
-主要是为了更高效的更新虚拟dom，数据和key相同时dom不用更新
+* v-for中的key：   
+与dom的diff算法有关，主要是为了更高效的更新虚拟dom，数据和key相同时dom不用更新
 
 * 检测数组更新   
 ```.push``` ```.pop``` ```.shift``` ```.unshift``` ```.splice``` ```.sort``` ```.reverse```
@@ -311,10 +311,11 @@ props: {
 - ```eventBus```
 #### 父子组件双向绑定
 ```ts
-// .sync
+// 方法一 .sync
 // 父组件
 :abc.sync="name"
 // 子组件
+// ts
 @Prop(String) readonly abc!: string;
 this.name = this.abc;
 watch: {
@@ -322,8 +323,9 @@ watch: {
     this.$emit('update:abc', newValue);
   }
 }
+// js
 
-// v-model
+// 方法二 v-model
 // 父组件
 v-model="name"
 // 子组件
@@ -467,7 +469,7 @@ if (flag) {
 是vue.js官方的路由插件，它和vue.js是深度集成的
 
 - hash模式
-  - #是自带的
+  - 地址栏上带有```#```的来指示hash值
   - 通过 ```location.hash``` 来改变href，页面不发生刷新
 - history模式（html5）
   - ```history.pushState({}, '', '/foo')```，不刷新，有历史记录
