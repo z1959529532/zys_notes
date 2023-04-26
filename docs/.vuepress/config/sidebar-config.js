@@ -32,6 +32,13 @@ module.exports =
             ],
         },
         '/websocket/websocket',
+        // '/vite/vite',
+        {
+            title: 'vite学习',
+            path: '/vite/vite',
+            collapsable: false,
+            sidebarDepth: 2,
+        },
         '/angular/angular',
         {
             title: '前端基础',
