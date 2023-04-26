@@ -1,7 +1,7 @@
 ---
 title: Vue系列
 ---
-
+## 基础
 ### 对Vue看法
 是一个轻量型渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
@@ -10,14 +10,14 @@ title: Vue系列
 * 优点：用户体验好、快，前后端分离开发
 * 缺点：初次加载耗时，SEO难度高
 
-### 双向绑定的理解
-数据劫持结合发布订阅   
-监听器```Observer```对数据劫持监听，数据变化再由订阅者```Watcher```看是否需要更新，交由订阅器```Dep```收集订阅者统一管理
-
 ### MVVM
 * Model：数据层，数据业务逻辑处理和服务端交互。
 * View：视图层，可以理解为展示给用户各种信息的DOM层。
 * VueModel：视图模型层，是View和Model之间的通信桥梁，一方面实现Data Banding另一方面实现了Dom Listener。
+
+### 双向绑定的原理
+数据劫持结合发布订阅   
+监听器```Observer```对数据劫持监听，数据变化再由订阅者```Watcher```看是否需要更新，交由订阅器```Dep```收集订阅者统一管理
 
 ### v-model原理
 v-bind + v-on   
@@ -210,7 +210,7 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 
 ---
 
-
+## 项目篇
 ### 项目中解决跨域
 1、通过```vue.config.js```文件配置代理```proxy```    
 2、通过```nginx```实现代理   
@@ -222,16 +222,6 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
   - 动态生成路由（数据前后端都可以，后端的话映射），```router.addRoutes()```添加，再通过new实例```.matcher```实现第二次清空
   - 也可通过```meta```设定权限标识，在```beforeEach((to, from, next) => {}))```去判断进行跳转
 * 按钮权限：通过```自定义权限指令```控制
-
-### 搭建项目
-* 构建方式 ```vue + ts + vite```
-* 安装路由工具
-* 全局状态管理
-* UI工具
-* 安装http工具axios
-* css预编译器
-* 代码规范和代码美化工具
-* git hooks钩子
 
 ### 性能优化
 - 代码层面的优化
@@ -252,29 +242,17 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 [//]: # (- SSR渲染)
 [//]: # (- 开启gzip压缩)
 
+### 搭建项目
+* 根据项目需求采用合适的技术栈，构建方式：脚手架/模板 ```vue + ts + vite```   
+第三方依赖：   
+* 安装路由```npm i vue-router```
+* 全局状态管理```npm i vuex```
+* UI组件库```npm i element-ui```
+* 安装http工具axios，封装请求工具
+* css预编译器，全局样式和主题色的修改
+* 代码规范和代码美化工具
+* git hooks钩子
 
-<!--
-
-### 第一次页面加载触发哪几个钩子
-beforeCreate、created、beforeMount、mounted
-
-### vue3提升体现在哪
-打包减小、渲染快、内存减小   
-源码（响应式）   
-更好的支持typescript   
-新特性：Composition API、内置组件
-
-
-### Composition API
-setup：使用和注意，执行时机，this，两个参数   
-ref、reactive：使用和原理，它俩的对比   
-toRef、shallowReavtive和shallowRef（浅响应式）   
-readonly（深只读）和shallowReadonly（浅只读）   
-toRaw和markRaw   
-自定义ref
-provide与inject
-
--->
 
 
 
