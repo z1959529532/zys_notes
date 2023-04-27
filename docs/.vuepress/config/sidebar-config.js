@@ -23,7 +23,7 @@ module.exports =
         // 数组的扩展形式
         {
             title: 'vue学习',
-            path: '/vue/',
+            path: '/vue/learn-vue2',
             collapsable: true,
             sidebarDepth: 1,
             children: [
@@ -31,14 +31,13 @@ module.exports =
                 '/vue/learn-vue3',
             ],
         },
-        '/websocket/websocket',
-        // '/vite/vite',
         {
             title: 'vite学习',
             path: '/vite/vite',
             collapsable: false,
             sidebarDepth: 2,
         },
+        '/websocket/websocket',
         '/angular/angular',
         {
             title: '前端基础',
