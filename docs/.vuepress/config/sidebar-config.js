@@ -16,10 +16,10 @@ module.exports =
                 '/interview/css',
                 '/interview/js',
                 '/interview/http',
-                '/interview/encapsulation',
                 '/interview/webgis'
             ],
         },
+        '/interview/encapsulation',
         // 数组的扩展形式
         {
             title: 'vue学习',
