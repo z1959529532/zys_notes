@@ -34,7 +34,7 @@ module.exports =
         {
             title: 'vite学习',
             path: '/vite/vite',
-            collapsable: false,
+            collapsable: true,
             sidebarDepth: 2,
         },
         '/websocket/websocket',

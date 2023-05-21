@@ -151,7 +151,8 @@ vite会将环境变量注入到```import.meta.env```里，注意vite做了一个
 新建3、vite-dev-server中```yarn add koa```，node端的框架   
 通过koa实例返回请求地址案例，访问的App.vue文件最终是解析成js代码
 
-## vite中处理css大概原理
+## vite中css相关
+### 处理css大概原理
 vite本身支持对css的处理，初体验项目里   
 1. vite在读取到main.js中引用到了Index.css
 2. 直接去使用fs模块去读取index.css中文件内容
@@ -159,7 +160,7 @@ vite本身支持对css的处理，初体验项目里
 4. 将style标签插入到index.html的```head```中
 5. 将该css文件中的内容直接替换为js脚本(方便热更新或者css模块化), 同时设置Content-Type为js 从而让浏览器以JS脚本的形式来执行该css后缀的文件
 
-- 场景：协同开发可能起一样的类名   
+- 模块化场景：协同开发可能起一样的类名   
 mian.js中引入componentA.js和componentB.js，两套css创建同样类名会出现覆盖
 1. module.css (module是一种约定, 表示需要开启css模块化)
 2. 他会将你的所有类名进行一定规则的替换（将footer 替换成 _footer_i22st_1）
@@ -168,13 +169,46 @@ mian.js中引入componentA.js和componentB.js，两套css创建同样类名会�
 5. 将componentA.module.css内容进行全部抹除, 替换成JS脚本（看network）
 5. 将创建的映射对象在脚本中进行默认导出
 
-- less同样支持模块化，安装```yarn add less```，main.js中导入less文件
+### 支持less（模块化）
+安装```yarn add less```，main.js中导入less文件```index.module.less```
 
-## vite中配置CSS
+### vite中配置CSS
 [参考地址https://cn.vitejs.dev/config/shared-options.html#css-modules](https://cn.vitejs.dev/config/shared-options.html#css-modules)   
-在配置文件中的配置```vite.base.config```
+在配置文件中的配置```vite.base.config```，```css: { modules: {} }```
 - localsConvention：css生成类名key的展示形式
 - scopeBehaviour：
 - generateScopedName：css生成类名value的展示形式
 - hashPrefix
 - globalModulePaths：不参与到css模块化的路径
+
+### vite中配置预处理器选项（less） preprocessorOptions
+[参考地址-http://lesscss.cn/usage/#less-options--math](http://lesscss.cn/usage/#less-options--math)   
+在配置文件中的配置```vite.base.config```，```css: { preprocessorOptions: {} }```
+- math：数学模式设置   
+安装了less就可以去编译less文件，就像node直接运行文件一样，```npx lessc .\index.module.less```   
+- globalVars：全局变量定义，不用import形式导文件```define.less```   
+
+### devSourcemap显示源文件
+在配置文件中的配置```vite.base.config```，```css: { devSourcemap: true }```   
+网页header中会显示源文件，假设程序出错，就会有索引文件
+
+## vite中postcss
+vite本身就支持postcss，配置插件去做不同的事情，设计之初想承担的维护成本是要高于less的   
+- 例如考虑浏览器兼容，它可以做：   
+语法降级（css变量） --- 前缀补全（--webkit） --- less编译（postcss对预处理器的插件已经停止维护，需要less自己编译，把编译结果给postcss）   
+
+- 使用postcss（test-postcss项目）   
+```yarn add postcss-cli postcss -D```，```postcss-cli```使用脚手架命令，```postcss```编译操作   
+[postcss-cli命令参考地址-https://github.com/postcss/postcss-cli](https://github.com/postcss/postcss-cli)   
+```npx postcss index.css -o result.css```
+
+```postcss.config.js配置文件```   
+[postcss插件参考地址-https://github.com/postcss/postcss/blob/main/docs/plugins.md](https://github.com/postcss/postcss/blob/main/docs/plugins.md)   
+```yarn add postcss-preset-env -D```安装预设环境，它包含了很多必要插件，例如就可以做语法降级，自动补全等
+
+- vite中postcss的设置（test-vite项目）
+  - 两种方式都可
+  - vite配置文件中```css: { postcss: { plugins: [ postcssPresetEnv(/* pluginOptions */) ```
+  - 新建```postcss.config.js```配置文件
+
+
