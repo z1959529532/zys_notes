@@ -8,7 +8,8 @@ title: vite学习
    
 webpack能改吗？
 ```js
-// webpack支持多种模块化，开始必须要统一模块化代码, 所以意味着他需要将所有的依赖全部读一遍
+// webpack支持多种模块化，开始必须要统一模块化代码,
+// 所以意味着他需要将所有的依赖全部读一遍
 const lodash = require("lodash"); // commonjs 规范
 import Vue from "vue"; // es6 module
 
@@ -46,19 +47,24 @@ vite、create-vite ---> vue团队
 // man.js
 import {count} from "./count.js";
 console.log(count);
-// count.js
-import _ from 'lodash';
-// 在默认情况下，es module导资源要么是相对路径，要么是绝对路径，否则浏览器不知道怎么去找
-console.log(_);
-export const count = 0;
 
 // 安装
 yarn init -y
 yarn add lodash
+
+// count.js
+import _ from 'lodash';
+// 在默认情况下，es module导资源要么是相对路径
+// 要么是绝对路径，否则浏览器不知道怎么去找
+console.log(_);
+export const count = 0;
+
+// 安装
 yarn add vite -D
 // 安装vite会处理找到，路径补全
 // import _ from "/node_modules/.vite/lodash";
-// import __vite__cjsImport0_lodash from "/node_modules/.vite/deps/lodash.js?v=55bcfa4a";
+// import __vite__cjsImport0_lodash from 
+// "/node_modules/.vite/deps/lodash.js?v=55bcfa4a";
 ```
 
 ## 依赖预构建
@@ -88,11 +94,18 @@ export default defineConfig({})
   - vite.prod.config.js
   - vite.dev.config.js
 ```js
+// 正常 vite.config.js vite默认读取的配置文件
+export default {
+  optimizeDeps: {
+    // 依赖不进行依赖预构建
+    // exclude: ['lodash-es']
+  }
+}
+
 import {defineConfig} from 'vite'
 import viteBaseConfig from "./vite.base.config";
 import viteProdConfig from "./vite.prod.config";
 import viteDevConfig from "./vite.dev.config";
-
 // 策略模式
 const envResolver = {
   "build": () => Object.assign({}, viteBaseConfig, viteDevConfig),
@@ -120,7 +133,8 @@ APP_KEY = 110
 export default defineConfig(({command, mode}) => {
     // console.log(process.env);  // 打印中没有APP_KEY
     console.log('process.cwd() ---> ' + process.cwd());
-    // 第二个参数：当前env所在目录--process.cwd()方法返回当前node进程的工作目录
+    // process.cwd()方法返回当前node进程的工作目录
+    // 第二个参数：当前env所在目录
     const env = loadEnv(mode, process.cwd(), "");  // 第三个参数不传默认是.env
     // console.log(env);  // 打印中就有APP_KEY了
 
@@ -141,24 +155,26 @@ const env = loadEnv(mode, process.cwd(), "");
 ```
 
 * 客户端的使用   
-vite会将环境变量注入到```import.meta.env```里，注意vite做了一个拦截，避免将隐私性的变量直接注入进去   
+vite会将环境变量注入到```import.meta.env```里    
+注意vite做了一个拦截，避免将隐私性的变量直接注入进去   
 处理是在变量前加```VITE_```，```VITE_APP_KEY = 120```   
-可以通过设置vite配置文件```envPrefix: 'ENV_'```默认是```VITE_```   
+可以通过配置-设置环境变量前缀```envPrefix: 'ENV_'```默认是```VITE_```   
 
 ## vite解析识别vue文件
 ```yarn create vite my-vue-app --template vue```通过脚手架创建项目   
+```2、my-vue-app项目```   
 运行后在网络中看App.vue响应是js代码，它是如何解析的呢？初步了解开发服务器原理node   
-新建3、vite-dev-server中```yarn add koa```，node端的框架   
-通过koa实例返回请求地址案例，访问的App.vue文件最终是解析成js代码
+新建```3、vite-dev-server```中```yarn add koa```：node端的框架   
+通过```koa```实例返回请求地址案例，访问的App.vue文件最终是解析成js代码
 
 ## vite中css相关
 ### 处理css大概原理
 vite本身支持对css的处理，初体验项目里   
-1. vite在读取到main.js中引用到了Index.css
-2. 直接去使用fs模块去读取index.css中文件内容
-3. 直接创建一个style标签, 将index.css中文件内容直接copy进style标签里
-4. 将style标签插入到index.html的```head```中
-5. 将该css文件中的内容直接替换为js脚本(方便热更新或者css模块化), 同时设置Content-Type为js 从而让浏览器以JS脚本的形式来执行该css后缀的文件
+* vite在读取到main.js中引用到了Index.css
+1. 直接去使用fs模块去读取index.css中文件内容
+2. 直接创建一个style标签, 将index.css中文件内容直接copy进style标签里
+3. 将style标签插入到index.html的```head```中
+4. 将该css文件中的内容直接替换为js脚本(方便热更新或者css模块化), 同时设置Content-Type为js 从而让浏览器以JS脚本的形式来执行该css后缀的文件
 
 - 模块化场景：协同开发可能起一样的类名   
 mian.js中引入componentA.js和componentB.js，两套css创建同样类名会出现覆盖
@@ -186,7 +202,7 @@ mian.js中引入componentA.js和componentB.js，两套css创建同样类名会�
 在配置文件中的配置```vite.base.config```，```css: { preprocessorOptions: {} }```
 - math：数学模式设置   
 安装了less就可以去编译less文件，就像node直接运行文件一样，```npx lessc .\index.module.less```   
-- globalVars：全局变量定义，不用import形式导文件```define.less```   
+- globalVars：全局变量定义，不用import形式导文件```global.less```   
 
 ### devSourcemap显示源文件
 在配置文件中的配置```vite.base.config```，```css: { devSourcemap: true }```   
@@ -211,4 +227,54 @@ vite本身就支持postcss，配置插件去做不同的事情，设计之初想
   - vite配置文件中```css: { postcss: { plugins: [ postcssPresetEnv(/* pluginOptions */) ```
   - 新建```postcss.config.js```配置文件
 
+## path.resolve()题外篇
+node端去读取文件或者操作文件的时候, 如果发现你用的是相对路径, 则可使用```process.cwd()```来进行对应的拼接   
+```process.cwd```：获取当前的node执行目录   
+commonjs规范注入的变量```__dirname```：返回的是当前文件所在的目录   
+```js
+const fs = require("fs");
+const path = require("path"); // path本质上就是一个字符串处理模块, 它里面有非常多的路径字符串处理方法
 
+// const result = fs.readFileSync('./variable.css');
+const result = fs.readFileSync(path.resolve(__dirname, "./variable.css"));
+console.log(
+    result.toString(),
+    process.cwd() + '\n', // node执行目录
+    __dirname + '\n', // 当前文件所在目录
+    path.resolve(__dirname, "./variable.css") // 拼接字符串，进行一个绝对路径的生成
+);
+```
+
+## vite加载静态资源
+vite对静态资源基本上是开箱即用的   
+- ```svg```：不会失真，尺寸小   
+缺点：没法很好的去表示层次丰富的图片信息，一般用```svg```去做图标
+
+## alias 路径别名
+vite配置文件中   
+```js
+resolve: {
+  alias: {
+    "@": path.resolve(__dirname, "./src"),
+    "@assets": path.resolve(__dirname, "./src/assets")
+  }
+}
+
+// 使用
+import sylasPicUrl from "@assets/sylas.png";
+```
+
+### alias原理
+```3、vite-dev-server```项目中，node端将请求资源返回的页面使用```alias```的地方进行字符串替换
+```js
+const viteConfig = require("./vite.config");
+const aliasResolver = require("./aliasResolver");
+
+if (ctx.request.url.endsWith(".js")) {
+    const JSContent = await fs.promises.readFile(path.resolve(__dirname, "." + ctx.request.url)); // 在服务端一般不会这么用
+    // 对使用alias的地方进行字符串替换
+    const lastResult = aliasResolver(viteConfig.resolve.alias, JSContent.toString());
+    ctx.response.body = lastResult;
+    ctx.response.set("Content-Type", "text/javascript");
+}
+```
