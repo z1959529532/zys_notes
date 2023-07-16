@@ -278,3 +278,141 @@ if (ctx.request.url.endsWith(".js")) {
     ctx.response.set("Content-Type", "text/javascript");
 }
 ```
+
+## vite在生产环境对静态资源的处理
+- 打包后的静态资源为什么要有hash
+  - 刷新页面-看请求的名字是不是同一个，读取缓存
+  - hash算法: 将一串字符串经过运算得到一个新的乱码字符串
+
+- 控制输出文件名```build: { rollupOptions: { output: { assetFileNames: "[hash].[name].[ext]" }}}```   
+[rollup-output配置项参考地址](https://rollupjs.org/javascript-api/#outputoptions-object)
+
+## vite插件
+就像在```postcss```中讲到，```less```和```postcss```对```css```做的不同处理   
+vite会在```生命周期```的不同阶段中去调用不同的插件以达到不同的目的（生命周期：vite从开始执行到执行结束的过程）   
+与webpack类似
+
+### vite-aliases插件
+自动生成别名，安装```yarn add vite-aliases -D```   
+[vite官网-->插件-->社区插件-->搜vite-aliases](https://cn.vitejs.dev/plugins/#community-plugins)   
+参考用法：```yarn add vite-aliases -D```   
+可能会遇到node版本问题，可以使用```nvm```方便切换node版本，[nvm使用参考](https://blog.csdn.net/m0_65634497/article/details/127789013)   
+- 使用：在vite配置文件```vite.base.config```手动设置resolve注释，导入```ViteAliases```
+```js
+// 会根据你的项目目录自动生成
+[
+  {find: '@', replacement: '${your_project_path}/src'},
+  {find: '@assets', replacement: '${your_project_path}/src/assets'}
+]
+```
+
+### 手写vite-aliases插件
+- 参考：   
+[vite官网-->Guide-->Plugin API-->vite-specific-hooks-->config](https://vitejs.dev/guide/api-plugin.html#vite-specific-hooks)   
+[vite官网-->指引-->插件 API-->Vite 独有钩子-->config](https://cn.vitejs.dev/guide/api-plugin.html#vite-specific-hooks)   
+- 新建```'plugins/MyAliases'```
+```js
+module.exports = (keyName='@') => {
+    return {
+        // 在解析vite配置文件前调用config
+        // 返回值将会与vite配置文件合并，类似Object.assign
+        config(config, env) {
+            const resolveAliasesObj = getTotalSrcDir(keyName);
+            return {
+                resolve: {
+                    // alias: { '@assets': 'D:\\01、web\\learn-vite\\1、test-vite\\src\\assets' }
+                    alias: resolveAliasesObj
+                }
+            };
+        }
+    }
+}
+
+// 返回指定地址下的文件夹和文件名数组
+fs.readdirSync(path.resolve(__dirname, "../src"));
+// 异步返回文件状态信息 isDirectory()
+fs.statSync(path.resolve(__dirname, basePath + "/" + name));
+```
+
+### vite插件
+- vue团队-->vite：减少开发者成本，很多东西内置调用了，开箱即用例如一些loader
+- react：主动权交给开发者去维护   
+[vite内部调用了很多插件参考](https://github.com/vitejs/vite/blob/main/packages/vite/src/node/plugins/index.ts)
+
+### vite-plugin-html插件
+- 动态控制html内容--->ejs语法```<%=  %>```
+- 安装```yarn add vite-plugin-html -D```   
+[vite官网-->插件-->社区插件-->搜vite-plugin-html](https://github.com/vbenjs/vite-plugin-html)
+```js
+import {createHtmlPlugin} from "vite-plugin-html"
+
+export default defineConfig({
+    plugins: [
+        createHtmlPlugin({ inject: { data: { title: "主页" } } }),
+    ]
+});
+```
+
+### 手写vite-plugin-html插件
+- 参考：   
+[vite官网-->Plugin API-->Vite Special Hooks-->transformIndexHtml](https://vitejs.dev/guide/api-plugin.html#transformindexhtml)
+- 新建```MyCreateHtmlPlugin.js```
+```js
+module.exports = (options) => {
+    return {
+        // 转换html的
+        // transformIndexHtml(html, ctx) {
+        //     // 注意html中body中使用，会报错没打印证明还没有执行到此处，
+        //     // 可能会有别的插件在这之前调用，所以我们要把执行时机提前
+        //     console.log(html, 1122);
+        // }
+        transformIndexHtml: {
+            // 将我们插件的一个执行时机提前
+            enforce: "pre",
+            transform: (html, ctx) => {
+                // html内容
+                // ctx当前请求的一个执行期上下文
+                return html.replace(/<%= title %>/g, options.inject.data.title);
+            }
+        }
+    }
+}
+```
+
+## vite结合ts
+本身对```TS```有良好的支持（类型检查、语法提示）   
+```6、vite-typescript```项目，开箱即用，但存在现象是编辑器检测错误，控制台和浏览器还正常   
+- 企业中ts检查配置，ts错误输出控制台   
+[vite结合ts检测](https://vite-plugin-checker.netlify.app/introduction/getting-started.html#getting-started)
+```json
+// yarn add vite-plugin-checker -D
+// yarn add typescript -D
+// tsconfig.json  配置ts检查规则
+{
+  "compilerOptions": {
+    "skipLibCheck": true, // 跳过node_modules
+    "module": "ESNext",
+    "moduleResolution": "node"
+  }
+}
+```
+
+- 构建打包时，并不执行任何类型检查   
+[构建前检查](https://cn.vitejs.dev/guide/features.html#typescript)
+```json
+"scripts": {
+  "build": "tsc --noEmit && vite build"
+},
+```
+
+- 声明提示文件，三斜线指令声明
+```js
+// vite-env.d.ts文件，提示环境变量为例
+
+/// <reference types="vite/client" />
+interface ImportMetaEnv {
+    readonly VITE_PRO_URL: string;
+}
+```
+
+
