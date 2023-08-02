@@ -391,8 +391,8 @@ module.exports = (options) => {
 {
   "compilerOptions": {
     "skipLibCheck": true, // 跳过node_modules
+    "moduleResolution": "node", // 模块解析错略
     "module": "ESNext",
-    "moduleResolution": "node"
   }
 }
 ```
@@ -414,5 +414,94 @@ interface ImportMetaEnv {
     readonly VITE_PRO_URL: string;
 }
 ```
+
+## vite性能优化
+- 开发时构建速度
+- 页面性能
+- js
+- css
+- 生产优化vite（rollup）/webpack：分包、压缩、treeshaking、图片资源压缩、CDN
+
+### vite分包策略
+打包js中代码会压缩，关掉要在vite配置文件```build: { minify: false }```
+```js
+// 安装lodash然后mian.ts使用
+// ts类型声明 yarn add @types/lodash 
+// 关掉打包不压缩
+```
+内容只要有一点变动，打包后生成文件就会生成新的hash值，例如lodash不需要更新的文件会重新请求，所以要进行单独打包处理   
+[vite官网-->配置-->构建选项-->搜rollupOptions](https://rollupjs.org/configuration-options/#output-manualchunks)   
+```6、vite-typescript```项目
+```js
+// vite配置文件
+build: {
+    minify: false, // 关掉打包不压缩
+    rollupOptions: { // 配置rollup的一些构建策略
+        output: { // 控制输出
+            manualChunks: (id: string) => {
+                // includes报错，ts认为你当前环境不在es6以后，"lib": ["ES2017", "DOM"]
+                if (id.includes('node_modules')) {
+                    return 'vendor';
+                }
+            }
+        },
+    }
+},
+```
+
+### gzip压缩
+有时候文件过大，需要将静态资源进行压缩减小体积   
+将```test-vite```打包有如下提示，```chunk```-->块的概念   
+```js
+(!) Some chunks are larger than 500 kBs after minification. Consider:
+- Using dynamic import() to code-split the application // 动态导入
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks // 分包
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+dist/assets/index-9c5b83c4.js        2,053.05 kB │ gzip: 1,526.98 kB // 用gzip压缩
+```
+[使用vite-plugin-compression：npm官网-->搜vite-plugin-compression](https://www.npmjs.com/package/vite-plugin-compression)   
+```yarn add vite-plugin-compression -D```   
+- 原理：服务端读取```index.js.gz```文件，已经压缩过了不用压缩，设置响应头```content-encoding-->gzip```(告诉浏览器是使用gzip压缩过的)   
+  浏览器收到解压得到原本js文件
+- 可能存在问题：存在解压时间，体积不大不要用，适得其反
+
+### 动态引入import()
+动态引入es6的新特性-->使代码分割，和三方库按需加载相类似   
+- 常用：路由```component: () => import('../views/Login/Login.vue')```，只加载文件不执行
+- webpack实现动态导入：```Promise```里```webpack_require.e()```状态
+
+### vite的cdn加速
+- 将三方依赖模块写成cdn形式注入，使代码体积更小   
+  正常打包会将三方库进行压缩   
+  ```7、vite-cdn```项目   
+```js
+// main.js
+import _ from 'lodash'
+const obj = _.cloneDeep({});
+console.log(obj);
+```
+[使用vite-plugin-cdn-import：npm官网-->搜vite-plugin-cdn-import](https://www.npmjs.com/package/vite-plugin-cdn-import)   
+[cdn地址参考：jsdelivr官网-->搜lodash](https://www.jsdelivr.com/)   
+在vite配置文件中使用   
+```js
+plugins: [
+    viteCDNPlugin({
+        modules: [
+            {
+                name: 'lodash',
+                var: '_',
+                path: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js'
+            }
+        ]
+    }),
+],
+```
+原理：```rollupOptions-->externalGlobals```
+
+## vite中跨域
+[同源策略参考](/ajax/#同源策略)   
+[参考：解决跨域 vite/webpack/nginx/CORS/JSONP](/interview/vue.html#项目中解决跨域)
+
 
 

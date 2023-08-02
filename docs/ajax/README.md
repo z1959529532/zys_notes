@@ -407,8 +407,8 @@ html中
   - 是浏览器的一种安全策略
   - 同源是指：<span style="color:#0000ff">协议、域名、端口</span>必须完全相同
 违背就是跨域
-- 如何解决跨域
-  - JSONP、CORS
+- 如何解决跨域   
+  [参考：解决跨域 vite/webpack/nginx/CORS/JSONP](/interview/vue.html#项目中解决跨域)
 
 创建服务
 ```js

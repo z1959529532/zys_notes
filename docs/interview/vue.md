@@ -212,10 +212,37 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 
 ## 项目篇
 ### 项目中解决跨域
-1、通过```vue.config.js```文件配置代理```proxy```    
-2、通过```nginx```实现代理   
-3、CORS服务端设置响应头   
-4、JSONP借助有跨域能力的标签
+[参考：同源策略](/ajax/#同源策略)   
+浏览器中不是同源就会拦截，所以一般利用构建工具/第三方库/自己搭一个开发服务器代理请求   
+1、webpack-->```vue.config.js```
+```js
+devServer: {
+    '/zysDevApi': {
+        target: 'http://localhost:3000',
+            changeOrigin: true,
+            // pathRewrite作用是把实际地址+给定值http://localhost:3000/abc
+            // 一般为空
+            pathRewrite: {
+            '^/zysDevApi': ''
+        }
+    }
+}
+```
+2、vite-->```vite.config.js```
+```js
+server: {
+    proxy: {
+        '/zys_dev_api': {
+            target: 'http://localhost:4050',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/zys_dev_api/, '')
+        }
+    }
+}
+```
+3、通过```nginx```实现代理   
+4、```CORS```服务端设置响应头   
+5、```JSONP```借助有跨域能力的标签
 
 ### 权限怎么做
 * 路由权限
@@ -224,23 +251,20 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 * 按钮权限：通过```自定义权限指令```控制
 
 ### 性能优化
-- 代码层面的优化
-  - 减少请求次数：数据缓存，keep-alive缓存
-  - ```v-for```添加```key```
-  - 长列表优化-分页、虚拟滚动
-  - 资源的懒加载、预加载
-  - 防抖节流
-- webpack优化
-  - 代码的提取分包
-  - 图片压缩
-  - 打包优化
-- web技术优化
-  - 开启```gzip```压缩
-
-[//]: # (- 避免无用渲染：懒加载、预加载)
-[//]: # (- 减少回流重绘)
-[//]: # (- SSR渲染)
-[//]: # (- 开启gzip压缩)
+- 打包构建方面```webpack/vite```
+  - 分包：不重复请求，三方库单独打包处理
+  - cdn加速：将三方依赖模块写成cdn形式注入
+  - gzip压缩
+  - 动态引入```import('')```与三方库按需加载相类似
+- 页面方面
+  - [图片懒加载、预加载](/interview/encapsulation.html)，路由懒加载
+  - 长列表虚拟滚动
+  - 首屏页面缓存，数据缓存
+- 代码方面
+  - [防抖节流](/interview/js.html#防抖和节流)
+  - 清定时器，销毁监听事件
+  - v-show
+  - v-for加key，避免与v-if一起使用
 
 ### 搭建项目
 * 根据项目需求采用合适的技术栈，构建方式：脚手架/模板 ```vue + ts + vite```   
