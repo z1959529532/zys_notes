@@ -115,38 +115,8 @@ Vue实例的根节点app入口不能有两个
 ```Vuex```
 
 ### 父子组件双向绑定
-```ts
-// 方法一 .sync
-// 父组件
-:abc.sync="name"
-// 子组件
-// ts
-@Prop(String) readonly abc!: string;
-this.name = this.abc;
-watch: {
-  name(newValue, oldValue) {
-    this.$emit('update:abc', newValue);
-  }
-}
-// js
-
-// 方法二 v-model
-// 父组件
-v-model="name"
-// 子组件
-@Model('parentNameChange', { type: String }) readonly name!: string;
-this.sonName = this.name;
-watch: {
-  sonName(newValue, oldValue) {
-    this.$emit('parentNameChange', newValue);
-  }
-}
-// js
-model: {
-  prop: 'name', 
-  event: 'parentNameChange'
-}
-```
+参考：
+[vue -> 组件化开发 -> 父子组件双向绑定](/vue/learn-vue2.html#父子组件双向绑定)
 
 ### 组件和插件的区别
 组件用来构成业务和界面模块，作用是App.vue   

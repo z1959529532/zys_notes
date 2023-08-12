@@ -305,41 +305,51 @@ props: {
   $parent ```this.$parent``` 多层的话 ```this.$root```
 - ```provide```/```reject```   
 - ```eventBus```
-#### 父子组件双向绑定
+### 父子组件双向绑定
 ```ts
-// 方法一 .sync
+/**************** 方法一 .sync *****************/
 // 父组件
 :abc.sync="name"
 // 子组件
 // ts
+@Component({
+  watch: {
+    sonName(newValue, oldValue) {
+      this.$emit('update:abc', newValue);
+    }
+  }
+})
 @Prop(String) readonly abc!: string;
-name = this.abc;
+mounted() { this.sonName = this.abc; }
+// js
+props: { abc: String }
 watch: {
-  name(newValue, oldValue) {
+  sonName(newValue, oldValue) {
     this.$emit('update:abc', newValue);
   }
 }
-// js
-props: {
-  abc: String
-}
+mounted() { this.sonName = this.abc;}
 
-// 方法二 v-model
+/**************** 方法二 v-model *****************/
 // 父组件
 v-model="name"
 // 子组件
 @Model('parentNameChange', { type: String }) readonly name!: string;
-sonName = this.name;
 watch: {
   sonName(newValue, oldValue) {
     this.$emit('parentNameChange', newValue);
   }
 }
+mounted() { this.sonName = this.abc }
 // js
-model: {
-  prop: 'name', 
-  event: 'parentNameChange'
+props: { abc: String }
+model: { prop: 'name', event: 'parentNameChange' }
+watch: {
+  sonName(newValue, oldValue) {
+    this.$emit('changeParentName', newValue);
+  }
 }
+mounted() { this.sonName = this.abc }
 ```
 
 ### slot插槽
