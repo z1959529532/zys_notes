@@ -26,8 +26,10 @@ function getType(obj) {
 * ```.find(() => )返回匹配项```，```.some(() => )有一个满足返回true```，```.every(() => )所有满足返回true```，```b=a.filter(() => )返回满足数组```，```.map()```
 * ```.splice(开始位置, 删除数量, 插入的元素)```
 
+* es6：```Array.from()```、```Array.of()```、```find```、```includes()```、```flatMap()```
+
 ### 数组去重方法
-* 循环利用```indexOf()```方法去重，```.indexOf(arr[i]) === -1```
+* 循环利用```indexOf()```方法往新数组push去重，```.indexOf(arr[i]) === -1```
 * 利用es6的```Set```去重，```Array.from(new Set())```
 * 利用```filter```去重，```arr.filter((val, index) => arr.indexOf(val) === index)```
 * 利用Map数据结构去重，```arr.filter(val => !map.has(val) && map.set(val, 1))```

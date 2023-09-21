@@ -23,7 +23,7 @@ module.exports =
         // 数组的扩展形式
         {
             title: 'vue学习',
-            path: '/vue/learn-vue2',
+            path: '/vue/start',
             collapsable: true,
             sidebarDepth: 1,
             children: [

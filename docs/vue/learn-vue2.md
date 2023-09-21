@@ -32,6 +32,9 @@ Vue2与Vue3对比
 </div>
 </div>
 
+## Vue CLI
+
+
 ## 基础语法
 ```vue
 Mustache语法：{{name}}
@@ -307,49 +310,60 @@ props: {
 - ```eventBus```
 ### 父子组件双向绑定
 ```ts
-/**************** 方法一 .sync *****************/
+/****************************** 方法一 .sync ***********************************/
 // 父组件
-:abc.sync="name"
+:parentName.sync="parentName"
 // 子组件
 // ts
 @Component({
   watch: {
     sonName(newValue, oldValue) {
-      this.$emit('update:abc', newValue);
+      this.$emit('update:parentName', newValue);
     }
   }
 })
-@Prop(String) readonly abc!: string;
-mounted() { this.sonName = this.abc; }
+@Prop(String) readonly parentName!: string;
+@Watch('parentName')
+parentNameChange(newValue: string, oldVal: string) {
+  this.sonName = this.parentName;
+}
+mounted() { this.sonName = this.parentName; }
 // js
-props: { abc: String }
+props: { parentName: String }
 watch: {
   sonName(newValue, oldValue) {
-    this.$emit('update:abc', newValue);
+    this.$emit('update:parentName', newValue);
   }
 }
-mounted() { this.sonName = this.abc;}
+mounted() { this.sonName = this.parentName; }
 
-/**************** 方法二 v-model *****************/
+/****************************** 方法二 v-model ***********************************/
 // 父组件
-v-model="name"
+v-model="parentName"
 // 子组件
-@Model('parentNameChange', { type: String }) readonly name!: string;
-watch: {
-  sonName(newValue, oldValue) {
-    this.$emit('parentNameChange', newValue);
+// ts
+@Component({
+  watch: {
+    sonName(newValue, oldValue) {
+      this.$emit('changeParentName', newValue);
+    }
   }
+})
+@Model('changeParentName', { type: String }) readonly parentName!: string;
+@Watch('parentName')
+parentNameChange(newValue: string, oldVal: string) {
+  this.sonName = this.parentName;
 }
 mounted() { this.sonName = this.abc }
 // js
-props: { abc: String }
-model: { prop: 'name', event: 'parentNameChange' }
+props: { parentName: String }
+model: { prop: 'parentName', event: 'changeParentName' }
 watch: {
   sonName(newValue, oldValue) {
     this.$emit('changeParentName', newValue);
   }
 }
-mounted() { this.sonName = this.abc }
+mounted() { this.sonName = this.parentName }
 ```
 
 ### slot插槽

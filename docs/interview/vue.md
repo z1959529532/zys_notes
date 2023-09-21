@@ -1,7 +1,7 @@
 ---
 title: Vue系列
 ---
-## 基础
+## 基础解决跨域
 ### 对Vue看法
 是一个轻量型渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
@@ -177,6 +177,12 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 ### Vuex中mutations和actions区别
 区别在于mutations中最好放同步方法，这样能跟踪到，对于异步操作放在actions中
 
+## Vue3
+### Vue2与Vue3的变化
+- Vue3最大化的兼容了Vue2（Vue3里可以写Vue2）
+- 组合式Api   
+  ```setup```会在```beforeCreate```之前调用
+- 
 
 ---
 
@@ -189,10 +195,10 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 devServer: {
     '/zysDevApi': {
         target: 'http://localhost:3000',
-            changeOrigin: true,
-            // pathRewrite作用是把实际地址+给定值http://localhost:3000/abc
-            // 一般为空
-            pathRewrite: {
+        changeOrigin: true,
+        // pathRewrite作用是把实际地址+给定值http://localhost:3000/abc
+        // 一般为空
+        pathRewrite: {
             '^/zysDevApi': ''
         }
     }
