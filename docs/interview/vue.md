@@ -1,7 +1,7 @@
 ---
 title: Vue系列
 ---
-## 基础解决跨域
+## 1、基础
 ### 对Vue看法
 是一个轻量型渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
@@ -13,27 +13,66 @@ title: Vue系列
 ### MVVM
 * Model：数据层，数据业务逻辑处理和服务端交互。
 * View：视图层，可以理解为展示给用户各种信息的DOM层。
-* VueModel：视图模型层，是View和Model之间的通信桥梁，一方面实现Data Banding另一方面实现了Dom Listener。
+* ViewModel：视图模型层，是View和Model之间的通信桥梁，一方面实现Data Banding另一方面实现了Dom Listener。
 
 ### 双向绑定的原理
 数据劫持结合发布订阅   
-监听器```Observer```对数据劫持监听，数据变化再由订阅者```Watcher```看是否需要更新，交由订阅器```Dep```收集订阅者统一管理
+监听器```Observer```对数据劫持监听   
+```Compile```解析模板指令，绑定更新函数，渲染和更新视图   
+数据变化再由订阅者```Watcher```决定是否需要更新（Observer、Compile通信桥梁）   
+交由订阅器```Dep```收集订阅者统一管理
+
+### vue的响应式原理
+* vue2的是通过 ```Object.defineproperty``` 数据劫持，初始化时对每个属性加上get/set（存在问题对象新增、删除属性界面不更新，得用$set（Vue内部通过重写函数）；通过下标改数组界面不更新
+* vue3的是通过 ```Proxy``` 拦截对象中任意属性变化（优点不用监听每个属性），通过 ```Reflect(反射)``` 对源对象属性操作（优点，重复性操作属性时，Reflect它是有返回值的，Object会报错）
 
 ### v-model原理
 v-bind + v-on   
 ```:value="abc"``` + ```v-on:input="abc = $event.target.value"```
 
-### vue的响应式原理
-* vue2的是通过 ```Object.defineproperty``` 数据劫持，初始化时对每个属性加上get/set（存在问题对象新增、删除属性界面不更新，得用$set；通过下标改数组界面不更新
-* vue3的是通过 ```Proxy``` 拦截对象中任意属性变化（优点不用监听每个属性），通过 ```Reflect(反射)``` 对源对象属性操作（优点，重复性操作属性时，Reflect它是有返回值的，Object会报错）
+### computed和watch的区别
+- computed计算属性对数据进行一些转化后在显示，要依赖其他属性的，也就是依赖的属性值发生改变才会触发，并且它有缓存（多次调用只触发一次，和method方法的区别）   
+- watch监听器就是观察作用，监听数据变化是执行后续操作逻辑，无缓存
+* Vue3中 ```watch```和```watchEffect```区别   
+  watch既要指明监视的属性也要指明回调
+  而watchEffect不用指明监视的属性，回调中用到的数据有变化就会执行
 
+### slot插槽
+是Vue的内容分发机制，其实就是让组件更有扩展性   
+使用：子组件```slot```开启插槽，父组件使用子组件标签夹显示内容   
+具名插槽(带有name去决定显示哪些不同内容)，作用域插槽（子组件提供数据，绑定在slot上）
 
----
+### filters过滤器
+用来改变数据的输出显示   
+computed和method都是通过修改数据来触发控制输出显示的
+
+### 修饰符有哪些
+- 表单修饰符v-model：```.trim``` ```.number``` ```.lazy```
+- 事件修饰符：```.stop``` ```.prevent```等于```event.stopPropagation()``` ```.once``` ```.native```
+- 鼠标：```.left``` ```.right``` ```.middle```
+- 按键：```@keyup.enter```
+- v-bind修饰符：```:abc.sync```
 
 ### v-if和v-show的区别
 都能控制元素的显隐   
 v-show条件为false时，只是元素的display属性设置为none，节点还存在dom中   
 v-if是直接添加与删除dom，开销大
+
+### Vue组件data必须为函数
+函数return的都是新地址的data，这样多个组件之间数据不会相互影响，防止数据污染
+
+### vue的$nextTick
+vue更新dom是异步执行的，修改数据后视图不会立刻更新，在回调中拿到更新后的dom结构   
+- 操作随数据变化的dom结构时   
+- Vue生命周期在create()操作dom，mounted()是在挂载完dom触发   
+$nextTick()返回一个promise对象
+
+### 自定义指令directive
+使用场景：有些需要操作普通dom的情况（下拉菜单、图片懒加载、集成三方插件）   
+
+### Vue模板编译
+模板template不是浏览器的标准无法解析渲染，所以需要一个模板编译转化的过程   
+三个阶段：parse解析->转化抽象语法树AST，optimize优化，generate生成->转化为render函数   
 
 ### v-for中key的作用
 加key能更高效的更新虚拟dom，与dom的diff算法有关   
@@ -45,78 +84,17 @@ diff算法：diff算法在vue中主要是用于虚拟dom和渲染后的真实dom
 在同一元素上使用，v-for的优先级高，每次遍历后再判断影响性能   
 解决：就是加template外层判断，不生成dom
 
-### 修饰符有哪些
-- 表单修饰符v-model：```.trim``` ```.number``` ```.lazy```
-- 事件修饰符：```.stop``` ```.prevent``` ```.once``` ```.native```
-- 鼠标：```.left``` ```.right``` ```.middle```
-- 按键：```@keyup.enter```
-- v-bind修饰符：```:abc.sync```
-
-### vue的$nextTick
-vue更新dom是异步执行的，修改数据后视图不会立刻更新，在回调中拿到更新后的dom结构   
-$nextTick()返回一个promise对象
-
-
----
-
-
 ### create和mounted中间间隔受哪些因素影响
 mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度可能会影响dom的渲染
 
-
----
-
-
-### Vue组件data必须为函数
-函数return的都是新地址的data，这样组件之间数据不会相互影响，防止数据污染
-
-### 计算属性computed
-使用情况：对数据进行一些转化后在显示   
-与方法对比好处是有缓存，多次使用只会调用一次
-```
-computed: {
-  getAll() { return this.message1+' '+this.message2; }
-}
-person.fullName = computed(() => { return person.firstName + '-' + person.lastName; })
-```
-
-### watch监听
-使用情况：监听值变化需要做一些业务逻辑时
-```
-watch: { sum (newValue, oldValue) { 业务 } }
-```
-* Vue3中 ```watch```和```watchEffect```区别   
-  watch既要指明监视的属性也要指明回调
-  而watchEffect不用指明监视的属性，回调中用到的数据有变化就会执行
-
 ### 混入mixin的理解
-在需要相似度极高的组件时可以用到，让组件复用一些我们配置相同的生命周期或者方法   
-
-
----
-
-
-### 组件化的理解
-尽可能的将页面拆分成一个个小的可复用的组件，这样代码更方便维护和管理，扩展性更强   
-高内聚，低耦合
+在需要相似度极高的组件时可以用到，让组件复用一些我们配置相同的生命周期或者方法
 
 ### Vue组件为什么只有一个根元素
 从三个方面来说   
 Vue实例的根节点app入口不能有两个   
 组件中template下的div也是实例的入口，其实就是树状结构的根处理为VDOM渲染成html   
 树状结构是diff算法所要求的虚拟dom结构
-
-### 组件通信的方式有哪些
-父传子用```props```接收，子传父用```this.$emit('事件名', 参数)```   
-父访问子```this.$refs.aaa```、```this.$children```   
-子访问父```this.$parent```   
-```provide```/```reject```   
-```eventBus```   
-```Vuex```
-
-### 父子组件双向绑定
-参考：
-[vue -> 组件化开发 -> 父子组件双向绑定](/vue/learn-vue2.html#父子组件双向绑定)
 
 ### 组件和插件的区别
 组件用来构成业务和界面模块，作用是App.vue   
@@ -129,14 +107,31 @@ Vue实例的根节点app入口不能有两个
 * 组件递归操作，允许组件模板调自身
 * vue调试工具vue-tools
 
-### 是什么插槽
-让封装的组件更有扩展性 ，将共性保留在组件中，将不同暴露为插槽   
-使用：子组件```slot```开启插槽，父组件使用子组件标签夹显示内容   
-具名插槽(带有name去决定显示哪些不同内容)，作用域插槽（子组件提供数据，绑定在slot上）
+---
 
+## 2、生命周期
 
 ---
 
+## 3、组件通信
+### 组件通信的方式有哪些
+父传子用```props```接收，子传父用```this.$emit('事件名', 参数)```   
+父访问子```this.$refs.aaa```、```this.$children```   
+子访问父```this.$parent```   
+```provide```/```reject```   
+```eventBus```   
+```Vuex```
+
+### 父子组件双向绑定
+参考：
+[vue -> 组件化开发 -> 父子组件双向绑定](/vue/learn-vue2.html#父子组件双向绑定)
+
+---
+
+4、路由
+### 懒加载实现
+- 箭头函数 + 动态引入import('')
+- 箭头函数 + require
 
 ### vue-router路由模式
 * hash   
@@ -144,6 +139,9 @@ Vue实例的根节点app入口不能有两个
 * history   
   对应的是HTML5History，```pushState()```和```replaceState()```
   区别：history模式下，刷新就会向后端请求整个网址，前后端地址要完全一致，否则会404报错，处理就是前端加一个搭配404页面
+
+### params和query的区别
+params方式就是在地址后跟上参数
 
 ### $router和$route的区别
 $router是VueRouter实例，包含了所有路由以及路由的跳转方法   
@@ -167,15 +165,16 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
   * activated(){}
   * deactivated (to, from, next){}
 
-
 ---
 
-
+## 状态管理
 ### Vuex是什么
 全局状态管理，可以将多个组件共享的数据存储在一个对象里
 
 ### Vuex中mutations和actions区别
 区别在于mutations中最好放同步方法，这样能跟踪到，对于异步操作放在actions中
+
+---
 
 ## Vue3
 ### Vue2与Vue3的变化
@@ -233,14 +232,17 @@ server: {
   - gzip压缩
   - 动态引入```import('')```与三方库按需加载相类似
 - 页面方面
-  - [图片懒加载、预加载](/interview/encapsulation.html)，路由懒加载
+  - [图片懒加载、预加载](/interview/encapsulation.html)
   - 长列表虚拟滚动
   - 首屏页面缓存，数据缓存
+  - 骨架屏
 - 代码方面
+  - 路由懒加载
   - [防抖节流](/interview/js.html#防抖和节流)
   - 清定时器，销毁监听事件
   - v-show
   - v-for加key，避免与v-if一起使用
+  - keep-alive缓存组件
 
 ### 搭建项目
 * 根据项目需求采用合适的技术栈，构建方式：脚手架/模板 ```vue + ts + vite```   
