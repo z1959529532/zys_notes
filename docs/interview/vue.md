@@ -84,9 +84,6 @@ diff算法：diff算法在vue中主要是用于虚拟dom和渲染后的真实dom
 在同一元素上使用，v-for的优先级高，每次遍历后再判断影响性能   
 解决：就是加template外层判断，不生成dom
 
-### create和mounted中间间隔受哪些因素影响
-mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度可能会影响dom的渲染
-
 ### 混入mixin的理解
 在需要相似度极高的组件时可以用到，让组件复用一些我们配置相同的生命周期或者方法
 
@@ -110,6 +107,16 @@ Vue实例的根节点app入口不能有两个
 ---
 
 ## 2、生命周期
+### 父子组件生命周期执行顺序
+父beforeCreate -> 父create -> 父beforeMount -> 子beforeCreate ... -> 父mounted   
+也就是父的```mounted```在子组件之后
+
+### create和mounted中间间隔受哪些因素影响
+mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度可能会影响dom的渲染
+
+### 一般在哪个生命周期请求一部数据
+created、beforeMount、mounted调用时data都已创建   
+推荐在created中，更快获取服务端数据，减少页面加载时间
 
 ---
 
@@ -128,7 +135,7 @@ Vue实例的根节点app入口不能有两个
 
 ---
 
-4、路由
+## 4、路由
 ### 懒加载实现
 - 箭头函数 + 动态引入import('')
 - 箭头函数 + require
@@ -140,8 +147,9 @@ Vue实例的根节点app入口不能有两个
   对应的是HTML5History，```pushState()```和```replaceState()```
   区别：history模式下，刷新就会向后端请求整个网址，前后端地址要完全一致，否则会404报错，处理就是前端加一个搭配404页面
 
-### params和query的区别
-params方式就是在地址后跟上参数
+### query和params的区别
+query方式可以使用name或path跳转，url上会显示参数   
+params只能使用name方式跳转，路由不写参数url上会不显示
 
 ### $router和$route的区别
 $router是VueRouter实例，包含了所有路由以及路由的跳转方法   
@@ -167,7 +175,7 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 
 ---
 
-## 状态管理
+## 5、状态管理
 ### Vuex是什么
 全局状态管理，可以将多个组件共享的数据存储在一个对象里
 
@@ -179,9 +187,9 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 ## Vue3
 ### Vue2与Vue3的变化
 - Vue3最大化的兼容了Vue2（Vue3里可以写Vue2）
-- 组合式Api   
-  ```setup```会在```beforeCreate```之前调用
-- 
+- 源码升级，响应式原理的不同
+- 对象式组件声明方式，更好的支持TypeScript，Vue2需要用装饰器
+- 优化tree shaking提供了新的内置功能
 
 ---
 
