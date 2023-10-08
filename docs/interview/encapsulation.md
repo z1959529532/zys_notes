@@ -10,6 +10,27 @@ title: 个人封装实现
 * 鼠标松开，完成一次拖拽并将事件清除   
 [参考https://juejin.cn/post/7067051410671534116](https://juejin.cn/post/7067051410671534116)
 
+## 虚拟列表
+- 容器高度自适应，给每一项高度
+  - （1）撑开滚动条可滚动：计算列表总高度，在容器下放个盒子给定高度
+  - （2）监听容器滚动条滚动事件：
+  - （3）通过滚动条到顶部的高度算起始下标(向上取整)
+  - （4）容器高度算显示区结尾下标(向下取整)
+  - （5）通过下标得到显示的列表显示
+```js
+get listTop() {
+    // return this.top + 'px';  // top一直变化，所以一直触发，列表不会有滚动效果
+    return this.startIndex * this.itemHeight + 'px';
+}
+
+updateVisibleData(content: HTMLElement) {
+    this.top = content.scrollTop;
+    this.startIndex = Math.floor(content.scrollTop / this.itemHeight);
+    this.endIndex = this.startIndex + Math.ceil(content.offsetHeight / this.itemHeight);
+    this.showItems = CloneUtil.deepClone(this.allItems).slice(this.startIndex, this.endIndex);
+}
+```
+
 ## 图片懒加载和预加载
 ### 懒加载   
 对于图片列表，减少同一时间图片的网络请求，提升网页性能，解决思路是初始不给src的值，图片进入可视区后再进行加载   
