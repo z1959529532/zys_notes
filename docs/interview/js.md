@@ -1,31 +1,48 @@
 ---
 title: JS系列
 ---
-## JS篇
+## 基础
 ### 数据类型
-基本：String、Number、Boolean、null、undefined   
-引用：Object、Array、Function   
+String、Number、Boolean、null、undefined、Object、Symbol、BigInt   
+引用：对象、数组、函数   
 ES6：   
 Symbol：创建后独一无二且不可变的数据类型，解决变量冲突   
 BigInt：可以存储和操作大整数
 
 ### typeof和instanceof
-typeof：返回类型字符串，null、对象和数组判断为object类型   
+typeof：返回类型字符串，（null、对象和数组判断为object类型）   
 instanceof：返回布尔值，只能判断引用数据类型   
-```Object.prototype.toString.call()```方法实现全局通用的数据类型判断   
+```Object.prototype.toString.call()```方法实现全局通用的数据类型判断```[Object 类型]```   
 ```js
 function getType(obj) {
     return Object.prototype.toString.call(obj).replace(/^\[object (\S+)\]$/, '$1');
 }
 ```
 
-### 数组常见方法
-* ```.push()```，```.unshift()开头添加任意个```，```b=a.concat()合并```
-* ```.pop()末尾删除```，```shift()删第一项，返回删除项```，```b=a.slice(1)删位置```
-* ```indexOf()返回位置```，```includes()返回布尔```
-* ```.find(() => )返回匹配项```，```.some(() => )有一个满足返回true```，```.every(() => )所有满足返回true```，```b=a.filter(() => )返回满足数组```，```.map()```
-* ```.splice(开始位置, 删除数量, 插入的元素)```
+### 判断对象是空对象的方法
+```Object.keys(obj).length == 0```、```JSON.stringify(obj) == '{}'```
 
+### ==和===区别
+相等会做类型转换，再进行值比较（true==1）
+全等要类型相同，值也要相同
+
+### 字符串常见方法
+- 增：```+```拼接，```concat()```拼接新的字符串
+- 删/截取：```slice()```，```substring()```，```substr()```接收一或两个参数(不改变原数据，下标1开始)
+- 查：```indexOf()返回下标```，```includes()返回布尔```
+- 大小写转化：```toLowerCase()```、 ```toUpperCase()```
+
+### 数组常见方法
+数组操作基本返回操作项   
+* 增：```.push()```，```.unshift()开头添加任意个```，```b=a.concat()合并```
+* 删：```.pop()末尾删除```，```shift()删第一项```，```b=a.slice(1)接收一或两个参数(不改变原数据，下标1开始)```
+* 查： ```indexOf()返回下标```，```includes()返回布尔```
+* ```.splice(开始位置index, 删除数量, 插入的元素)```
+  * 一个参数，删除之后的元素（包含index），返回删除元素数组
+  * 两个参数，返回删除元素数组
+  * 三个以上参数，返回删除元素数组
+* 迭代方法（不改变原数据）：```.find(() => )返回匹配项```，```.some(() => )有一个满足返回true```，```.every(() => )所有满足返回true```，```b=a.filter(() => )返回满足数组```，```.map()```
+* ```reverse()```反转，```sort()```排序
 * es6：```Array.from()```、```Array.of()```、```find```、```includes()```、```flatMap()```
 
 ### 数组去重方法
@@ -53,102 +70,11 @@ function f1() {
 ```
 使用场景：创建私有变量、回调函数、防抖和节流、循环函数赋值
 
-### 内存泄露
-* 使用未声明的变量，意外创建了一个全局变量，使变量在内存中无法被收回
-* 闭包，函数内部的局部变量，没有释放
-* 删除dom元素，没有清理dom的引用
-```js
-var a = document.getElementById('btn');
-document.body.removeChild(document.getElementById('btn'));
-// 解决手动删除 a = null;
-```
-
-### 判断对象是空对象的方法
-```Object.keys(obj).length == 0```、```JSON.stringify(obj) == '{}'```
-
-### ==和===区别
-相等会做类型转换，再进行值比较（true==1）
-全等要类型相同，值也要相同
-
-### DOM和BOM
-DOM：文档对象模型，是W3C标准规范，主要学习操作页面元素   
-BOM：浏览器对象模型   
-常见的BOM对象：window(核心对象)包含-->location、screen、navigator
-
-### 作用域和作用域链
-* 作用域
-  * 全局作用域：不在函数和大括号中声明的变量
-  * 函数作用域
-  * 块级作用域   
-* 作用域链：js中使用变量，会在当前作用域开始，层层向上寻找
-
-### 原型和原型链
-js中是使用构造函数来新建一个对象的   
-访问一个对象属性时，不仅在对象上搜索，还会搜索该对象的原型，直到找到匹配名字或层层向上找达到原型链的末端   
-```js
-function Person() {}
-console.log(Person.prototype);
-
-// 输出
-{
-  constructor: ƒ Person()
-  __proto__: {
-    constructor: ƒ Object()
-    hasOwnProperty: ƒ hasOwnProperty()
-    isPrototypeOf: ƒ isPrototypeOf()
-    propertyIsEnumerable: ƒ propertyIsEnumerable()
-    toLocaleString: ƒ toLocaleString()
-    toString: ƒ toString()
-    valueOf: ƒ valueOf()
-  }
-}
-
-const p = new Person();
-console.log(p);
-// 输出
-{
-  __proto__: {
-    constructor: ƒ Person()
-    __proto__: Object
-  }
-}
-```
-```__proto__```作为桥梁，用来指向构造函数的原型   
-```p.__proto__===Person.prototype```   
-所有对象最终都是由Object构造的，```Object.prototype```的下一级是```Object.prototypep.__proto__===null```
-
-### 事件代理
-事件流经过三个阶段：捕获-->目标-->冒泡，事件代理就是在冒泡阶段完成   
-就是把一组元素的事件委托到父级或更外层元素上，绑定事件是外层元素   
-优点：动态绑定减少重复工作，减少所需内存
-
-### 事件循环机制 Event Loop
-JS执行代码是单线程的，每次只能做一件事，遇到异步任务不会一直等待返回结果，会将对应的任务放在事件队列中（微任务、宏任务）   
-事件循环可理解为一个桥梁   
-首先执行同步代码这属于宏任务，执行中遇到微任务加入到微任务队列（宏任务也一样），执行完当前宏任务后，有微任务就执行微任务   
-然后浏览器会执行渲染，接着JS线程执行下一个宏任务
-* 宏任务：宿主环境提供，script代码、setTimeout、setInterval、ajax、UI交互
-* 微任务：语言本身提供，Promise、mutationObserver
-
-### AJAX
-异步更新网页（更新网页对应部分，不需要刷新整个网页）    
-* 过程
-  * 创建XMLHttpRequest实例对象（new XMLHttpRequest()）
-  * 与服务器建立连接.open
-  * 发送给服务端.send
-
-### Axios
-支持promise、浏览器端发送AJAX请求、node端发http请求
-
-### for...in和for...of区别
-for in：遍历对象（拿key），遍历数组（拿索引）   
-for of：遍历数组（拿每项item）
-
 ### 浅拷贝深拷贝
-针对于Object和Array引用数据类型   
+针对于Object和Array引用数据类型
 * 浅拷贝：属性是基本类型，拷贝的是基本类型的值，属性是引用类型，拷贝的就是内存地址（指向同一块内存）   
-赋值和浅拷贝的区别在于第一层的基本数据类型，赋值后改值源对象会改变   
-```手写代码```，```Object.assign```，```拓展运算符...```
+  赋值和浅拷贝的区别在于第一层的基本数据类型，赋值后改值源对象会改变   
+  ```手写代码```，```Object.assign```，```拓展运算符...```
 ```js
 function shallowClone(obj) {
         const newObj = {};
@@ -162,7 +88,7 @@ function shallowClone(obj) {
 ```
 
 * 深拷贝：将一个对象从内存中完整的拷贝一份出来（不共享同一块内存），修改新对象不会影响原对象
-```手写代码递归```，```lodash.cloneDeep```，```JSON.string（会忽略undefined，symbol，函数）```
+  ```手写代码递归```，```lodash.cloneDeep```，```JSON.string（会忽略undefined，symbol，函数）```
 ```js
 function deepClone(obj, hash = new WeakMap()) {
     if (obj == null) return obj;
@@ -180,6 +106,10 @@ function deepClone(obj, hash = new WeakMap()) {
     return cloneObj;
 }
 ```
+
+### for...in和for...of区别
+for in：遍历对象（拿key），遍历数组（拿索引）   
+for of：遍历数组（拿每项item）
 
 ## ES6篇
 ### var、let、const
@@ -247,5 +177,85 @@ var proxy = new Proxy(target, handler)
 proxy.revocable(target, handler)
 ```
 
+## 其它
+### 内存泄露
+* 使用未声明的变量，意外创建了一个全局变量，使变量在内存中无法被收回
+* 闭包，函数内部的局部变量，没有释放
+* 删除dom元素，没有清理dom的引用
+```js
+var a = document.getElementById('btn');
+document.body.removeChild(document.getElementById('btn'));
+// 解决手动删除 a = null;
+```
+
+### DOM和BOM
+DOM：文档对象模型，是W3C标准规范，主要学习操作页面元素   
+BOM：浏览器对象模型   
+常见的BOM对象：window(核心对象)包含-->location、screen、navigator
+
+### 作用域和作用域链
+* 作用域
+  * 全局作用域：不在函数和大括号中声明的变量
+  * 函数作用域
+  * 块级作用域
+* 作用域链：js中使用变量，会在当前作用域开始，层层向上寻找
+
+### 原型和原型链
+js中是使用构造函数来新建一个对象的   
+访问一个对象属性时，不仅在对象上搜索，还会搜索该对象的原型，直到找到匹配名字或层层向上找达到原型链的末端
+```js
+function Person() {}
+console.log(Person.prototype);
+
+// 输出
+{
+  constructor: ƒ Person()
+  __proto__: {
+    constructor: ƒ Object()
+    hasOwnProperty: ƒ hasOwnProperty()
+    isPrototypeOf: ƒ isPrototypeOf()
+    propertyIsEnumerable: ƒ propertyIsEnumerable()
+    toLocaleString: ƒ toLocaleString()
+    toString: ƒ toString()
+    valueOf: ƒ valueOf()
+  }
+}
+
+const p = new Person();
+console.log(p);
+// 输出
+{
+  __proto__: {
+    constructor: ƒ Person()
+    __proto__: Object
+  }
+}
+```
+```__proto__```作为桥梁，用来指向构造函数的原型   
+```p.__proto__===Person.prototype```   
+所有对象最终都是由Object构造的，```Object.prototype```的下一级是```Object.prototypep.__proto__===null```
+
+### 事件代理
+事件流经过三个阶段：捕获-->目标-->冒泡，事件代理就是在冒泡阶段完成   
+就是把一组元素的事件委托到父级或更外层元素上，绑定事件是外层元素   
+优点：动态绑定减少重复工作，减少所需内存
+
+### 事件循环机制 Event Loop
+JS执行代码是单线程的，每次只能做一件事，遇到异步任务不会一直等待返回结果，会将对应的任务放在事件队列中（微任务、宏任务）   
+事件循环可理解为一个桥梁   
+首先执行同步代码这属于宏任务，执行中遇到微任务加入到微任务队列（宏任务也一样），执行完当前宏任务后，有微任务就执行微任务   
+然后浏览器会执行渲染，接着JS线程执行下一个宏任务
+* 宏任务：宿主环境提供，script代码、setTimeout、setInterval、ajax、UI交互
+* 微任务：语言本身提供，Promise、mutationObserver
+
+### AJAX
+异步更新网页（更新网页对应部分，不需要刷新整个网页）
+* 过程
+  * 创建XMLHttpRequest实例对象（new XMLHttpRequest()）
+  * 与服务器建立连接.open
+  * 发送给服务端.send
+
+### Axios
+支持promise、浏览器端发送AJAX请求、node端发http请求
 
 

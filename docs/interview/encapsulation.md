@@ -16,13 +16,14 @@ title: 个人封装实现
   - （2）监听容器滚动条滚动事件：
   - （3）通过滚动条到顶部的高度算起始下标(向上取整)
   - （4）容器高度算显示区结尾下标(向下取整)
-  - （5）通过下标得到显示的列表显示
+  - （5）通过下标得到显示的列表数据
 ```js
+// 可视区定位
 get listTop() {
     // return this.top + 'px';  // top一直变化，所以一直触发，列表不会有滚动效果
     return this.startIndex * this.itemHeight + 'px';
 }
-
+// 可视区列表数据
 updateVisibleData(content: HTMLElement) {
     this.top = content.scrollTop;
     this.startIndex = Math.floor(content.scrollTop / this.itemHeight);
@@ -30,6 +31,9 @@ updateVisibleData(content: HTMLElement) {
     this.showItems = CloneUtil.deepClone(this.allItems).slice(this.startIndex, this.endIndex);
 }
 ```
+
+## 一键换肤
+
 
 ## 图片懒加载和预加载
 ### 懒加载   
