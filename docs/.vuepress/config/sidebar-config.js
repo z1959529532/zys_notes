@@ -13,8 +13,8 @@ module.exports =
             sidebarDepth: 2,
             children: [
                 '/interview/vue',
-                '/interview/css',
                 '/interview/js',
+                '/interview/css',
                 '/interview/http',
                 '/interview/webgis'
             ],

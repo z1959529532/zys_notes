@@ -7,17 +7,22 @@ String、Number、Boolean、null、undefined、Object、Symbol、BigInt
 引用：对象、数组、函数   
 ES6：   
 Symbol：创建后独一无二且不可变的数据类型，解决变量冲突   
-BigInt：可以存储和操作大整数
+BigInt：可以安全存储和操作大整数
 
 ### typeof和instanceof
 typeof：返回类型字符串，（null、对象和数组判断为object类型）   
-instanceof：返回布尔值，只能判断引用数据类型   
-```Object.prototype.toString.call()```方法实现全局通用的数据类型判断```[Object 类型]```   
+instanceof：返回布尔值，只能判断引用数据类型（内部运行机制是判断在原型链中能否找到该类型的原型）   
+```Object.prototype.toString.call()```使用Object对象的原型方法toString，通用```[Object 类型]```   
 ```js
 function getType(obj) {
     return Object.prototype.toString.call(obj).replace(/^\[object (\S+)\]$/, '$1');
 }
 ```
+
+### null和undefined区别
+初始化空对象，未定义   
+null用type of判断时会返回object   
+相等返回true，全等返回false
 
 ### 判断对象是空对象的方法
 ```Object.keys(obj).length == 0```、```JSON.stringify(obj) == '{}'```
@@ -28,21 +33,18 @@ function getType(obj) {
 
 ### 字符串常见方法
 - 增：```+```拼接，```concat()```拼接新的字符串
-- 删/截取：```slice()```，```substring()```，```substr()```接收一或两个参数(不改变原数据，下标1开始)
-- 查：```indexOf()返回下标```，```includes()返回布尔```
-- 大小写转化：```toLowerCase()```、 ```toUpperCase()```
+- 删/截取：```slice()```，```substring()```，```substr()```接收一个或两个参数(顾头不顾尾)
+- 查：```indexOf()```返回下标，```includes()```返回布尔
+- 大小写转化：```toUpperCase()```、 ```toLowerCase()```
 
 ### 数组常见方法
-数组操作基本返回操作项   
-* 增：```.push()```，```.unshift()开头添加任意个```，```b=a.concat()合并```
-* 删：```.pop()末尾删除```，```shift()删第一项```，```b=a.slice(1)接收一或两个参数(不改变原数据，下标1开始)```
-* 查： ```indexOf()返回下标```，```includes()返回布尔```
-* ```.splice(开始位置index, 删除数量, 插入的元素)```
-  * 一个参数，删除之后的元素（包含index），返回删除元素数组
-  * 两个参数，返回删除元素数组
-  * 三个以上参数，返回删除元素数组
-* 迭代方法（不改变原数据）：```.find(() => )返回匹配项```，```.some(() => )有一个满足返回true```，```.every(() => )所有满足返回true```，```b=a.filter(() => )返回满足数组```，```.map()```
-* ```reverse()```反转，```sort()```排序
+数组操作基本是改变元数据   
+* 增：```.push()```，```.unshift()```开头添加，```b=a.concat(...)```不改变原数据，返回合并后数据
+* 删：```.pop()```末尾删除，```shift()```删第一项，```b=a.slice()```不改变原数据，接收一个或两个参数(顾头不顾尾)
+* 查： ```indexOf()```返回下标，```includes()```返回布尔
+* ```.splice(开始位置index, 删除数量, 插入的元素)```返回删除元素数组
+* 迭代方法（不改变原数据）：```.find(() => )```返回匹配项，```.some(() => )```有一个满足返回true，```.every(() => )```所有满足返回true，```b=a.filter(() => )```返回满足数组，```.map()```
+* ```reverse()```反转，```sort()```排序(a-b小到大)
 * es6：```Array.from()```、```Array.of()```、```find```、```includes()```、```flatMap()```
 
 ### 数组去重方法
@@ -131,7 +133,9 @@ console.log(typeof a) // number
 ```
 
 ### 箭头函数和普通函数的区别
-```this```指向问题，箭头函数内部的```this```指向是固定的（指向它调用或者定义时的环境），普通函数的```this```指向是可变的
+- 写法简洁
+- 没有自己的this，继承上一层的this而且指向不会改变
+- 没有prototype，不能new一个箭头函数
 
 ### Promise
 是异步编程新的一种解决方案，支持链式调用解决回调地狱的问题
