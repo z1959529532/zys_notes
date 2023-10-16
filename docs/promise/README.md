@@ -374,6 +374,7 @@ myReadFile('./resource/file.txt').then(data => {
 ```
 
 ## 8、async 与 await
+基于Promise实现的，好处就是让异步的代码看起来和同步代码一样，代码容易阅读和维护
 ### async函数
 - 返回值为Promise对象
 - 函数返回非Promise情况，返回成功的Promise对象，返回值为结果值

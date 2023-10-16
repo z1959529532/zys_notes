@@ -114,9 +114,9 @@ Vue实例的根节点app入口不能有两个
 ### create和mounted中间间隔受哪些因素影响
 mounted是在挂载完dom后调用的，比如页面复杂度，数据复杂度可能会影响dom的渲染
 
-### 一般在哪个生命周期请求一部数据
+### 一般在哪个生命周期请求异步数据
 created、beforeMount、mounted调用时data都已创建   
-推荐在created中，更快获取服务端数据，减少页面加载时间
+推荐在created中，更快获取到数据，减少页面加载时间
 
 ---
 
@@ -149,7 +149,7 @@ created、beforeMount、mounted调用时data都已创建
 
 ### query和params的区别
 query方式可以使用name或path跳转，url上会显示参数   
-params只能使用name方式跳转，路由不写参数url上会不显示
+params只能使用name方式跳转，路由不写参数url上会不显示，不在路由配参数刷新会丢参（存在sessionStorage）
 
 ### $router和$route的区别
 $router是VueRouter实例，包含了所有路由以及路由的跳转方法   
@@ -239,7 +239,7 @@ server: {
   - cdn加速：将三方依赖模块写成cdn形式注入
   - gzip压缩
 - 代码页面方面
-  - [图片懒加载、预加载](/interview/encapsulation.html)
+  - [图片懒加载、预加载](/interview/encapsulation.html#图片懒加载和预加载)（IntersectionObserver）
   - [长列表的虚拟滚动](/interview/encapsulation.html#虚拟列表)
   - 首屏页面缓存，数据缓存
   - 骨架屏

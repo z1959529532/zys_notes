@@ -42,6 +42,8 @@ updateVisibleData(content: HTMLElement) {
 [参考地址2.https://blog.csdn.net/weixin_49554584/article/details/128736678](https://blog.csdn.net/weixin_49554584/article/details/128736678)   
 ```ts
 // js代码实现 图片设置默认高度让容器产生滚动条
+// 监听容器滚动条事件，遍历所有图片元素
+// 图片距离浏览器窗口高度getBoundingClientRect() - 容器距浏览器窗口高度 < 容器高度
 this.imgContent.addEventListener("scroll", this.lazyLoad);
 lazyLoad() {
     if (this.timer) {
