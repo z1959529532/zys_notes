@@ -27,13 +27,25 @@ get listTop() {
 updateVisibleData(content: HTMLElement) {
     this.top = content.scrollTop;
     this.startIndex = Math.floor(content.scrollTop / this.itemHeight);
-    this.endIndex = this.startIndex + Math.ceil(content.offsetHeight / this.itemHeight);
+    this.endIndex = this.startIndex + Math.ceil(content.clientHeight / this.itemHeight);
     this.showItems = CloneUtil.deepClone(this.allItems).slice(this.startIndex, this.endIndex);
 }
 ```
 
 ## 一键换肤
 
+## 大文件上传
+[参考地址：https://juejin.cn/post/7099362510532247589?searchId=2023102319245149D480042C1B7764B392](https://juejin.cn/post/7099362510532247589?searchId=2023102319245149D480042C1B7764B392)
+- 导致问题
+  - 网络不好
+  - 服务器过载失败
+  - 事件影响用户体验
+- 实现
+  - 拿到文件对象进行切片处理```slice```保存在数组中
+  - 同时用文件```spark-md5```的值（hash值）
+  - 通过hash值向后端获取文件上传状态（成功 percent=100 | url）
+  - 文件未上传成功执行切片上传，拿到未上传切片数组继续上传
+  - 所有切片上传，合并切片
 
 ## 图片懒加载和预加载
 ### 懒加载   
