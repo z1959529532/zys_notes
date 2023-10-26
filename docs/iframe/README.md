@@ -18,46 +18,44 @@ title: iframe通信
 ```vue
 
 <iframe id="showChildrenIframe"
-        class="showChildrenIframe" :src="地址" frameborder="0"></iframe>
+        class="showChildrenIframe" :src="iframeUrl" frameborder="0"></iframe>
 
-<script lang="ts">
-export default class Main extends Vue {
-    // 父
-    sendGreet() {
-        const sonFrame: any = document.getElementById('showChildrenIframe');
-        sonFrame.onload = () => {
-            // 非跨域
-            // sonFrame.contentWindow.showGreet('hello 在吗？');
-            // 跨域
-            sonFrame.contentWindow.postMessage(
-                {data: 'hello 在吗？', type: 'zys', parentUrl: location.href},
-                location.origin + `/#/iframeTest` // 子页面地址，*为所有
-            )
-            // 获取子dom
-            console.log(sonFrame.contentWindow.document.getElementById('greet'), 1122);
-        }
-    }
+<script>
+/************************************ 父 ************************************/
+this.iframeUrl = location.origin + `/#/iframeSon`;
+this.$nextTick(() => {
+  const iframe = document.getElementById('ifr') as any;
+  // iframe.contentWindow.location.reload();
+  iframe.onload = () => {
+    // 非跨域
+    // iframe.contentWindow.document.getElementById('abc');
+    // iframe.contentWindow.showGreet('hello 在吗？');
+    // 跨域
+    iframe.contentWindow.postMessage(
+            {data: '在工位吗？过来一下', type: 'zys', parentUrl: location.href},
+            this.iframeUrl
+            // '*'
+    )
+  }
+})
 
-    // 子
-    sendReply() {
-        // 非跨域
-        // parent.window.receiveReply('你好！在');
-        // 跨域
-        window.parent.postMessage(
-            {data: '你好！在', type: 'zys', parentUrl: ''},
-            'parentUrl'  // 父页面地址，*为所有
-        );
-        // 获取父dom
-        console.log(window.parent.document.getElementById('reply'), 1122);
-    }
+/************************************ 子 ************************************/
+// 非跨域
+// window.parent.showReply('好的')
+// window.top
+// 跨域
+window.parent.postMessage(
+    {data: '好的', type: 'zys', parentUrl: ''},
+    this.message.parentUrl
+    // '*'
+)
 
-    // 跨域接收消息
-    mounted() {
-        window.addEventListener("message", (e) => {
-            if (e.data?.type && e.data.type == 'zys') {
-            }
-        })
+// 跨域接收消息
+mounted() {
+  window.addEventListener("message", (e) => {
+    if (e.data?.type && e.data.type == 'zys') {
     }
+  })
 }
 </script>
 ```

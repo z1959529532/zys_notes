@@ -16,7 +16,8 @@ module.exports =
                 '/interview/js',
                 '/interview/css',
                 '/interview/http',
-                '/interview/webgis'
+                '/interview/webgis',
+                '/interview/vueDiff'
             ],
         },
         '/interview/encapsulation',
