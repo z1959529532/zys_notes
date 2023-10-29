@@ -15,7 +15,10 @@ title: Vue系列
 * View：视图层，可以理解为展示给用户各种信息的DOM层。
 * ViewModel：视图模型层，是View和Model之间的通信桥梁，一方面实现Data Banding另一方面实现了Dom Listener。
 
-### 双向绑定的原理
+### v-model 双向绑定的原理
+v-bind + v-on   
+```:value="abc"``` + ```v-on:input="abc = $event.target.value"```   
+
 数据劫持结合发布订阅   
 监听器```Observer```对数据劫持监听   
 ```Compile```解析模板指令，绑定更新函数，渲染和更新视图   
@@ -26,9 +29,6 @@ title: Vue系列
 * vue2的是通过 ```Object.defineproperty``` 数据劫持，初始化时对每个属性加上get/set（存在问题对象新增、删除属性界面不更新，得用$set（Vue内部通过重写函数）；通过下标改数组界面不更新
 * vue3的是通过 ```Proxy``` 拦截对象中任意属性变化（优点不用监听每个属性），通过 ```Reflect(反射)``` 对源对象属性操作（优点，重复性操作属性时，Reflect它是有返回值的，Object会报错）
 
-### v-model原理
-v-bind + v-on   
-```:value="abc"``` + ```v-on:input="abc = $event.target.value"```
 
 ### computed和watch的区别
 - computed计算属性对数据进行一些转化后在显示，要依赖其他属性的，也就是依赖的属性值发生改变才会触发，并且它有缓存（多次调用只触发一次，和method方法的区别）   
@@ -232,25 +232,6 @@ server: {
   - 动态生成路由（数据前后端都可以，后端的话映射），```router.addRoutes()```添加，再通过new实例```.matcher```实现第二次清空
   - 也可通过```meta```设定权限标识，在```beforeEach((to, from, next) => {}))```去判断进行跳转
 * 按钮权限：通过```自定义权限指令```控制
-
-### 性能优化
-- 打包构建方面```webpack/vite```
-  - 分包：不重复请求，三方库单独打包处理
-  - cdn加速：将三方依赖模块写成cdn形式注入
-  - gzip压缩
-- 代码页面方面
-  - [图片懒加载、预加载](/interview/encapsulation.html#图片懒加载和预加载)（IntersectionObserver）
-  - [长列表的虚拟滚动](/interview/encapsulation.html#虚拟列表)
-  - 首屏页面缓存，数据缓存
-  - 骨架屏
-  ---
-  - 路由懒加载
-  - 动态引入```import('')```与三方库按需加载相类似
-  - [防抖节流](/interview/js.html#防抖和节流)
-  - 清定时器，销毁监听事件
-  - v-show
-  - v-for加key，避免与v-if一起使用
-  - keep-alive缓存组件
 
 ### 搭建项目
 * 根据项目需求采用合适的技术栈，构建方式：脚手架/模板 ```vue + ts + vite```   
