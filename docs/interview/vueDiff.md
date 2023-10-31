@@ -11,7 +11,7 @@ Vue源码借鉴了snabbdom实现虚拟Dom和Diff算法的方式
 想使用build好的JS版本的snabbdom的库，可以从npm下载```yarn add snabbdom -D```   
 
 
-Diff发生在新的虚拟Dom和旧的虚拟Dom上，最后反映到真实Dom   
+Diff发生在新的虚拟Dom和旧的虚拟Dom对比上，最后反映到真实Dom   
 不研究Dom如何转化为虚拟Dom，属于模板编译   
 h函数---->虚拟Dom---->真实Dom   
 

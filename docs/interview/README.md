@@ -9,7 +9,7 @@ title: 面试题
 ### [闭包](/interview/js.html#闭包)
 函数套函数，内层函数中访问到其外层函数的作用域
 - 两个优点：保存和保护
-  - 保护内部变量不受外界干扰，适合模块化开发，在ES6 module和CommonJs都能看到
+  - 保护内部变量不受外界干扰，适合模块化开发，在ES6 module和CommonJs都有应用
   - 保存就是形成一个不销毁的作用域，一直存在内存中，容易造成[内存泄露](/interview/js.html#内存泄露)
   - 主要应用[防抖节流](/interview/encapsulation.html#防抖节流)
 
@@ -20,10 +20,41 @@ title: 面试题
 ```Object.prototypep.__proto__===null```
 
 ### 跨域
+浏览器的安全机制，为了防止读取非同源的DOM、Cookie、LocalStorage、IndexDB   
+协议、域名、端口都相同，否则就是跨域   
+* CORS：在服务端设置响应头```Access-Control-Allow-Origin```--```express```
+* JSONP：借助有跨域能力的标签```script```，有缺陷：只支持get、传递信息有限制
+* 服务器代理：```node```、```nginx```（允许前端带上cookie）不经过浏览器
 
 ### [Promise](/promise)
+是异步编程新的一种解决方案，支持链式调用解决回调地狱的问题   
+* 状态：```pedding``` --> ```fulfilled``` 或 ```rejected```
+* Api：```.then(value => {}, reason => {})```，```.catch(reason => {})```（失败语法糖）
+* Promise对象的方法：```.resolve()```，```.reject()```，```.all()```，```.race()```
+async 与 await
+基于Promise实现的，好处就是让异步的代码看起来和同步代码一样，代码容易阅读和维护
+* async：返回结果是Promise对象，返回结果和.resolve一样
+* await：返回结果是成功promise的值（右侧一般为Promise对象，失败Promise要加try...catch），await必须写在async函数中，但async函数中可以没有await
 
 ### [Vue 虚拟Dom和Diff算法](/interview/vueDiff.html)
+Vue源码借鉴了snabbdom实现虚拟Dom和Diff算法的方式   
+原理就是h函数产生虚拟节点 --> patch函数将对比完的虚拟节点上树   
+Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映到真实Dom   
+#### patch函数
+判断oldVnode是虚拟节点还是Dom节点（是Dom用h函数包装为虚拟节点）   
+然后判断是不是同一根节点（key和sel选择器）---->是（***精细比较***）/ 不是（递归生成dom，直接插入新的，删除旧的）
+
+#### 子节点的比较(Diff算法-双端对比)
+- 四种对比方式--四个指针
+  - 新前--旧前
+  - 新后--旧后
+  - 新后--旧前（新前指的节点，移动到旧后之后）
+  - 新前--旧后（新前指的节点，移动到旧前之前）
+
+- Vue3 快速Diff的不同
+  - 头和头
+  - 尾和尾
+  - 然后通过```最长递增子序列```进行移动/添加/删除
 
 ## 项目经历
 ### 大文件上传-切片上传
@@ -41,7 +72,7 @@ title: 面试题
 
 ### 首屏优化-->性能优化
 * 首屏优化
-  * 减少请求，接口整合，使用缓存
+  * 减少请求，接口整合，”使用缓存“
   * 懒加载
   * 将资源用cdn形式
   * 图片压缩，gzip压缩
@@ -52,3 +83,6 @@ title: 面试题
   * [防抖节流](/interview/js.html#防抖和节流)
   * UI库按需加载
   * 代码（清定时器，销毁监听事件）--（v-show）--（v-for加key，避免与v-if一起使用）--（keep-alive缓存组件）
+
+### [列表虚拟滚动](/interview/encapsulation.html#虚拟列表)
+
