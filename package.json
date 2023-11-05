@@ -4,9 +4,9 @@
     "description": "zys_notes",
     "main": "index.js",
     "scripts": {
-        "dev": "vuepress dev docs",
-        "build": "vuepress build docs",
-        "deploy": "vuepress build docs && start deploy.bat"
+        "dev": "set NODE_OPTIONS=--openssl-legacy-provider && vuepress dev docs",
+        "build": "set NODE_OPTIONS=--openssl-legacy-provider && vuepress build docs",
+        "deploy": "set NODE_OPTIONS=--openssl-legacy-provider && vuepress build docs && start deploy.bat"
     },
     "repository": {
         "type": "git",

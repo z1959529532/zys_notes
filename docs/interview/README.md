@@ -66,7 +66,7 @@ Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映�
 - 实现
   - 拿到文件对象进行切片处理```slice```，Blob保存在数组中
   - 同时用文件```spark-md5```的值（hash值）
-  - 通过hash值向后端获取```文件上传状态```（成功 percent=100 | url）
+  - 通过hash值向后端获取```文件上传状态```（成功--文件妙传 percent=100 | url）
   - 未成功执行```切片上传```，过滤拿到未上传切片数组继续上传
   - 通过切片数组判断所有切片上传成功，告诉后端```合并切片```
 
@@ -86,3 +86,11 @@ Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映�
 
 ### [列表虚拟滚动](/interview/encapsulation.html#虚拟列表)
 
+### iframe
+微前端：多个小型前端组合成一个应用的方式，独立部署、不同技术栈子应用   
+
+- 解决问题
+  - 记住子应用路由：子应用路由发生变化就发送到主应用，存在缓存中，下次重新显示时直接给iframe的url
+  - cookie登录失效：跨域情况下，新增了SameSite属性防止攻击和追踪，无法set-cookie；解决：服务端代理，前端处理cookie
+  - 
+[项目问题参考：https://www.cnblogs.com/smileZAZ/archive/2023/08/01/17598642.html](https://www.cnblogs.com/smileZAZ/archive/2023/08/01/17598642.html)
