@@ -122,12 +122,12 @@ created、beforeMount、mounted调用时data都已创建
 
 ## 3、组件通信
 ### 组件通信的方式有哪些
-父传子用```props```接收，子传父用```this.$emit('事件名', 参数)```   
-父访问子```this.$refs.aaa```、```this.$children```   
-子访问父```this.$parent```   
-```provide```/```reject```   
-```eventBus```   
-```Vuex```
+[参考地址：https://blog.csdn.net/pdd11997110103/article/details/113563786](https://blog.csdn.net/pdd11997110103/article/details/113563786)   
+- 父传子用 ```props```接收，子传父用```this.$emit('事件名', 参数)```   
+- 引用：父访问子 ```this.$refs.aaa```、```this.$children```，子访问父 ```this.$parent```   
+- 父和孙 ```provide```/```Inject```   
+- 兄弟/跨级 ```eventBus```，通过new Vue的bus对象-->```bus.$emit```触发，```bus.$on```监听   
+- ```Vuex```
 
 ### 父子组件双向绑定
 参考：

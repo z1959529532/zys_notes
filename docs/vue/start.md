@@ -43,3 +43,5 @@ Vue CLI是一个 Vue.js 项目脚手架，可快速搭建Vue开发环境以及�
 - 查看版本：```vue --version```
 - 用脚手架创建项目：```vue create app```
 
+### vue-property-decorator
+[vue-property-decorator 使用参考地址：https://blog.csdn.net/weixin_44116302/article/details/111225763](https://blog.csdn.net/weixin_44116302/article/details/111225763)
