@@ -8,7 +8,7 @@ title: 面试题
 * [Vue经典面试题：https://juejin.cn/post/7097067108663558151?searchId=20231114212935B49E5A86A5981924F39B#heading-92](https://juejin.cn/post/7097067108663558151?searchId=20231114212935B49E5A86A5981924F39B#heading-92)
 
 ### [闭包](/interview/js.html#闭包)
-函数套函数，内层函数中访问到其外层函数的作用域
+函数套函数，内层函数访问外层函数的作用域
 - 两个优点：保存和保护
   - 保护内部变量不受外界干扰，适合模块化开发，在ES6 module和CommonJs都有应用
   - 保存就是形成一个不销毁的作用域，一直存在内存中，容易造成[内存泄露](/interview/js.html#内存泄露)
@@ -44,7 +44,7 @@ Vue源码借鉴了snabbdom实现虚拟Dom和Diff算法的方式
 Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映到真实Dom   
 #### patch函数
 判断oldVnode是虚拟节点还是Dom节点（是Dom用h函数包装为虚拟节点）   
-然后判断是不是同一根节点（key和sel选择器）---->是（***精细比较***）/ 不是（递归生成dom，直接插入新的，删除旧的）
+然后判断是不是同一根节点```sameVnode```（key和sel选择器）---->是（***精细比较***）/ 不是（递归生成dom，直接插入新的，删除旧的）
 
 #### 子节点的比较(Diff算法-双端对比)
 - 四种对比方式--四个指针
@@ -92,8 +92,8 @@ Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映�
   * 图片压缩，gzip压缩
   * 分包（三方库，避免重复请求）
 * 性能优化
-  * [图片懒加载、预加载](/interview/encapsulation.html#图片懒加载和预加载)（IntersectionObserver）
-  * [长列表的虚拟滚动](/interview/encapsulation.html#虚拟列表)
+  * [图片懒加载、预加载](/interview/encapsulation.html#图片懒加载和预加载)（getBoundingClientRect，IntersectionObserver）
+  * [列表的虚拟滚动](/interview/encapsulation.html#虚拟列表)
   * [防抖节流](/interview/js.html#防抖和节流)
   * UI库按需加载
   * 代码（清定时器，销毁监听事件）--（v-show）--（v-for加key，避免与v-if一起使用）--（keep-alive缓存组件）
@@ -104,7 +104,18 @@ Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映�
 微前端：多个小型前端组合成一个应用的方式，独立部署、不同技术栈子应用   
 
 - 解决问题
-  - 记住子应用路由：子应用路由发生变化就发送到主应用，存在缓存中，下次重新显示时直接给iframe的url
-  - cookie登录失效：跨域情况下，新增了SameSite属性防止攻击和追踪，无法set-cookie；解决：服务端代理，前端处理cookie
-  - 
+  - 首页卡的问题：主系统iFrame预加载（js创建iFrame），子应用减少加载资源   
+    [参考1：https://pythonjishu.com/niljfcmmrkzqpwd/](https://pythonjishu.com/niljfcmmrkzqpwd/)   
+  - 记住子应用路由问题：子应用路由发生变化就发送到主应用，存在缓存中，下次重新显示时直接给iframe的url
+  - cookie登录失效：跨域情况下，新增了SameSite属性防止攻击和追踪，无法set-cookie；解决：服务端代理，前端处理cookie   
+
 [项目问题参考：https://www.cnblogs.com/smileZAZ/archive/2023/08/01/17598642.html](https://www.cnblogs.com/smileZAZ/archive/2023/08/01/17598642.html)
+
+
+### webpack优化
+[webpack优化技巧：https://zhuanlan.zhihu.com/p/536200606](https://zhuanlan.zhihu.com/p/536200606)
+- 缓存cache：开发环境开启缓存，加快构建速度（webpack5内置了缓存配置,低版本的话安装cache-loader）
+- 多线程```thread-loader```：
+- 摇树优化```tree-shaking```：不编译没有用到的代码（webpack5内置，确保在编译时使用生产模式，mode: 'production'）
+
+
