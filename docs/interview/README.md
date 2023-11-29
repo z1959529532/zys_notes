@@ -65,6 +65,10 @@ Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映�
 ### Vue3与Vue2的区别
 [组合式Api的不同：https://blog.csdn.net/qq_39290323/article/details/124786099](https://blog.csdn.net/qq_39290323/article/details/124786099)   
 [Vue3的优点：https://blog.csdn.net/Clytza/article/details/130137753](https://blog.csdn.net/Clytza/article/details/130137753)
+- Vue3最大化的兼容了Vue2（Vue3里可以写Vue2）
+- 源码升级，响应式原理的不同（Proxy），Diff算法的优化
+- 组件对象式声明方式，更好的支持TypeScript，Vue2需要用装饰器
+- 优化了tree shaking，提供了新的内置功能（Fragment，Teleport）
 
 ### 0到1搭建项目
 [参考地址1：https://blog.csdn.net/Lyrelion/article/details/128066489](https://blog.csdn.net/Lyrelion/article/details/128066489)   
@@ -86,6 +90,7 @@ Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映�
   - 未成功执行```切片上传```，过滤拿到未上传切片数组继续上传
   - 判断所有切片上传成功，告诉后端```合并切片```
 
+注意文件切片的缓存（转字符串或二进制```localstorage```/```SessionStorage```）   
 并发请求Promise.all()   
 停止请求，请求配置axios.CancelToken.source()，然后调用.cancel
 
@@ -112,7 +117,8 @@ Diff发生在新旧虚拟Dom对比上，也就是patch函数里，最后反映�
   - 首页卡的问题：主系统iFrame预加载（js创建iFrame），子应用减少加载资源   
     [参考1：https://pythonjishu.com/niljfcmmrkzqpwd/](https://pythonjishu.com/niljfcmmrkzqpwd/)   
   - 记住子应用路由问题：子应用路由发生变化就发送到主应用，存在缓存中，下次重新显示时直接给iframe的url
-  - cookie登录失效：跨域情况下，新增了SameSite属性防止攻击和追踪，无法set-cookie；解决：服务端代理，前端处理cookie   
+  - cookie登录失效：跨域情况下，新增了SameSite属性防止攻击和追踪，无法set-cookie；解决：服务端代理，前端处理cookie
+  - 前进后退：监听
 
 [项目问题参考：https://www.cnblogs.com/smileZAZ/archive/2023/08/01/17598642.html](https://www.cnblogs.com/smileZAZ/archive/2023/08/01/17598642.html)
 

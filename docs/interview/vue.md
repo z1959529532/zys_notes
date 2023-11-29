@@ -22,7 +22,7 @@ v-bind + v-on
 数据劫持结合发布订阅   
 监听器```Observer```对数据劫持监听   
 ```Compile```解析模板指令，绑定更新函数，渲染和更新视图   
-数据变化再由订阅者```Watcher```决定是否需要更新（Observer、Compile通信桥梁）   
+数据变化再由订阅者```Watcher```决定是否需要更新，是Observer、Compile通信桥梁   
 交由订阅器```Dep```收集订阅者统一管理
 
 ### vue的响应式原理
@@ -187,9 +187,9 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 ## Vue3
 ### Vue2与Vue3的变化
 - Vue3最大化的兼容了Vue2（Vue3里可以写Vue2）
-- 源码升级，响应式原理的不同
-- 对象式组件声明方式，更好的支持TypeScript，Vue2需要用装饰器
-- 优化tree shaking提供了新的内置功能
+- 源码升级，响应式原理的不同（Proxy），Diff算法的优化
+- 组件对象式声明方式，更好的支持TypeScript，Vue2需要用装饰器
+- 优化了tree shaking，提供了新的内置功能
 
 ---
 

@@ -6,20 +6,6 @@ module.exports =
     // 2、数组形式
     [
         '/',
-        {
-            title: '面试问题',
-            path: '/interview/',
-            collapsable: false,
-            sidebarDepth: 2,
-            children: [
-                '/interview/vue',
-                '/interview/js',
-                '/interview/css',
-                '/interview/http',
-                '/interview/webgis',
-                '/interview/vueDiff'
-            ],
-        },
         '/interview/encapsulation',
         // 数组的扩展形式
         {
@@ -38,8 +24,14 @@ module.exports =
             collapsable: true,
             sidebarDepth: 2,
         },
-        '/websocket/websocket',
+        {
+            title: 'uniapp学习',
+            path: '/uniapp/uniapp',
+            collapsable: true,
+            sidebarDepth: 2,
+        },
         '/angular/angular',
+        '/websocket/websocket',
         {
             title: '前端基础',
             path: '/basis/',
@@ -53,7 +45,21 @@ module.exports =
         '/ajax/',
         '/promise/',
         '/axios/',
-        '/iframe/'
+        '/iframe/',
+        {
+            title: '面试问题',
+            path: '/interview/',
+            collapsable: false,
+            sidebarDepth: 2,
+            children: [
+                '/interview/vue',
+                '/interview/js',
+                '/interview/css',
+                '/interview/http',
+                '/interview/webgis',
+                '/interview/vueDiff'
+            ],
+        },
     ];
 
     // 3、对象形式
