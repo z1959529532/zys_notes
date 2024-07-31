@@ -24,7 +24,7 @@ module.exports = {
     /** 6、个人信息 */
     title: 'zys笔记',
     description: 'Welcome to zys_notes',
-    // port: '8787',
+    port: '3030',
     head: headConfig,
 
     /** 插件 */

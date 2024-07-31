@@ -6,7 +6,6 @@ module.exports =
     // 2、数组形式
     [
         '/',
-        '/interview/encapsulation',
         // 数组的扩展形式
         {
             title: 'vue学习',
@@ -47,17 +46,18 @@ module.exports =
         '/axios/',
         '/iframe/',
         {
-            title: '面试问题',
+            title: '准备',
             path: '/interview/',
             collapsable: false,
             sidebarDepth: 2,
             children: [
+                '/interview/encapsulation',
                 '/interview/vue',
                 '/interview/js',
                 '/interview/css',
                 '/interview/http',
                 '/interview/webgis',
-                '/interview/vueDiff'
+                '/interview/vueDiff',
             ],
         },
     ];

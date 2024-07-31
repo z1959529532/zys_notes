@@ -1,7 +1,60 @@
 ---
 title: Vue系列
 ---
-## 1、基础
+
+### 目录
+[//]: # (基础)
+- [对Vue看法](/interview/vue.html#对vue看法)
+- [SPA](/interview/vue.html#spa)
+- [MVVM](/interview/vue.html#mvvm)
+- [Vue基本原理](/interview/vue.html#vue基本原理)
+- [双向绑定的原理](/interview/vue.html#v-model-双向绑定的原理)
+- [vue的响应式原理](/interview/vue.html#vue的响应式原理)
+- [computed和watch的区别](/interview/vue.html#computed和watch的区别)
+- [slot插槽](/interview/vue.html#slot插槽)
+- [修饰符有哪些](/interview/vue.html#修饰符有哪些)
+- [v-if和v-show的区别](/interview/vue.html#v-if和v-show的区别)
+- [Vue组件data必须为函数](/interview/vue.html#vue组件data必须为函数)
+- [vue的$nextTick](/interview/vue.html#vue的$nextTick)
+- [自定义指令directive](/interview/vue.html#自定义指令directive)
+- [Vue模板编译](/interview/vue.html#vue模板编译)
+- [v-for中key的作用](/interview/vue.html#v-for中key的作用)
+- [为什么v-if和v-for不建议一起用](/interview/vue.html#为什么v-if和v-for不建议一起用)
+- [混入mixin的理解](/interview/vue.html#混入mixin的理解)
+- [vue组件为什么只有一个根元素](/interview/vue.html#vue组件为什么只有一个根元素)
+- [组件和插件的区别](/interview/vue.html#组件和插件的区别)
+- [组件name的作用](/interview/vue.html#组件name的作用)
+
+[//]: # (生命周期)
+- [父子组件生命周期执行顺序](/interview/vue.html#父子组件生命周期执行顺序)
+- [create和mounted中间间隔受哪些因素影响](/interview/vue.html#create和mounted中间间隔受哪些因素影响)
+- [一般在哪个生命周期请求异步数据](/interview/vue.html#一般在哪个生命周期请求异步数据)
+
+[//]: # (组件通信)
+- [组件通信的方式有哪些](/interview/vue.html#组件通信的方式有哪些)
+- [父子组件双向绑定](/vue/learn-vue2.html#父子组件双向绑定)
+
+[//]: # (路由)
+- [懒加载实现](/interview/vue.html#懒加载实现)
+- [vue-router路由模式](/interview/vue.html#vue-router路由模式)
+- [query和params的区别](/interview/vue.html#query和params的区别)
+- [$router和$route的区别](/interview/vue.html#$router和$route的区别)
+- [active-class](/interview/vue.html#active-class)
+- [路由守卫有哪些](/interview/vue.html#路由守卫有哪些)
+- [keep-alive的作用](/interview/vue.html#keep-alive的作用)
+
+[//]: # (状态管理)
+- [vuex是什么](/interview/vue.html#vuex是什么)
+- [vuex中mutations和actions区别](/interview/vue.html#vuex中mutations和actions区别)
+- [如何保存页面状态](/interview/vue.html#如何保存页面状态)
+
+[//]: # (项目)
+- [vue2与vue3的变化](/interview/vue.html#vue2与vue3的变化)
+- [项目中解决跨域](/interview/vue.html#项目中解决跨域)
+- [权限怎么做](/interview/vue.html#权限怎么做)
+- [搭建项目](/interview/vue.html#搭建项目)
+
+
 ### 对Vue看法
 是一个轻量型渐进式框架，可作为应用的一部分嵌入其中，容易迅速开发一些中小型项目
 
@@ -15,12 +68,16 @@ title: Vue系列
 * View：视图层，可以理解为展示给用户各种信息的DOM层。
 * ViewModel：视图模型层，是View和Model之间的通信桥梁，一方面实现Data Banding另一方面实现了Dom Listener。
 
+### Vue基本原理
+创建vue实例时，遍历data将属性转为get/set，在属性访问和修改时会通知变化   
+然后每个组件都有相应的watcher，在渲染过程属性会记录为依赖，依赖项setter调用就会通知组件watcher重新计算更新
+
 ### v-model 双向绑定的原理
 v-bind + v-on   
 ```:value="abc"``` + ```v-on:input="abc = $event.target.value"```   
 
 数据劫持结合发布订阅   
-监听器```Observer```对数据劫持监听   
+初始化监听器```Observer```对数据劫持监听   
 ```Compile```解析模板指令，绑定更新函数，渲染和更新视图   
 数据变化再由订阅者```Watcher```决定是否需要更新，是Observer、Compile通信桥梁   
 交由订阅器```Dep```收集订阅者统一管理
@@ -28,7 +85,6 @@ v-bind + v-on
 ### vue的响应式原理
 * vue2的是通过 ```Object.defineproperty``` 数据劫持，初始化时对每个属性加上get/set（存在问题对象新增、删除属性界面不更新，得用$set（Vue内部通过重写函数）；通过下标改数组界面不更新
 * vue3的是通过 ```Proxy``` 拦截对象中任意属性变化（优点不用监听每个属性），通过 ```Reflect(反射)``` 对源对象属性操作（优点，重复性操作属性时，Reflect它是有返回值的，Object会报错）
-
 
 ### computed和watch的区别
 - computed计算属性对数据进行一些转化后在显示，要依赖其他属性的，也就是依赖的属性值发生改变才会触发，并且它有缓存（多次调用只触发一次，和method方法的区别）   
@@ -87,7 +143,7 @@ diff算法：diff算法在vue中主要是用于虚拟dom和渲染后的真实dom
 ### 混入mixin的理解
 在需要相似度极高的组件时可以用到，让组件复用一些我们配置相同的生命周期或者方法
 
-### Vue组件为什么只有一个根元素
+### vue组件为什么只有一个根元素
 从三个方面来说   
 Vue实例的根节点app入口不能有两个   
 组件中template下的div也是实例的入口，其实就是树状结构的根处理为VDOM渲染成html   
@@ -106,7 +162,6 @@ Vue实例的根节点app入口不能有两个
 
 ---
 
-## 2、生命周期
 ### 父子组件生命周期执行顺序
 父beforeCreate -> 父create -> 父beforeMount -> 子beforeCreate ... -> 父mounted   
 也就是父的```mounted```在子组件之后
@@ -120,7 +175,6 @@ created、beforeMount、mounted调用时data都已创建
 
 ---
 
-## 3、组件通信
 ### 组件通信的方式有哪些
 [参考地址：https://blog.csdn.net/pdd11997110103/article/details/113563786](https://blog.csdn.net/pdd11997110103/article/details/113563786)   
 - 父传子用 ```props```接收，子传父用```this.$emit('事件名', 参数)```   
@@ -135,7 +189,6 @@ created、beforeMount、mounted调用时data都已创建
 
 ---
 
-## 4、路由
 ### 懒加载实现
 - 箭头函数 + 动态引入import('')
 - 箭头函数 + require
@@ -175,17 +228,23 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 
 ---
 
-## 5、状态管理
-### Vuex是什么
+### vuex是什么
 全局状态管理，可以将多个组件共享的数据存储在一个对象里
 
-### Vuex中mutations和actions区别
+### vuex中mutations和actions区别
 区别在于mutations中最好放同步方法，这样能跟踪到，对于异步操作放在actions中
+
+### 如何保存页面状态
+分两种情况
+- 组件会被卸载
+  - ```LocalStorage```/```SessionStorage```
+  - 路由传值
+- 组件不会被卸载
+  父组件储存或[keep-alive](/interview/vue.html#keep-alive的作用)
 
 ---
 
-## Vue3
-### Vue2与Vue3的变化
+### vue2与vue3的变化
 - Vue3最大化的兼容了Vue2（Vue3里可以写Vue2）
 - 源码升级，响应式原理的不同（Proxy），Diff算法的优化
 - 组件对象式声明方式，更好的支持TypeScript，Vue2需要用装饰器
@@ -193,7 +252,6 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 
 ---
 
-## 项目篇
 ### 项目中解决跨域
 [参考：同源策略](/ajax/#同源策略)   
 浏览器中不是同源就会拦截，所以一般利用构建工具/第三方库/自己搭一个开发服务器代理请求   
