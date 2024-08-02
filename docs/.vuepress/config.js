@@ -22,7 +22,7 @@ module.exports = {
     },
 
     /** 6、个人信息 */
-    title: 'zys笔记',
+    title: 'zys-conclusion',
     description: 'Welcome to zys_notes',
     port: '3030',
     head: headConfig,

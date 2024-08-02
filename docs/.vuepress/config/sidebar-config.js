@@ -55,6 +55,7 @@ module.exports =
                 '/interview/vue',
                 '/interview/js',
                 '/interview/css',
+                '/interview/webpack',
                 '/interview/http',
                 '/interview/webgis',
                 '/interview/vueDiff',
