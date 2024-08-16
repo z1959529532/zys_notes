@@ -2,10 +2,11 @@
 title: 实现总结
 ---
 
-- [防抖节流](/interview/encapsulation.html#防抖节流)
+- [手写防抖节流](/interview/encapsulation.html#防抖节流)
 - [拖拽指令实现](/interview/encapsulation.html#拖拽指令实现)
+- [虚拟列表](/interview/encapsulation.html#虚拟列表)
+- [大文件上传](/interview/encapsulation.html#大文件上传)
 - [图片懒加载和预加载](/interview/encapsulation.html#图片懒加载和预加载)
-- [预加载](/interview/encapsulation.html#预加载)
 
 ### 防抖节流
 都是防止一段时间重复性操作      
@@ -13,11 +14,11 @@ title: 实现总结
 ```节流```：n秒内只执行一次（提交按钮）
 
 ## 拖拽指令实现
-* 元素设置绝对定位   
+* 元素设置绝对定位    
 * 鼠标按下，计算得到鼠标点击元素位置```disX = e.pageX - el.offsetLeft;```   
 * 鼠标移动，计算得到元素横行纵向距离，判断有没有出可视区，给元素偏移量   
 ```0```<=```x = e.pageX - disX```<=```document.body.clientWidth - el.offsetWidth```   
-* 鼠标松开，完成一次拖拽并将事件清除   
+* 鼠标松开，完成一次拖拽并将事件清除    
 [参考https://juejin.cn/post/7067051410671534116](https://juejin.cn/post/7067051410671534116)
 
 ## 虚拟列表
@@ -41,6 +42,20 @@ updateVisibleData(content: HTMLElement) {
     this.showItems = CloneUtil.deepClone(this.allItems).slice(this.startIndex, this.endIndex);
 }
 ```
+
+## 大文件上传
+[参考地址：https://juejin.cn/post/7099362510532247589?searchId=2023102319245149D480042C1B7764B392](https://juejin.cn/post/7099362510532247589?searchId=2023102319245149D480042C1B7764B392)
+- 导致问题
+  - 网络不好
+  - 服务器过载失败
+  - 事件影响用户体验
+- 实现
+  - 拿到文件对象进行切片处理```slice```保存在数组中
+  - 同时用文件```spark-md5```的值（hash值）
+  - 通过hash值向后端获取```文件上传状态```（成功 percent=100 | url）
+  - 未成功执行```切片上传```，过滤拿到未上传切片数组继续上传
+  - 通过切片数组判断所有切片上传成功，告诉后端```合并切片```
+  - 同事要注意切片的缓存
 
 ## 一键换肤
 

@@ -77,7 +77,7 @@ v-bind + v-on
 ```:value="abc"``` + ```v-on:input="abc = $event.target.value"```   
 
 数据劫持结合发布订阅   
-初始化监听器```Observer```对数据劫持监听   
+初始化时监听器```Observer```对数据劫持监听   
 ```Compile```解析模板指令，绑定更新函数，渲染和更新视图   
 数据变化再由订阅者```Watcher```决定是否需要更新，是Observer、Compile通信桥梁   
 交由订阅器```Dep```收集订阅者统一管理
