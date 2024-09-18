@@ -5,13 +5,51 @@
     <title>Title</title>
 </head>
 <body>
+<div id="div1">
+    <a href="#">a1</a>
+    <a href="#">a2</a>
+    <a href="#">a3</a>
+    <button id="btn1">查看更多...</button>
+</div>
+
 <script>
-    async function abc() {
-      // return Promise.resolve(1)
-      return Promise.reject(2)
+  // 事件代理
+  const div1 = document.getElementById('div1')
+  bindEvent(div1, 'click', 'a', function (event) { // 下面用this，这就不能用箭头函数
+    event.preventDefault()
+    // const target = event.target
+    // if (target.nodeName==='A') alert(target.innerHTML)
+    alert(this.innerHTML)
+  })
+
+  const btn1 = document.getElementById('btn1')
+  bindEvent(btn1, 'click', function (event) {
+    event.preventDefault()
+    alert(this.innerHTML)
+  })
+
+  function bindEvent(elem, type, selector, fn) {
+    // elem.addEventListener(type, fn)
+    // return
+
+    if (!fn) {
+      fn = selector
+      selector = null
     }
-    const result = abc()
-    console.log(result);
+    elem.addEventListener(type, event => {
+      const target = event.target
+      if (selector) {
+        // 代理绑定
+        if (target.matches(selector)) { // 选择器是否正确
+          fn.call(target, event)
+        }
+      } else {
+        // 普通绑定
+        fn.call(target, event)
+      }
+
+    })
+  }
 </script>
 </body>
 </html>

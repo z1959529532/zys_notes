@@ -258,15 +258,17 @@ router-link（渲染成a标签）路由匹配默认样式，修改在实例VueRo
 1、webpack-->```vue.config.js```
 ```js
 devServer: {
+  proxy: {
     '/zysDevApi': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        // pathRewrite作用是把实际地址+给定值http://localhost:3000/abc
-        // 一般为空
-        pathRewrite: {
-            '^/zysDevApi': ''
-        }
-    }
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+      // pathRewrite作用是把实际地址+给定值http://localhost:3000/abc
+      // 一般为空
+      pathRewrite: {
+        '^/zysDevApi': ''
+      }
+    } 
+  }
 }
 ```
 2、vite-->```vite.config.js```
