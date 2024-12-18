@@ -14,8 +14,8 @@ title: Vue系列
 - [slot插槽](/interview/vue.html#slot插槽)
 - [修饰符有哪些](/interview/vue.html#修饰符有哪些)
 - [v-if和v-show的区别](/interview/vue.html#v-if和v-show的区别)
-- [Vue组件data必须为函数](/interview/vue.html#vue组件data必须为函数)
-- [vue的$nextTick](/interview/vue.html#vue的$nextTick)
+- [vue组件data必须为函数](/interview/vue.html#vue组件data必须为函数)
+- [vue的$nextTick](/interview/vue.html#vue的-nexttick)
 - [自定义指令directive](/interview/vue.html#自定义指令directive)
 - [Vue模板编译](/interview/vue.html#vue模板编译)
 - [v-for中key的作用](/interview/vue.html#v-for中key的作用)
@@ -114,13 +114,13 @@ computed和method都是通过修改数据来触发控制输出显示的
 v-show条件为false时，只是元素的display属性设置为none，节点还存在dom中   
 v-if是直接添加与删除dom，开销大
 
-### Vue组件data必须为函数
+### vue组件data必须为函数
 函数return的都是新地址的data，这样多个组件之间数据不会相互影响，防止数据污染
 
 ### vue的$nextTick
 vue更新dom是异步执行的，修改数据后视图不会立刻更新，在回调中拿到更新后的dom结构   
-- 操作随数据变化的dom结构时   
-- Vue生命周期在create()操作dom，mounted()是在挂载完dom触发   
+- 数据变化后执行的dom操作   
+- 如果在Vue生命周期create中操作dom   
 $nextTick()返回一个promise对象
 
 ### 自定义指令directive
@@ -301,8 +301,9 @@ server: {
 * UI组件库```npm i element-ui```
 * 安装http工具axios，封装请求工具
 * css预编译器，全局样式和主题色的修改
-* 代码规范和代码美化工具
+然后其它的
 * git hooks钩子
+* 代码规范和代码美化工具
 
 
 
