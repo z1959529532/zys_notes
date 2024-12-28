@@ -296,12 +296,12 @@ server: {
 ### 搭建项目
 * 根据项目需求采用合适的技术栈，构建方式：脚手架/模板 ```vue + ts + vite```   
 第三方依赖：   
+* UI组件库```npm i element-ui```
 * 安装路由```npm i vue-router```
 * 全局状态管理```npm i vuex```
-* UI组件库```npm i element-ui```
 * 安装http工具axios，封装请求工具
-* css预编译器，全局样式和主题色的修改
-然后其它的
+* css预编译器，全局样式和主题色的修改   
+然后其它的：
 * git hooks钩子
 * 代码规范和代码美化工具
 
