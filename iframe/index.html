@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>iframe通信 | zys-conclusion</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/zys_notes/assets/imgs/favicon.ico">
+    <meta name="description" content="Welcome to zys_notes">
+    <meta name="author" content="zys">
+    <meta name="keywords" content="使用vuepress">
+    
+    <link rel="preload" href="/zys_notes/assets/css/0.styles.a1da0401.css" as="style"><link rel="preload" href="/zys_notes/assets/js/app.27d2a2d1.js" as="script"><link rel="preload" href="/zys_notes/assets/js/2.dfcfa016.js" as="script"><link rel="preload" href="/zys_notes/assets/js/18.53136da5.js" as="script"><link rel="prefetch" href="/zys_notes/assets/js/10.cfacbde0.js"><link rel="prefetch" href="/zys_notes/assets/js/11.7152949e.js"><link rel="prefetch" href="/zys_notes/assets/js/12.89311dc4.js"><link rel="prefetch" href="/zys_notes/assets/js/13.f00188eb.js"><link rel="prefetch" href="/zys_notes/assets/js/14.703aa30f.js"><link rel="prefetch" href="/zys_notes/assets/js/15.c9296715.js"><link rel="prefetch" href="/zys_notes/assets/js/16.7537c97d.js"><link rel="prefetch" href="/zys_notes/assets/js/17.beaa65a7.js"><link rel="prefetch" href="/zys_notes/assets/js/19.35e09296.js"><link rel="prefetch" href="/zys_notes/assets/js/20.b72ad227.js"><link rel="prefetch" href="/zys_notes/assets/js/21.d60756f5.js"><link rel="prefetch" href="/zys_notes/assets/js/22.c3b19fb6.js"><link rel="prefetch" href="/zys_notes/assets/js/23.55ad0ebc.js"><link rel="prefetch" href="/zys_notes/assets/js/24.9b45613e.js"><link rel="prefetch" href="/zys_notes/assets/js/25.42cf1f68.js"><link rel="prefetch" href="/zys_notes/assets/js/26.3af6579d.js"><link rel="prefetch" href="/zys_notes/assets/js/27.a765196c.js"><link rel="prefetch" href="/zys_notes/assets/js/28.9641a23b.js"><link rel="prefetch" href="/zys_notes/assets/js/29.58de9ec5.js"><link rel="prefetch" href="/zys_notes/assets/js/3.48a24a76.js"><link rel="prefetch" href="/zys_notes/assets/js/30.042fd9db.js"><link rel="prefetch" href="/zys_notes/assets/js/31.09968ecf.js"><link rel="prefetch" href="/zys_notes/assets/js/32.de245d2f.js"><link rel="prefetch" href="/zys_notes/assets/js/33.a4ef8d72.js"><link rel="prefetch" href="/zys_notes/assets/js/4.0e8dcff8.js"><link rel="prefetch" href="/zys_notes/assets/js/5.aa9851b9.js"><link rel="prefetch" href="/zys_notes/assets/js/6.99ad772a.js"><link rel="prefetch" href="/zys_notes/assets/js/7.0adce77b.js"><link rel="prefetch" href="/zys_notes/assets/js/8.e3455c10.js"><link rel="prefetch" href="/zys_notes/assets/js/9.6f3c5772.js">
+    <link rel="stylesheet" href="/zys_notes/assets/css/0.styles.a1da0401.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/zys_notes/" class="home-link router-link-active"><img src="/zys_notes/assets/imgs/header.png" alt="zys-conclusion" class="logo"> <span class="site-name can-hide">zys-conclusion</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/zys_notes/vp-notes/" class="nav-link">
+  Vuepress
+</a></div><div class="nav-item"><a href="/zys_notes/vue/" class="nav-link">
+  Vue
+</a></div><div class="nav-item"><a href="/zys_notes/interview/vue.html" class="nav-link">
+  面试问题
+</a></div><div class="nav-item"><a href="/zys_notes/timeline/" class="nav-link">
+  时间线
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/zys_notes/vp-notes/" class="nav-link">
+  Vuepress
+</a></div><div class="nav-item"><a href="/zys_notes/vue/" class="nav-link">
+  Vue
+</a></div><div class="nav-item"><a href="/zys_notes/interview/vue.html" class="nav-link">
+  面试问题
+</a></div><div class="nav-item"><a href="/zys_notes/timeline/" class="nav-link">
+  时间线
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/zys_notes/" aria-current="page" class="sidebar-link">首页</a></li><li><section class="sidebar-group collapsable depth-0"><a href="/zys_notes/vue/start" class="sidebar-heading clickable"><span>vue学习</span> <span class="arrow right"></span></a> <!----></section></li><li><a href="/zys_notes/vite/vite.html" class="sidebar-link">vite学习</a></li><li><a href="/zys_notes/uniapp/uniapp.html" class="sidebar-link">uniapp学习</a></li><li><a href="/zys_notes/angular/angular.html" class="sidebar-link">Angular</a></li><li><a href="/zys_notes/websocket/websocket.html" class="sidebar-link">Websocket</a></li><li><section class="sidebar-group depth-0"><a href="/zys_notes/basis/" class="sidebar-heading clickable"><span>前端基础</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/zys_notes/basis/learn-html.html" class="sidebar-link">html部分</a></li><li><a href="/zys_notes/basis/learn-css.html" class="sidebar-link">css部分</a></li></ul></section></li><li><a href="/zys_notes/ajax/" class="sidebar-link">ajax</a></li><li><a href="/zys_notes/promise/" class="sidebar-link">Promise</a></li><li><a href="/zys_notes/axios/" class="sidebar-link">axios</a></li><li><a href="/zys_notes/iframe/" aria-current="page" class="active sidebar-link">iframe通信</a><ul class="sidebar-sub-headers"></ul></li><li><section class="sidebar-group depth-0"><a href="/zys_notes/interview/" class="sidebar-heading clickable"><span>准备</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/zys_notes/interview/encapsulation.html" class="sidebar-link">实现总结</a></li><li><a href="/zys_notes/interview/vue.html" class="sidebar-link">Vue系列</a></li><li><a href="/zys_notes/interview/js.html" class="sidebar-link">JS系列</a></li><li><a href="/zys_notes/interview/css.html" class="sidebar-link">CSS系列</a></li><li><a href="/zys_notes/interview/webpack.html" class="sidebar-link">Webpack</a></li><li><a href="/zys_notes/interview/http.html" class="sidebar-link">http系列</a></li><li><a href="/zys_notes/interview/webgis.html" class="sidebar-link">WebGis系列</a></li><li><a href="/zys_notes/interview/vueDiff.html" class="sidebar-link">Vue虚拟Dom与Diff算法</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><p>作为一个html标签，可嵌入任何的html网页</p> <ul><li>优点：
+<ul><li>用起来简单，原封不动嵌入，可以直接调用和修改嵌入页面的内容</li> <li>解决第三方内容加载缓慢的问题（广告，图标）</li></ul></li> <li>缺点：
+<ul><li>会阻塞主页面onload事件，要在iframe加载完毕后(dom，css，js)才会触发，影响网页加载速度</li> <li>共享连接池，影响页面并行加载（个解决方案是在优先级更高的资源下载完成后再动态的给iframe的src赋值）</li> <li>对于小设备展示不全兼容性差</li></ul></li></ul> <h3 id="通信-非跨域-跨域"><a href="#通信-非跨域-跨域" class="header-anchor">#</a> 通信（非跨域/跨域）</h3> <div class="language-vue extra-class"><pre class="language-vue"><code>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>iframe</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>showChildrenIframe<span class="token punctuation">&quot;</span></span>
+        <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>showChildrenIframe<span class="token punctuation">&quot;</span></span> <span class="token attr-name">:src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>iframeUrl<span class="token punctuation">&quot;</span></span> <span class="token attr-name">frameborder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>0<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>iframe</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token comment">/************************************ 父 ************************************/</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span>iframeUrl <span class="token operator">=</span> location<span class="token punctuation">.</span>origin <span class="token operator">+</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">/#/iframeSon</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">$nextTick</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> iframe <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'ifr'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> any<span class="token punctuation">;</span>
+  <span class="token comment">// iframe.contentWindow.location.reload();</span>
+  iframe<span class="token punctuation">.</span><span class="token function-variable function">onload</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 非跨域</span>
+    <span class="token comment">// iframe.contentWindow.document.getElementById('abc');</span>
+    <span class="token comment">// iframe.contentWindow.showGreet('hello 在吗？');</span>
+    <span class="token comment">// 跨域</span>
+    iframe<span class="token punctuation">.</span>contentWindow<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span>
+            <span class="token punctuation">{</span><span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">'在工位吗？过来一下'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'zys'</span><span class="token punctuation">,</span> <span class="token literal-property property">parentUrl</span><span class="token operator">:</span> location<span class="token punctuation">.</span>href<span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>iframeUrl
+            <span class="token comment">// '*'</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">/************************************ 子 ************************************/</span>
+<span class="token comment">// 非跨域</span>
+<span class="token comment">// window.parent.showReply('好的')</span>
+<span class="token comment">// window.top</span>
+<span class="token comment">// 跨域</span>
+window<span class="token punctuation">.</span>parent<span class="token punctuation">.</span><span class="token function">postMessage</span><span class="token punctuation">(</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">'好的'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'zys'</span><span class="token punctuation">,</span> <span class="token literal-property property">parentUrl</span><span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>message<span class="token punctuation">.</span>parentUrl
+    <span class="token comment">// '*'</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment">// 跨域接收消息</span>
+<span class="token function">mounted</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">&quot;message&quot;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>data<span class="token operator">?.</span>type <span class="token operator">&amp;&amp;</span> e<span class="token punctuation">.</span>data<span class="token punctuation">.</span>type <span class="token operator">==</span> <span class="token string">'zys'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">更新时间:</span> <span class="time">2023年11月5日星期日下午1点01分</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/zys_notes/axios/" class="prev">
+        axios
+      </a></span> <span class="next"><a href="/zys_notes/interview/encapsulation.html">
+        实现总结
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/zys_notes/assets/js/app.27d2a2d1.js" defer></script><script src="/zys_notes/assets/js/2.dfcfa016.js" defer></script><script src="/zys_notes/assets/js/18.53136da5.js" defer></script>
+  </body>
+</html>
